@@ -1,0 +1,124 @@
+/* The terminal's page furniture. Everything visible is drawn on the canvas;
+   these elements are the hit areas, the keyboard input and the controls. */
+
+.crt { --crt-z: 2147483000; }
+.crt-safe {
+  position: fixed;
+  visibility: hidden;
+  padding: 0 env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) 0;
+  pointer-events: none;
+}
+.crt [hidden] { display: none !important; }
+
+.crt-canvas {
+  position: fixed;
+  z-index: calc(var(--crt-z) + 1);
+  display: block;
+  pointer-events: none;
+}
+
+/* The monitor in the corner is a button: click, tap or Enter opens it. */
+.crt-launcher {
+  position: fixed;
+  z-index: calc(var(--crt-z) + 2);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 18%;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.crt-launcher:focus-visible { outline: 2px solid #86FFA3; outline-offset: 4px; }
+.is-open .crt-launcher { visibility: hidden; }
+
+.crt-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--crt-z);
+  background: radial-gradient(ellipse at 50% 45%, rgba(6, 10, 8, .86), rgba(2, 3, 2, .97));
+  -webkit-backdrop-filter: blur(5px) saturate(.6);
+  backdrop-filter: blur(5px) saturate(.6);
+  opacity: 0;
+  transition: opacity .7s ease;
+  touch-action: none;
+}
+.crt-backdrop.is-visible { opacity: 1; }
+
+.crt-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--crt-z) + 3);
+  pointer-events: none;
+}
+
+/* The real input: invisible, lying exactly over the glass. It takes the
+   keyboard, the phone's keyboard, paste and taps; the CRT draws the text. */
+.crt-input {
+  position: fixed;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: none;
+  resize: none;
+  overflow: hidden;
+  background: transparent;
+  color: transparent;
+  caret-color: transparent;
+  font-size: 16px; /* no zoom-on-focus on iOS */
+  opacity: 0;
+  pointer-events: auto;
+  cursor: text;
+}
+.crt-input::selection { background: transparent; }
+
+.crt-controls {
+  position: fixed;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 12px;
+  pointer-events: none;
+}
+.is-open .crt-controls { animation: crt-appear .45s ease .6s both; }
+@keyframes crt-appear {
+  from { opacity: 0; transform: translateY(6px); }
+}
+.crt-controls > * {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  padding: 0 13px;
+  border: 1px solid rgba(134, 255, 163, .18);
+  border-radius: 999px;
+  background: rgba(14, 18, 15, .82);
+  color: #A9D9B4;
+  font: 500 11.5px/1 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .08em;
+  text-decoration: none;
+  text-transform: uppercase;
+  pointer-events: auto;
+  cursor: pointer;
+}
+.crt-controls > *:hover { border-color: rgba(134, 255, 163, .45); color: #E4FFEA; }
+.crt-controls > *:focus-visible { outline: 2px solid #86FFA3; outline-offset: 2px; }
+.crt-controls kbd { padding: 2px 5px; border: 1px solid rgba(134, 255, 163, .25); border-radius: 4px; font: inherit; font-size: 10px; }
+.crt-powered { color: #7F9C86 !important; }
+
+.crt-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crt-backdrop { transition: none; }
+  .is-open .crt-controls { animation: none; }
+}
