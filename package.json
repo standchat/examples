@@ -1,0 +1,15 @@
+{
+  "name": "stand-chat-examples",
+  "private": true,
+  "description": "Copy-pasteable examples of integrating Stand Chat, served at https://examples.stand.chat/",
+  "license": "Unlicense",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "start": "node build.mjs && npx --yes serve@14 --no-clipboard --listen 3000",
+    "og": "node og.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

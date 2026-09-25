@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>One-line install</title>
+  <meta name="description" content="The smallest possible Stand Chat integration: one script tag on a small business website. The greeting, timing and who answers are set in Stand, not in code.">
+  <meta name="author" content="Stand Chat">
+  <link rel="author" href="https://stand.chat/">
+  <meta name="keywords" content="stand.js, install">
+  <meta property="og:title" content="One-line install">
+  <meta property="og:description" content="The smallest possible Stand Chat integration: one script tag on a small business website. The greeting, timing and who answers are set in Stand, not in code.">
+  <meta property="og:image" content="https://examples.stand.chat/one-line-install/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="stylesheet" href="/_shared/example.css">
+  <script type="module" src="/_shared/example.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap">
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Stand Chat. This one line is the entire integration. -->
+  <script defer src="https://cdn.stand.chat/widget/stand.js" data-stand-id="demo"></script>
+
+  <!--
+    Demo only, not part of the integration. A real site sets its greeting in
+    Stand (Sites → Chat widget behavior) and needs just the line above. These
+    examples share Stand's demo site, so this page opens the chat with its own
+    greeting instead: on wide screens, once per browser session.
+  -->
+  <script type="module">
+    const greeting = "Hei! This is where Kaisla's guests would ask about towels, tickets and the ice hole. I'm Stand Chat's demo assistant, so ask me how it works.";
+    const greeted = () => { try { return sessionStorage.getItem('kaisla-greeted'); } catch { return '1'; } };
+    const stand = window.StandChat;
+    if (stand && matchMedia('(min-width: 900px)').matches && !greeted()) {
+      stand.whenAvailable(() => setTimeout(() => {
+        try { sessionStorage.setItem('kaisla-greeted', '1'); } catch {}
+        stand.openChat(greeting);
+      }, 2500));
+    }
+  </script>
+</head>
+<body>
+  <sx-example-bar></sx-example-bar>
+
+  <div class="kaisla">
+    <section class="hero">
+      <img class="hero-art" src="lake.svg" alt="A log sauna on a lakeshore at dusk. Smoke rises from the chimney, someone sits at the end of the pier, and reeds frame the water.">
+      <header class="nav">
+        <a class="brand" href="#top">Kaisla</a>
+        <nav aria-label="Kaisla">
+          <a href="#sauna">Sauna</a>
+          <a href="#prices">Prices</a>
+          <a href="#visit">Visit</a>
+        </nav>
+        <span class="open"><i aria-hidden="true"></i>Open today 7–22</span>
+      </header>
+      <div class="hero-copy" id="top">
+        <p class="eyebrow">Public lakeside sauna · since 1952</p>
+        <h1>Warm wood. <em>Cold&nbsp;lake.</em></h1>
+        <p class="intro">A wood-fired public sauna on a quiet shore, twenty minutes from the city. Come for one round, or stay until the stars come out.</p>
+      </div>
+    </section>
+
+    <section class="today" aria-label="Today at Kaisla" data-og-hide>
+      <div><span>Sauna</span><strong>82°</strong></div>
+      <div><span>Lake</span><strong>4°</strong></div>
+      <div><span>Ice hole</span><strong>Open</strong></div>
+      <div><span>Sunset</span><strong>18:52</strong></div>
+    </section>
+
+    <section class="rituals" id="sauna">
+      <h2>An evening in three parts</h2>
+      <div class="cols">
+        <article>
+          <span class="num">i.</span>
+          <h3>Heat</h3>
+          <p>Two wood-fired rooms: the big one for company, the small smoke sauna for quiet. Throw water on the stones and let the <em>löyly</em> roll over you.</p>
+        </article>
+        <article>
+          <span class="num">ii.</span>
+          <h3>Lake</h3>
+          <p>Walk the pier and slip in. In winter we keep an ice hole open, so the swim is short, bright and unforgettable.</p>
+        </article>
+        <article>
+          <span class="num">iii.</span>
+          <h3>Rest</h3>
+          <p>Wrap up on the terrace with tea or lingonberry juice and watch the light go. When you're ready, back to the heat.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="prices" id="prices">
+      <h2>Prices</h2>
+      <dl>
+        <div><dt>Day ticket</dt><dd>€18</dd></div>
+        <div><dt>Evening ticket, after 18</dt><dd>€14</dd></div>
+        <div><dt>Towel and linen wrap</dt><dd>€6</dd></div>
+        <div><dt>Private sauna for up to 8, two hours</dt><dd>€190</dd></div>
+      </dl>
+      <p class="fine">No booking needed for public sessions. Mixed sauna every day; women only on Tuesdays 16–20. Swimwear optional in the smoke sauna.</p>
+    </section>
+
+    <section class="visit" id="visit">
+      <div>
+        <h2>Visit</h2>
+        <p>Rantatie 4, by the old boat harbour.<br>Bus 23 to <em>Kaislaranta</em>, then five minutes along the shore.</p>
+        <p class="hours">Open daily 7–22 · Kitchen until 21</p>
+      </div>
+      <aside class="ask">
+        <p class="ask-title">Questions?</p>
+        <p>Towels, the ice hole, your first visit, a private evening for twelve — ask in the chat. It answers any time of day.</p>
+      </aside>
+    </section>
+
+    <footer class="foot">
+      <span class="brand">Kaisla</span>
+      <span>A fictional sauna, made up for this example.</span>
+    </footer>
+  </div>
+
+  <section id="how-it-works" class="sx-explainer">
+    <div class="sx-wrap">
+      <p class="sx-eyebrow">How it works</p>
+      <h2>The whole integration is one line</h2>
+      <p class="sx-lead">Kaisla's website is plain HTML. Stand Chat is added with the snippet Stand generates for the site. Nothing else on the page knows about Stand.</p>
+
+      <pre class="sx-code" data-file="index.html" data-wrap><code class="language-html">&lt;script defer src="https://cdn.stand.chat/widget/stand.js" data-stand-id="YOUR-SITE-ID"&gt;&lt;/script&gt;</code></pre>
+
+      <p>Put it in the <code>&lt;head&gt;</code> of every page, usually through your site template or your website builder's custom code setting. <code>defer</code> keeps it out of the way while the page loads. Use the snippet from <strong>Sites</strong> in Stand: <code>data-stand-id</code> is your site's public ID, not a secret.</p>
+
+      <h3>What happens on the page</h3>
+      <ol class="sx-steps">
+        <li><code>stand.js</code> asks Stand whether anyone can answer on this page: a person on your team who is marked available, or an AI Stand-in.</li>
+        <li>If someone can, a chat button appears in the corner, with a greeting if you set one.</li>
+        <li>If nobody can, nothing appears. That's a normal state, not an error.</li>
+      </ol>
+
+      <div class="sx-note">This page uses <code>data-stand-id="demo"</code>, Stand Chat's shared demo site, so the chat works on any domain, including localhost. Its demo Stand-in explains Stand Chat and won't answer for Kaisla. With your own Site ID, your own Stand-ins answer, trained on your website. The status pill in the top bar shows what Stand sees.</div>
+
+      <h3>Everything else is set in Stand, not in code</h3>
+      <ul>
+        <li><strong>Who answers:</strong> your team's availability, and AI Stand-ins that cover when nobody is online.</li>
+        <li><strong>What the AI knows:</strong> point a knowledge source at your website and Stand keeps it fresh. For Kaisla, that would be its prices, hours and swimming rules.</li>
+        <li><strong>When and how chat appears:</strong> chat behavior rules per path. Choose the trigger (on load, after a delay, on scroll), a custom greeting, a half-size widget, or opening the chat on desktop.</li>
+      </ul>
+      <p>Changes apply on the next page load. The snippet never changes.</p>
+
+      <div class="sx-note">The greeting on this page is the one exception. You'd normally set it in Stand, under <strong>Sites → Chat widget behavior</strong>: a custom greeting, plus "open chat widget on desktop" if the chat should open by itself. These examples share Stand's demo site, so this page opens the chat with its greeting in code, using <code>StandChat.openChat(greeting)</code>. Your own site needs just the one line.</div>
+
+      <h3>Try it</h3>
+      <ol class="sx-steps">
+        <li>On a wide screen, the chat opens after a moment with a greeting. On a phone, tap the chat button in the corner.</li>
+        <li>Ask it something, like <em>"How do I add this chat to my site?"</em> The demo Stand-in answers here, so a question about Kaisla itself gets a polite pointer instead of made-up opening hours.</li>
+      </ol>
+
+      <h3>Copy this example</h3>
+      <pre class="sx-code"><code class="language-sh">npx degit standchat/examples/one-line-install my-site</code></pre>
+
+      <ul class="sx-links">
+        <li><a href="https://stand.chat/guide/quickstart">Quickstart guide ↗</a></li>
+        <li><a href="https://stand.chat/guide/tune-chat-behavior">Chat behavior rules ↗</a></li>
+        <li><a href="https://github.com/standchat/examples/tree/main/one-line-install/">Source on GitHub ↗</a></li>
+      </ul>
+    </div>
+  </section>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>In-app support button</title>
+  <meta name="description" content="Put Stand behind your app's own Support button: no floating launcher, shown only when someone can answer, and opened with the signed-in user and the screen's context attached.">
+  <meta name="author" content="Stand Chat">
+  <link rel="author" href="https://stand.chat/">
+  <meta name="keywords" content="StandChat API, initiallyHideChatButton, identify, openChat">
+  <meta property="og:title" content="In-app support button">
+  <meta property="og:description" content="Put Stand behind your app's own Support button: no floating launcher, shown only when someone can answer, and opened with the signed-in user and the screen's context attached.">
+  <meta property="og:image" content="https://examples.stand.chat/in-app-support/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="stylesheet" href="/_shared/example.css">
+  <script type="module" src="/_shared/example.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Stand Chat. support.js hides its floating button: the app opens chat itself. -->
+  <script defer src="https://cdn.stand.chat/widget/stand.js" data-stand-id="demo"></script>
+  <script defer src="app.js"></script>
+  <script defer src="support.js"></script>
+</head>
+<body>
+  <sx-example-bar></sx-example-bar>
+
+  <div class="layerline">
+    <aside class="sidebar">
+      <a class="logo" href="#">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 16.5 12 20l8-3.5M4 12.5 12 16l8-3.5M12 4 4 8.5 12 12l8-3.5z"/></svg>
+        Layerline
+      </a>
+      <button class="org" type="button">
+        <span class="org-mark">H</span>
+        <span>Helix Prototyping Lab</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg>
+      </button>
+
+      <nav class="menu" aria-label="Layerline">
+        <a class="active" href="#">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9V4h12v5M6 18H4v-7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v7h-2M8 14h8v6H8z"/></svg>
+          Printers <span class="count">8</span>
+        </a>
+        <a href="#">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg>
+          Queue <span class="count">14</span>
+        </a>
+        <a href="#">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.5"/><path d="M12 4v5.5M20 12h-5.5"/></svg>
+          Materials
+        </a>
+        <a href="#">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>
+          Reports
+        </a>
+        <a href="#">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>
+          Settings
+        </a>
+      </nav>
+
+      <div class="sidebar-foot">
+        <a class="docs" href="#">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h10l4 4v12H5z M15 4v4h4"/></svg>
+          Docs
+        </a>
+
+        <div class="support-slot">
+          <!-- Support. Hidden until Stand has someone who can answer; see support.js.
+               A real app renders the greeting and prompt from its session and current screen. -->
+          <button class="support" type="button" hidden
+            data-support data-support-id="sidebar"
+            data-support-greeting="Hi Maya! What can I help you with in Layerline today?"
+            data-support-prompt="Maya Chen, lab manager at Helix Prototyping Lab, opened Support from the Layerline sidebar while on the Printers page. Five of eight printers are printing; Heron is paused with error E-217 (heater fault), and orange PETG is running low (0.4 kg).">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13v-1a8 8 0 0 1 16 0v1M4 13h3v5H5a1 1 0 0 1-1-1zM20 13h-3v5h2a1 1 0 0 0 1-1zM17 18c0 1.7-2 3-5 3"/></svg>
+            Support
+            <span class="live" title="Someone can answer now"><span class="visually-hidden">(online)</span></span>
+          </button>
+
+          <!-- Demo annotation, not part of the app: points out the Support item. -->
+          <p class="demo-note" role="note">
+            <svg viewBox="0 0 66 40" aria-hidden="true"><path d="M64 6C42 0 12 4-16 16"/><path d="M-16 16l10-8M-16 16l13 3"/></svg>
+            <span><strong>Stand lives here.</strong> A quiet menu item, shown only while someone can answer. Click it, or ask about Heron's error.</span>
+          </p>
+        </div>
+
+        <div class="me">
+          <span class="initials">MC</span>
+          <span><strong>Maya Chen</strong><small>Lab manager</small></span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <h1>Printers</h1>
+          <p>Helix Prototyping Lab · 8 printers · updated just now</p>
+        </div>
+        <div class="actions">
+          <button class="ghost" type="button">Pause all</button>
+          <button class="primary" type="button">New job</button>
+        </div>
+      </header>
+
+      <section class="kpis" aria-label="Summary">
+        <div><span>Printing</span><strong><b data-kpi-printing>5</b><small>/8</small></strong></div>
+        <div><span>Queued</span><strong>14 jobs</strong><small>about 31 h of printing</small></div>
+        <div><span>Success, last 7 days</span><strong>96.4%</strong><small>2 failed of 55</small></div>
+        <div class="low"><span>PETG, orange</span><strong>0.4 kg</strong><small>Reorder soon</small></div>
+      </section>
+
+      <section class="printers" data-printers aria-label="Printers"></section>
+    </main>
+  </div>
+
+  <section id="how-it-works" class="sx-explainer">
+    <div class="sx-wrap">
+      <p class="sx-eyebrow">How it works</p>
+      <h2>Your app's own Support button, answered in Stand</h2>
+      <p class="sx-lead">Inside an app, a floating chat bubble gets in the way. Hide it, show your own Support entry only when someone can answer, and open the chat already knowing who is asking and what they are looking at.</p>
+      <p>This is how Stand's own dashboard offers <em>Support (live)</em>.</p>
+
+      <h3>Try it</h3>
+      <ol class="sx-steps">
+        <li>Look at the bottom of the sidebar. <strong>Support</strong>, with a green light, appears as soon as Stand finds a rep or an AI Stand-in. It is meant to be quiet: that is how support belongs in an app.</li>
+        <li>Click it. The chat greets Maya by name, and whoever answers knows who she is and what her printers are doing.</li>
+        <li>On Heron's card, click <strong>Get help with E-217</strong>. The chat opens with a greeting about the error, and the printer's state goes along as private context.</li>
+      </ol>
+
+      <div class="sx-note">Chats here use <code>data-stand-id="demo"</code>, Stand Chat's shared demo site, which works on any domain. Its demo Stand-in follows the page's greeting and prompt, but won't speak for the made-up business. With your own Site ID, your own Stand-ins answer.</div>
+
+      <h3>1. Load Stand, then your integration</h3>
+      <pre class="sx-code" data-file="index.html"><code class="language-html">&lt;script defer src="https://cdn.stand.chat/widget/stand.js" data-stand-id="YOUR-SITE-ID"&gt;&lt;/script&gt;
+&lt;script defer src="support.js"&gt;&lt;/script&gt;</code></pre>
+      <p>Deferred scripts run in order, so <code>window.StandChat</code> exists by the time <code>support.js</code> runs. The first thing it does is hide Stand's floating button.</p>
+
+      <h3>2. Mark your entry points</h3>
+      <p>The sidebar button and any contextual button start <code>hidden</code>. <code>data-support-*</code> attributes carry what each one sends: a greeting for the user, and private context about where they are. Render them from your session and the current screen.</p>
+      <pre class="sx-code" data-file="index.html" data-wrap><code class="language-html">&lt;button type="button" data-support hidden
+  data-support-greeting="Hi Maya! What can I help you with in Layerline today?"
+  data-support-prompt="Maya Chen, lab manager at Helix Prototyping Lab, opened Support from the sidebar on the Printers page…"&gt;
+  Support &lt;span class="live"&gt;&lt;/span&gt;
+&lt;/button&gt;
+
+&lt;button type="button" hidden
+  data-support-greeting="I see Heron paused with E-217. Let's get it printing again…"
+  data-support-prompt="The user is looking at printer Heron (LX-2, firmware 4.3.1)…"&gt;
+  Get help with E-217
+&lt;/button&gt;</code></pre>
+
+      <h3>3. Connect them to Stand</h3>
+      <pre class="sx-code" data-file="support.js"><code class="language-js">const user = { id: 'usr_4821', name: 'Maya Chen' }; // From your app's session.
+
+function connectSupport(stand) {
+  stand.initiallyHideChatButton();
+  stand.identify({ externalId: user.id, name: user.name });
+
+  stand.whenAvailable(() =&gt; {
+    for (const el of document.querySelectorAll('[data-support], [data-support-prompt]')) {
+      el.hidden = false;
+    }
+  });
+
+  document.addEventListener('click', (event) =&gt; {
+    const trigger = event.target.closest('[data-support], [data-support-prompt]');
+    if (!trigger) return;
+    stand.openChat(trigger.dataset.supportGreeting ?? '', {
+      prompt: trigger.dataset.supportPrompt ?? '',
+      analyticsId: trigger.dataset.supportId ?? '',
+    });
+  });
+}
+
+// stand.js is deferred and can be blocked, so wait for its API.
+(function waitForStand(tries = 0) {
+  if (window.StandChat) return connectSupport(window.StandChat);
+  if (tries &lt; 200) setTimeout(() =&gt; waitForStand(tries + 1), 50);
+})();</code></pre>
+
+      <h3>Good to know</h3>
+      <ul>
+        <li><strong><code>initiallyHideChatButton()</code> keeps Stand's own button off screen</strong> until your code opens the chat. Call it before Stand finds a responder, as <code>support.js</code> does right after the script loads.</li>
+        <li><strong><code>whenAvailable</code> is the gate.</strong> It runs when Stand has a responder, right away if it already has one. If nobody can answer, your button stays hidden rather than opening an empty chat. The callback also gets <code>{ human, name, title, avatarUrl }</code> if you want to show who will answer.</li>
+        <li><strong><code>identify</code> is for new conversations.</strong> Call it when the signed-in user is known, and <code>identify(null)</code> on sign-out. Reps see the name; the ID stays private. It is page-supplied metadata, never proof of identity.</li>
+        <li><strong>The prompt is private, not secret.</strong> Visitors don't see it in the chat, but it lives in your page. Pass facts that help: plan, screen, error, record IDs. Never pass tokens or credentials.</li>
+        <li><strong>Greeting and prompt apply to new conversations.</strong> If Maya already has a chat open, <code>openChat</code> simply reopens it.</li>
+        <li><strong>In React, Vue and other SPAs</strong>, keep the function <code>whenAvailable</code> returns and call it on unmount.</li>
+      </ul>
+
+      <h3>Copy this example</h3>
+      <pre class="sx-code"><code class="language-sh">npx degit standchat/examples/in-app-support my-app-support</code></pre>
+
+      <ul class="sx-links">
+        <li><a href="https://stand.chat/features/javascript-api">JavaScript API ↗</a></li>
+        <li><a href="https://stand.chat/features/visitor-identification">Visitor identification ↗</a></li>
+        <li><a href="https://stand.chat/features/private-page-context">Private page context ↗</a></li>
+        <li><a href="https://github.com/standchat/examples/tree/main/in-app-support/">Source on GitHub ↗</a></li>
+      </ul>
+    </div>
+  </section>
+</body>
+</html>

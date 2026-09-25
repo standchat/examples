@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>stand-card with spotlight</title>
+  <meta name="description" content="A &lt;stand-card&gt; that asks shoppers what music they make, then spotlights itself mid-scroll. Their own words start the chat, with the whole catalog as private context.">
+  <meta name="author" content="Stand Chat">
+  <link rel="author" href="https://stand.chat/">
+  <meta name="keywords" content="stand-card, spotlight, data-stand-visitor-message, ::part">
+  <meta property="og:title" content="stand-card with spotlight">
+  <meta property="og:description" content="A &lt;stand-card&gt; that asks shoppers what music they make, then spotlights itself mid-scroll. Their own words start the chat, with the whole catalog as private context.">
+  <meta property="og:image" content="https://examples.stand.chat/stand-card/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="stylesheet" href="/_shared/example.css">
+  <script type="module" src="/_shared/example.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Stand Chat. The <stand-card> elements below need nothing else. -->
+  <script defer src="https://cdn.stand.chat/widget/stand.js" data-stand-id="demo"></script>
+  <!-- No floating chat button: on this page, the cards are the invitation. -->
+  <script>addEventListener('DOMContentLoaded', () => window.StandChat?.initiallyHideChatButton());</script>
+</head>
+<body>
+  <sx-example-bar></sx-example-bar>
+
+  <div class="orchard">
+    <header class="nav">
+      <a class="logo" href="#">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14"/><path d="M5 16c2.5-7 5.5-7 8 0s5.5 7 8 0 4-5 6-3"/></svg>
+        Signal Orchard
+      </a>
+      <nav aria-label="Signal Orchard">
+        <a href="#modules">Modules</a>
+        <a href="#systems">Systems</a>
+        <a href="#">Cases</a>
+        <a href="#">Learn</a>
+      </nav>
+      <a class="cart" href="#">Cart <span>0</span></a>
+    </header>
+
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="tag">Hand-built in small batches</p>
+        <h1>Grow your first <mark>modular</mark> synth.</h1>
+        <p class="lede">Bright, well-labelled Eurorack modules that make sense the first time you patch them, and people who help you choose.</p>
+        <div class="cta">
+          <a class="btn primary" href="#systems">See starter systems</a>
+          <a class="btn" href="#modules">Browse modules</a>
+        </div>
+      </div>
+      <img class="hero-art" src="hero.svg" alt="Two rows of bright modular synthesizer modules, patched together with colourful cables.">
+    </section>
+
+    <section class="modules" id="modules">
+      <div class="section-head">
+        <h2>Six modules. Endless patches.</h2>
+        <p>Each one does one job well and labels every jack. Start with three, and add the rest when you get curious.</p>
+      </div>
+      <div class="catalog">
+        <article>
+          <svg class="panel" viewBox="0 0 100 254" aria-hidden="true"><use href="modules.svg#seed"/></svg>
+          <div>
+            <h3>Seed <span>Oscillator</span></h3>
+            <p>A warm analog VCO with sine, triangle and saw out at once. Tracks eight octaves.</p>
+            <p class="spec">10 HP · <strong>€249</strong></p>
+          </div>
+        </article>
+        <article>
+          <svg class="panel" viewBox="0 0 120 254" aria-hidden="true"><use href="modules.svg#bloom"/></svg>
+          <div>
+            <h3>Bloom <span>Filter</span></h3>
+            <p>Low-, band- and high-pass with a resonance that sings instead of screams.</p>
+            <p class="spec">12 HP · <strong>€229</strong></p>
+          </div>
+        </article>
+        <article>
+          <svg class="panel" viewBox="0 0 60 254" aria-hidden="true"><use href="modules.svg#root"/></svg>
+          <div>
+            <h3>Root <span>LFO</span></h3>
+            <p>Slow movement for everything else: from glacial sweeps to audio-rate wobble.</p>
+            <p class="spec">6 HP · <strong>€139</strong></p>
+          </div>
+        </article>
+        <article>
+          <svg class="panel" viewBox="0 0 40 254" aria-hidden="true"><use href="modules.svg#pollen"/></svg>
+          <div>
+            <h3>Pollen <span>Noise</span></h3>
+            <p>White and pink noise for hi-hats, wind, surf and happy accidents.</p>
+            <p class="spec">4 HP · <strong>€89</strong></p>
+          </div>
+        </article>
+        <article>
+          <svg class="panel" viewBox="0 0 80 254" aria-hidden="true"><use href="modules.svg#canopy"/></svg>
+          <div>
+            <h3>Canopy <span>Mixer</span></h3>
+            <p>Four channels with sliders you can play, plus a headphone-ready output.</p>
+            <p class="spec">8 HP · <strong>€159</strong></p>
+          </div>
+        </article>
+        <article>
+          <svg class="panel" viewBox="0 0 160 254" aria-hidden="true"><use href="modules.svg#stem"/></svg>
+          <div>
+            <h3>Stem <span>Sequencer</span></h3>
+            <p>Eight steps, a knob for each. The fastest way from a drone to a melody.</p>
+            <p class="spec">16 HP · <strong>€329</strong></p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- The stand-card. Its wrapper holds `hidden`, so the section appears only
+         when Stand has someone who can answer. -->
+    <section class="advisor" hidden data-stand-reveal data-og-focus>
+      <stand-card
+        spotlight
+        identity="avatar name title"
+        theme="horizontal"
+        greeting="Tell me about the music you make, and I'll sketch a first rack that fits it."
+        prompt="The visitor is on Signal Orchard's page for new modular synth players. Catalog: Seed VCO €249 (10 HP), Bloom filter €229 (12 HP), Root LFO €139 (6 HP), Pollen noise €89 (4 HP), Canopy mixer €159 (8 HP), Stem sequencer €329 (16 HP). Starter systems: Sprout 42 HP €890, Grove 84 HP €1,690. Suggest a first system of three to five modules for their music, current gear and budget, with one line on why each module earns its space. Ask at most one follow-up question."
+        dismiss-label="Keep browsing"
+        analytics-id="first-rack">
+        <img slot="media" src="rack.svg" alt="">
+        <p class="card-kicker">Not sure where to start?</p>
+        <h2>Tell us what you play. We'll sketch your first rack.</h2>
+        <p>Describe your music, the gear you already have and a rough budget. We'll suggest three to five modules that work together, with room to grow.</p>
+        <textarea data-stand-visitor-message rows="3" aria-label="What music do you make?" placeholder="Ambient drones on a laptop. I want something hands-on for about €900."></textarea>
+        <button slot="actions" type="button" data-stand-action>Sketch my rack</button>
+        <span slot="footer">A synth nerd or our AI Stand-in replies in seconds.</span>
+      </stand-card>
+    </section>
+
+    <section class="systems" id="systems">
+      <div class="section-head">
+        <h2>Starter systems</h2>
+        <p>Powered case, modules and cables, tested together before they ship.</p>
+      </div>
+      <div class="tiers">
+        <article class="tier" style="--accent: #9BE564">
+          <h3>Sprout</h3>
+          <p class="size">42 HP · 1 row</p>
+          <p>Seed, Bloom, Root and Canopy. Drones, basslines and your first hundred patches.</p>
+          <p class="price">€890</p>
+        </article>
+        <article class="tier featured" style="--accent: #FFD23F">
+          <h3>Grove</h3>
+          <p class="size">84 HP · 1 row</p>
+          <p>Everything in Sprout, plus Stem, Pollen and a second Seed. Melodies that move.</p>
+          <p class="price">€1,690</p>
+        </article>
+        <article class="tier" style="--accent: #FF5C8A">
+          <h3>Orchard</h3>
+          <p class="size">104 HP · 2 rows</p>
+          <p>The full family, doubled where it counts. A complete voice for the studio or the stage.</p>
+          <p class="price">€2,480</p>
+        </article>
+      </div>
+
+      <stand-card
+        hidden
+        class="case-fit"
+        data-stand-action
+        theme="outlined"
+        greeting="Tell me your case size and what's already in it, and I'll check what fits."
+        prompt="The visitor already owns a Eurorack case and wants to know which Signal Orchard modules fit. Ask for the case size (HP and rows) and the modules they have, then check space against the catalog: Seed 10 HP, Bloom 12 HP, Root 6 HP, Pollen 4 HP, Canopy 8 HP, Stem 16 HP."
+        analytics-id="case-fit">
+        <strong>Already have a case?</strong>
+        <span>Ask what fits the space you have left →</span>
+      </stand-card>
+    </section>
+
+    <footer class="foot">
+      <span class="logo">Signal Orchard</span>
+      <span>A fictional synth maker, made up for this example.</span>
+    </footer>
+  </div>
+
+  <section id="how-it-works" class="sx-explainer">
+    <div class="sx-wrap">
+      <p class="sx-eyebrow">How it works</p>
+      <h2>A stand-card that starts the conversation in the visitor's words</h2>
+      <p class="sx-lead">Some questions need more than a button: a bit of explanation, a picture, a place to type. <code>&lt;stand-card&gt;</code> wraps your own markup in a chat invitation. Add <code>spotlight</code> and it steps forward at the moment the visitor scrolls past it.</p>
+      <p>This page also hides Stand's floating button, so the cards speak for themselves:</p>
+      <pre class="sx-code" data-file="index.html"><code class="language-html">&lt;script&gt;addEventListener('DOMContentLoaded', () =&gt; window.StandChat?.initiallyHideChatButton());&lt;/script&gt;</code></pre>
+
+      <h3>Try it</h3>
+      <ol class="sx-steps">
+        <li>Scroll down past the modules. When the card reaches the middle of the screen, it moves to the center over a blurred page.</li>
+        <li>Type what you play, for example <em>"techno on a drum machine, about €600"</em>, and press <strong>Sketch my rack</strong>. Your text becomes the first message in the chat.</li>
+        <li>Under the starter systems, the whole <strong>Already have a case?</strong> card is clickable. That is the compact version.</li>
+      </ol>
+
+      <div class="sx-note">Chats here use <code>data-stand-id="demo"</code>, Stand Chat's shared demo site, which works on any domain. Its demo Stand-in follows the page's greeting and prompt, but won't speak for the made-up business. With your own Site ID, your own Stand-ins answer.</div>
+
+      <h3>The card</h3>
+      <pre class="sx-code" data-file="index.html" data-wrap><code class="language-html">&lt;section hidden data-stand-reveal&gt;
+  &lt;stand-card
+    spotlight
+    identity="avatar name title"
+    theme="horizontal"
+    greeting="Tell me about the music you make, and I'll sketch a first rack that fits it."
+    prompt="The visitor is new to modular. Catalog: Seed VCO €249 (10 HP), Bloom filter €229 (12 HP)… Suggest three to five modules for their music and budget."
+    dismiss-label="Keep browsing"
+    analytics-id="first-rack"&gt;
+    &lt;img slot="media" src="rack.svg" alt=""&gt;
+    &lt;h2&gt;Tell us what you play. We'll sketch your first rack.&lt;/h2&gt;
+    &lt;p&gt;Describe your music, the gear you already have and a rough budget.&lt;/p&gt;
+    &lt;textarea data-stand-visitor-message rows="3" aria-label="What music do you make?"&gt;&lt;/textarea&gt;
+    &lt;button slot="actions" type="button" data-stand-action&gt;Sketch my rack&lt;/button&gt;
+    &lt;span slot="footer"&gt;A synth nerd or our AI Stand-in replies in seconds.&lt;/span&gt;
+  &lt;/stand-card&gt;
+&lt;/section&gt;</code></pre>
+      <ul>
+        <li><strong>A card does nothing until you mark an action.</strong> <code>data-stand-action</code> goes on exactly one button, or on the card itself to make the whole card clickable.</li>
+        <li><code>data-stand-visitor-message</code> marks the field whose text is sent as the visitor's first message. If it's empty, the chat simply opens.</li>
+        <li><code>identity="avatar name title"</code> adds a header showing who will answer. For an AI Stand-in it also shows an <em>AI</em> badge.</li>
+        <li><code>spotlight</code> centers the card over a blurred page once, as it crosses the middle of the screen. Dismissing or using it is remembered per card and page in that browser. <code>dismiss-label</code> renames the generated Cancel button.</li>
+        <li><code>greeting</code> and <code>prompt</code> work as on <code>&lt;stand-button&gt;</code>: an opening line from your side, and private context for whoever answers.</li>
+        <li>Slots: <code>media</code>, <code>actions</code>, <code>footer</code>, and the default slot for everything else. Themes: <code>outlined</code>, <code>elevated</code>, <code>horizontal</code>, <code>cover-media</code>, <code>stretch-media</code>, <code>divided-footer</code>.</li>
+      </ul>
+
+      <h3>Styling it</h3>
+      <p>Your own content inside the card is ordinary light DOM, so style it like any other markup. The card's own surfaces are exposed as parts.</p>
+      <pre class="sx-code" data-file="style.css"><code class="language-css">.advisor stand-card::part(card) {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  border: 3px solid #121212;
+  border-radius: 22px;
+  box-shadow: 10px 10px 0 #121212;
+}
+
+.advisor stand-card::part(header-suffix) { background: #FF5C8A; }
+
+.advisor stand-card [data-stand-action] {
+  border: 3px solid #121212;
+  background: #FFD23F;
+  color: #121212;
+}</code></pre>
+
+      <h3>Good to know</h3>
+      <ul>
+        <li><strong>Put <code>hidden</code> in one place.</strong> Either on the card, or on one wrapper marked <code>data-stand-reveal</code> (as here) so the surrounding section appears with it.</li>
+        <li><strong>Use <code>type="button"</code></strong> on the action, so it can't submit a surrounding form before Stand loads.</li>
+        <li><strong>Visitor text goes to an open chat too.</strong> If the visitor already has a conversation, the message is added to it. The greeting and prompt only apply to new ones.</li>
+      </ul>
+      <p class="sx-note">The spotlight shows once per browser. To see it again, <button type="button" class="sx-inline-button" onclick="for (const key of Object.keys(localStorage)) if (key.startsWith('stand_chat_spotlight:')) localStorage.removeItem(key); location.reload();">reset it and reload</button>. That button is a demo helper, not part of the example.</p>
+
+      <h3>Copy this example</h3>
+      <pre class="sx-code"><code class="language-sh">npx degit standchat/examples/stand-card my-stand-card</code></pre>
+
+      <ul class="sx-links">
+        <li><a href="https://stand.chat/features/stand-card">stand-card reference ↗</a></li>
+        <li><a href="https://stand.chat/guide/tune-chat-behavior">Guide: tune chat behavior ↗</a></li>
+        <li><a href="https://github.com/standchat/examples/tree/main/stand-card/">Source on GitHub ↗</a></li>
+      </ul>
+    </div>
+  </section>
+</body>
+</html>

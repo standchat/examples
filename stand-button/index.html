@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>stand-button at every tricky step</title>
+  <meta name="description" content="A sourdough recipe with a &lt;stand-button&gt; wherever bakers get stuck. Each opens chat with its own greeting and private context, and a show-when banner changes with who is answering.">
+  <meta name="author" content="Stand Chat">
+  <link rel="author" href="https://stand.chat/">
+  <meta name="keywords" content="stand-button, prompt, show-when, ::part">
+  <meta property="og:title" content="stand-button at every tricky step">
+  <meta property="og:description" content="A sourdough recipe with a &lt;stand-button&gt; wherever bakers get stuck. Each opens chat with its own greeting and private context, and a show-when banner changes with who is answering.">
+  <meta property="og:image" content="https://examples.stand.chat/stand-button/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="stylesheet" href="/_shared/example.css">
+  <script type="module" src="/_shared/example.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400;1,6..72,600&display=swap">
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Stand Chat. The <stand-button> elements below need nothing else. -->
+  <script defer src="https://cdn.stand.chat/widget/stand.js" data-stand-id="demo"></script>
+  <!-- No floating chat button: on this page, the recipe's own buttons open the chat. -->
+  <script>addEventListener('DOMContentLoaded', () => window.StandChat?.initiallyHideChatButton());</script>
+</head>
+<body>
+  <sx-example-bar></sx-example-bar>
+
+  <div class="larkspur">
+    <header class="masthead">
+      <a class="brand" href="#">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 29V9M16 13c-4-1-6-4-6-7 4 1 6 4 6 7Zm0 0c4-1 6-4 6-7-4 1-6 4-6 7Zm0 7c-4-1-6-4-6-7 4 1 6 4 6 7Zm0 0c4-1 6-4 6-7-4 1-6 4-6 7Z"/></svg>
+        Larkspur Mill
+      </a>
+      <nav aria-label="Larkspur Mill">
+        <a href="#">Flour</a>
+        <a href="#">Baking school</a>
+        <a href="#" aria-current="page">Recipes</a>
+        <a href="#">Shop</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="kicker">Recipe · Sourdough · Two days</p>
+          <h1>The Larkspur country loaf</h1>
+          <p class="dek">A crackling, open-crumbed sourdough for home ovens. One Dutch oven, no mixer, and a baker a click away at every step.</p>
+          <dl class="facts">
+            <div><dt>Active</dt><dd>45 min</dd></div>
+            <div><dt>Total</dt><dd>36 h</dd></div>
+            <div><dt>Makes</dt><dd>2 loaves</dd></div>
+            <div><dt>Hydration</dt><dd>75%</dd></div>
+          </dl>
+
+          <!-- Shown only when a person is answering. -->
+          <aside class="hotline" hidden data-stand-reveal>
+            <p><strong>A baker is in the kitchen right now.</strong> Stuck on any step? Ask a real person.</p>
+            <stand-button
+              show-when="rep"
+              message="Hi! I'm in the bakery today. Where are you in the recipe?"
+              prompt="The visitor opened chat from the top of the Larkspur country loaf recipe: a two-day sourdough, 75% hydration, baked in a Dutch oven. Ask which step they are on if it isn't clear."
+              analytics-id="hotline-rep">
+              Ask a baker
+            </stand-button>
+          </aside>
+
+          <!-- Shown only when an AI Stand-in is answering. -->
+          <aside class="hotline" hidden data-stand-reveal>
+            <p><strong>Our baking assistant knows every Larkspur recipe.</strong> Ask about any step, day or night.</p>
+            <stand-button
+              show-when="standin"
+              message="Hi! I know this loaf inside out. Which step are you on?"
+              prompt="The visitor opened chat from the top of the Larkspur country loaf recipe: a two-day sourdough, 75% hydration, baked in a Dutch oven. Ask which step they are on if it isn't clear."
+              analytics-id="hotline-ai">
+              Ask the assistant
+            </stand-button>
+          </aside>
+        </div>
+        <figure class="hero-art">
+          <img src="loaf.svg" alt="A scored sourdough loaf with a tall ear, on a wooden board beside a striped linen towel and ears of wheat.">
+        </figure>
+      </section>
+
+      <div class="recipe">
+      <section class="ingredients" aria-labelledby="ingredients">
+        <h2 id="ingredients">Ingredients <span>for two loaves</span></h2>
+        <table>
+          <thead><tr><th scope="col">Ingredient</th><th scope="col">Grams</th><th scope="col">Baker's %</th></tr></thead>
+          <tbody>
+            <tr><td>Larkspur bread flour</td><td>800</td><td>80%</td></tr>
+            <tr><td>Stone-ground whole wheat</td><td>200</td><td>20%</td></tr>
+            <tr><td>Water, 30 °C</td><td>750</td><td>75%</td></tr>
+            <tr><td>Levain, from step 1</td><td>200</td><td>20%</td></tr>
+            <tr><td>Fine sea salt</td><td>20</td><td>2%</td></tr>
+          </tbody>
+        </table>
+        <stand-button
+          hidden
+          message="Out of something? Tell me what you have, and I'll help you adjust the recipe."
+          prompt="The visitor is looking at the ingredients of the Larkspur country loaf: 800 g bread flour (12.5% protein), 200 g whole wheat, 750 g water, 200 g levain at 100% hydration, 20 g salt. Help with substitutions and scaling, and recalculate grams when asked."
+          analytics-id="ingredients">
+          Swap an ingredient
+        </stand-button>
+      </section>
+
+      <section class="method" aria-labelledby="method">
+        <h2 id="method">Method</h2>
+        <ol class="steps">
+          <li>
+            <p class="when">Day 1 · 9 pm · 5 min</p>
+            <h3>Build the levain</h3>
+            <p>Mix 50 g active starter with 100 g warm water and 100 g whole wheat flour in a jar. Cover loosely and leave overnight at about 24 °C.</p>
+            <p class="cue"><strong>Ready when</strong> it has doubled, the top is domed and bubbly, and it smells pleasantly sour, like yogurt.</p>
+            <stand-button
+              hidden
+              message="Let's check your levain. How much has it risen since you fed it, and how does it smell?"
+              prompt="The visitor is on step 1 (building the levain) of the Larkspur country loaf: 50 g starter, 100 g water and 100 g whole wheat, 8–12 h at about 24 °C. Ready means doubled, domed, bubbly and yogurt-sour. Help them judge readiness from what they describe; the float test is only a rough hint."
+              analytics-id="step-1-levain">
+              Is my levain ready?
+            </stand-button>
+          </li>
+          <li>
+            <p class="when">Day 2 · 8 am · rest 45 min</p>
+            <h3>Autolyse</h3>
+            <p>Mix 800 g bread flour, 200 g whole wheat and 750 g water at 30 °C until no dry flour remains. Cover and rest. The flour hydrates and the dough starts building strength on its own.</p>
+            <stand-button
+              hidden
+              message="The rest does more than it looks like. What would you like to know about the autolyse?"
+              prompt="The visitor is on step 2 (autolyse) of the Larkspur country loaf: 800 g bread flour, 200 g whole wheat and 750 g water at 30 °C, rested 45 minutes before the levain and salt go in. Explain what the rest does (hydration, gluten development, extensibility) and whether they can shorten, extend or skip it."
+              analytics-id="step-2-autolyse">
+              Why rest the dough?
+            </stand-button>
+          </li>
+          <li>
+            <p class="when">8:45 am · 10 min</p>
+            <h3>Add levain and salt</h3>
+            <p>Add 200 g levain and squeeze it through the dough with a wet hand. After 20 minutes, sprinkle in 20 g salt with a splash of water and pinch until it disappears.</p>
+            <stand-button
+              hidden
+              message="Mixing in the levain and salt can feel messy. What's giving you trouble?"
+              prompt="The visitor is on step 3 (adding 200 g levain, then 20 g salt with a splash of water 20 minutes later) of the Larkspur country loaf, at 75% hydration. Help them work the levain and salt in by hand: wet hands, pinch and fold, and how the dough should feel afterwards."
+              analytics-id="step-3-mix">
+              Help mixing it in
+            </stand-button>
+          </li>
+          <li>
+            <p class="when">9:30–11 am · 4 sets</p>
+            <h3>Stretch and fold</h3>
+            <p>Every 30 minutes, lift one side of the dough with wet hands, stretch it up and fold it over. Turn the bowl and repeat on all four sides. It goes from shaggy to smooth and elastic.</p>
+            <stand-button
+              hidden
+              message="Sticky dough is normal at this stage, but let's make sure. What happens when you stretch it?"
+              prompt="The visitor is on step 4 (stretch and folds) of the Larkspur country loaf: 75% hydration, 20% whole wheat, four sets 30 minutes apart. Reassure them that early stickiness is normal. Suggest wet hands, a bench scraper and extra folds before suggesting less water next time."
+              analytics-id="step-4-folds">
+              My dough is too sticky
+            </stand-button>
+          </li>
+          <li data-og-focus>
+            <p class="when">Until about 1 pm</p>
+            <h3>Bulk fermentation</h3>
+            <p>Leave the dough covered after the last fold. At 24 °C, bulk takes four to five hours from adding the levain. Warmer kitchens are faster, cooler ones slower.</p>
+            <p class="cue"><strong>Done when</strong> the dough has grown by about half, is domed and jiggly, and shows bubbles on the top and sides.</p>
+            <stand-button
+              hidden
+              message="Bulk is the trickiest judgement call. How much has your dough grown, and how warm is your kitchen?"
+              prompt="The visitor is on step 5 (bulk fermentation) of the Larkspur country loaf: 1000 g flour, 75% hydration, 20% levain, 2% salt, target 24 °C, 4–5 h from adding the levain. Done means about 50% rise, domed, jiggly, visible bubbles. Help them decide whether to end bulk now or wait, and warn about over-proofing if it has doubled."
+              analytics-id="step-5-bulk">
+              Is bulk done?
+            </stand-button>
+          </li>
+          <li>
+            <p class="when">1 pm · rest 30 min</p>
+            <h3>Divide and pre-shape</h3>
+            <p>Tip the dough onto an unfloured counter, cut it in two, and round each piece into a loose ball with a bench scraper. Let them relax, uncovered.</p>
+            <stand-button
+              hidden
+              message="A pre-shape that relaxes a little is normal. How much has yours spread, and does it hold any shape?"
+              prompt="The visitor is on step 6 (divide and pre-shape, then a 30-minute bench rest) of the Larkspur country loaf, 75% hydration. If the rounds spread flat, discuss weak gluten or over-proofing and suggest a tighter pre-shape or a second pre-shape."
+              analytics-id="step-6-preshape">
+              Dough spreading flat?
+            </stand-button>
+          </li>
+          <li>
+            <p class="when">1:30 pm · 10 min</p>
+            <h3>Shape</h3>
+            <p>Flour the top, flip, and fold into a tight round: bottom up, sides in, top down, then roll it toward you to build tension. Place it seam side up in a floured basket.</p>
+            <stand-button
+              hidden
+              message="Shaping takes practice. What's happening: is the dough spreading, tearing, or sticking to everything?"
+              prompt="The visitor is on step 7 (final shaping into a boule) of the Larkspur country loaf, 75% hydration, going seam side up into a floured banneton. Diagnose from their description (slack, tearing, sticking) and give one or two concrete corrections."
+              analytics-id="step-7-shape">
+              Help with shaping
+            </stand-button>
+          </li>
+          <li>
+            <p class="when">Overnight · 12–16 h</p>
+            <h3>Cold proof</h3>
+            <p>Cover the baskets and refrigerate at 4 °C. The cold deepens the flavour and makes the dough much easier to score.</p>
+            <stand-button
+              hidden
+              message="Plans change. How long has your dough been in the fridge, and when can you bake?"
+              prompt="The visitor is on step 8 (cold proof at 4 °C for 12–16 hours) of the Larkspur country loaf. Advise on the proofing window: up to about 24 hours is usually fine in a cold fridge. Mention the poke test and the signs of over-proofing."
+              analytics-id="step-8-cold-proof">
+              Can I proof longer?
+            </stand-button>
+          </li>
+          <li>
+            <p class="when">Day 3 · 8 am · 45 min</p>
+            <h3>Bake</h3>
+            <p>Preheat the oven with a Dutch oven inside to 250 °C for 45 minutes. Turn a loaf onto parchment, score one confident curve at a shallow angle, and bake 20 minutes with the lid on, then 25 minutes uncovered at 230 °C, until deep brown.</p>
+            <p class="cue"><strong>Wait an hour</strong> before cutting. The crumb is still setting.</p>
+            <stand-button
+              hidden
+              message="Let's look at your loaf. What did you get: flat, pale, no ear, or a dense crumb?"
+              prompt="The visitor is on step 9 (baking) of the Larkspur country loaf: Dutch oven preheated to 250 °C, 20 min lid on, then 25 min lid off at 230 °C. Diagnose what they describe (flat, pale, no ear, dense, gummy) and trace it back to the likely step: bulk, shaping, proofing or scoring."
+              analytics-id="step-9-bake">
+              Troubleshoot my bake
+            </stand-button>
+          </li>
+        </ol>
+      </section>
+      </div>
+    </main>
+
+    <footer class="colophon">
+      <span class="brand">Larkspur Mill</span>
+      <span>A fictional mill and baking school, made up for this example.</span>
+    </footer>
+  </div>
+
+  <section id="how-it-works" class="sx-explainer">
+    <div class="sx-wrap">
+      <p class="sx-eyebrow">How it works</p>
+      <h2>A stand-button wherever people get stuck</h2>
+      <p class="sx-lead">Recipes, docs and setup guides have predictable sticking points. Put a <code>&lt;stand-button&gt;</code> right there. Each one opens chat with its own greeting, and a private prompt tells whoever answers exactly where the visitor is.</p>
+      <p>The buttons need no JavaScript; the element comes with <code>stand.js</code>. One line hides Stand's own floating button, so the recipe's buttons are the way in:</p>
+      <pre class="sx-code" data-file="index.html"><code class="language-html">&lt;script&gt;addEventListener('DOMContentLoaded', () =&gt; window.StandChat?.initiallyHideChatButton());&lt;/script&gt;</code></pre>
+
+      <h3>Try it</h3>
+      <ol class="sx-steps">
+        <li>Every step has its own button. In step 5, click <strong>Is bulk done?</strong> The chat opens with a greeting about bulk fermentation.</li>
+        <li>Compare it with <strong>Help with shaping</strong> in step 7: a different greeting and different context.</li>
+        <li>At the top, a banner offers a real baker or the AI assistant, depending on who is answering right now.</li>
+      </ol>
+
+      <div class="sx-note">Chats here use <code>data-stand-id="demo"</code>, Stand Chat's shared demo site, which works on any domain. Its demo Stand-in follows the page's greeting and prompt, but won't speak for the made-up business. With your own Site ID, your own Stand-ins answer.</div>
+
+      <h3>One button</h3>
+      <pre class="sx-code" data-file="index.html" data-wrap><code class="language-html">&lt;stand-button
+  hidden
+  message="Bulk is the trickiest judgement call. How much has your dough grown, and how warm is your kitchen?"
+  prompt="The visitor is on step 5 (bulk fermentation) of the Larkspur country loaf: 75% hydration, 20% levain, 24 °C, 4–5 h. Help them decide whether to end bulk now or wait."
+  analytics-id="step-5-bulk"&gt;
+  Is bulk done?
+&lt;/stand-button&gt;</code></pre>
+      <ul>
+        <li><code>hidden</code> keeps the button out of sight until Stand knows someone can answer. Stand removes it then.</li>
+        <li>Add <code>avatar</code> to show the face of whoever will answer. This page leaves it off to keep the buttons in the recipe's own style.</li>
+        <li><code>message</code> is the opening greeting from their side, not something the visitor says.</li>
+        <li><code>prompt</code> is private context for the person or AI answering. Visitors don't see it in the chat.</li>
+        <li><code>analytics-id</code> labels the placement, so you can see which steps draw the most questions. That's a map of where your recipe, docs or product confuse people.</li>
+      </ul>
+
+      <h3>Different copy for a person and for AI</h3>
+      <pre class="sx-code" data-file="index.html" data-wrap><code class="language-html">&lt;aside hidden data-stand-reveal&gt;
+  &lt;p&gt;&lt;strong&gt;A baker is in the kitchen right now.&lt;/strong&gt; Ask a real person.&lt;/p&gt;
+  &lt;stand-button show-when="rep" message="Hi! I'm in the bakery today. Where are you in the recipe?"&gt;
+    Ask a baker
+  &lt;/stand-button&gt;
+&lt;/aside&gt;
+
+&lt;aside hidden data-stand-reveal&gt;
+  &lt;p&gt;&lt;strong&gt;Our baking assistant knows every recipe.&lt;/strong&gt; Ask any time.&lt;/p&gt;
+  &lt;stand-button show-when="standin" message="Hi! I know this loaf inside out. Which step are you on?"&gt;
+    Ask the assistant
+  &lt;/stand-button&gt;
+&lt;/aside&gt;</code></pre>
+      <p><code>show-when="rep"</code> shows a button only when a person is answering, and <code>show-when="standin"</code> only for an AI Stand-in. Put <code>hidden</code> on a wrapper marked <code>data-stand-reveal</code> and the copy around the button appears with it.</p>
+
+      <h3>Make it yours</h3>
+      <pre class="sx-code" data-file="style.css"><code class="language-css">stand-button { font-family: 'Newsreader', Georgia, serif; }
+
+stand-button::part(button) {
+  border: 1.5px solid #8A4B24;
+  border-radius: 999px;
+  font-style: italic;
+}
+
+stand-button:hover::part(button) { background: #8A4B24; color: #FFF7EA; }</code></pre>
+      <p>Style the inside with <code>::part(button)</code>, <code>::part(icon)</code> and <code>::part(label)</code>.</p>
+
+      <h3>Good to know</h3>
+      <ul>
+        <li><strong>Greeting and prompt start new conversations.</strong> If the visitor already has a chat going, a button simply reopens it.</li>
+        <li><strong>Prompts are private, not secret.</strong> They're in your HTML, so keep them to page facts and guidance.</li>
+        <li><strong><code>show-when</code> doesn't change who answers.</strong> It filters on the responder Stand has already chosen for this visitor.</li>
+      </ul>
+
+      <h3>Copy this example</h3>
+      <pre class="sx-code"><code class="language-sh">npx degit standchat/examples/stand-button my-recipe</code></pre>
+
+      <ul class="sx-links">
+        <li><a href="https://stand.chat/features/stand-button">stand-button reference ↗</a></li>
+        <li><a href="https://stand.chat/features/private-page-context">Private page context ↗</a></li>
+        <li><a href="https://github.com/standchat/examples/tree/main/stand-button/">Source on GitHub ↗</a></li>
+      </ul>
+    </div>
+  </section>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <!-- The site's default social image. Capture it with: npm run build && npm run og -- _shared -->
+  <title>Stand Chat Examples social image</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=PT+Mono&family=PT+Sans+Caption:wght@700&family=PT+Sans:wght@400;700&display=swap">
+  <style>
+    * { box-sizing: border-box; }
+    body { position: relative; width: 1200px; height: 630px; margin: 0; overflow: hidden; background: #0E0E0E; color: #fff; font-family: 'PT Sans', sans-serif; }
+    .copy { position: absolute; top: 64px; left: 64px; width: 520px; }
+    .brand { margin: 0; font: 700 24px/1 'PT Sans Caption', sans-serif; }
+    h1 { margin: 64px 0 22px; font: 700 64px/1.02 'PT Sans Caption', sans-serif; letter-spacing: -.015em; }
+    p { margin: 0; color: #BDBDBD; font-size: 25px; line-height: 1.4; }
+    code { display: inline-block; margin-top: 40px; padding: 10px 16px; border-radius: 10px; background: #1B1D20; color: #9BE3AC; font: 17px 'PT Mono', monospace; }
+    code .t { color: #71DCFD; }
+    code .a { color: #FDD02E; }
+    .grid { position: absolute; top: 40px; right: -40px; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; width: 640px; transform: rotate(-6deg); }
+    .grid img { width: 100%; border: 1px solid #2A2A2A; border-radius: 12px; box-shadow: 0 20px 40px rgba(0, 0, 0, .55); }
+    .grid img:nth-child(2n) { margin-top: 60px; }
+  </style>
+</head>
+<body>
+  <div class="copy">
+    <p class="brand">Stand Chat Examples</p>
+    <h1>Copy-paste Stand Chat integrations</h1>
+    <p>Small, working examples in plain HTML, CSS and JavaScript. Public domain.</p>
+    <code>&lt;<span class="t">stand-card</span> <span class="a">spotlight</span>&gt;</code>
+  </div>
+  <div class="grid" data-grid></div>
+  <script type="module">
+    // Tiles are the examples' own social images, repeated to fill the collage.
+    const examples = await (await fetch('/examples.json')).json();
+    const images = examples.map((e) => e.image).filter((src) => src.startsWith('/') && !src.startsWith('/_shared/'));
+    const grid = document.querySelector('[data-grid]');
+    for (let i = 0; images.length && i < 6; i++) {
+      grid.append(Object.assign(document.createElement('img'), { src: images[i % images.length], alt: '' }));
+    }
+  </script>
+</body>
+</html>

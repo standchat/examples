@@ -1,0 +1,225 @@
+body { margin: 0; background: #FBF6EC; }
+
+.larkspur {
+  --paper: #FBF6EC;
+  --cream: #F4EAD7;
+  --card: #FFFCF6;
+  --ink: #2B1E15;
+  --text: #4B3C30;
+  --muted: #86705D;
+  --crust: #8A4B24;
+  --rust: #B4522E;
+  --wheat: #D7AE62;
+  --line: #E7D9C2;
+  color: var(--ink);
+  font: 400 19px/1.6 'Newsreader', Georgia, serif;
+  -webkit-font-smoothing: antialiased;
+}
+.larkspur * { box-sizing: border-box; }
+.larkspur :is(h1, h2, h3, .brand) {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -.015em;
+}
+
+/* Masthead */
+.larkspur .masthead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 22px 24px;
+  border-bottom: 1px solid var(--line);
+}
+.larkspur .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  font-size: 23px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.larkspur .brand svg {
+  width: 28px;
+  height: 28px;
+  fill: none;
+  stroke: var(--rust);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.larkspur .masthead nav { display: flex; gap: 28px; font-size: 17px; }
+.larkspur .masthead nav a { color: var(--text); text-decoration: none; }
+.larkspur .masthead nav a:hover { color: var(--ink); }
+.larkspur .masthead nav a[aria-current] {
+  color: var(--ink);
+  text-decoration: underline 2px var(--wheat);
+  text-underline-offset: 7px;
+}
+
+.larkspur main { max-width: 1180px; margin: 0 auto; padding: 0 24px 104px; }
+
+/* Hero */
+.larkspur .hero {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 48px;
+  align-items: center;
+  padding: 56px 0 24px;
+}
+.larkspur .kicker {
+  margin: 0 0 18px;
+  color: var(--rust);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.larkspur h1 { margin: 0 0 20px; font-size: clamp(46px, 6vw, 78px); line-height: 1; }
+.larkspur .dek { max-width: 34ch; margin: 0 0 28px; color: var(--text); font-size: 22px; line-height: 1.5; }
+.larkspur .facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 36px;
+  margin: 0 0 28px;
+  padding: 16px 0;
+  border-block: 1px solid var(--line);
+}
+.larkspur .facts dt { color: var(--muted); font-size: 13px; letter-spacing: .12em; text-transform: uppercase; }
+.larkspur .facts dd { margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 25px; }
+.larkspur .hero-art { margin: 0; }
+.larkspur .hero-art img { display: block; width: 100%; height: auto; }
+
+.larkspur .hotline {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 16px 16px 16px 20px;
+  border: 1px dashed #D2B98F;
+  border-radius: 18px;
+  background: var(--cream);
+}
+.larkspur .hotline[hidden] { display: none; }
+.larkspur .hotline p { margin: 0; color: var(--text); font-size: 17px; line-height: 1.45; }
+.larkspur .hotline p strong { color: var(--ink); font-weight: 600; }
+
+/* Recipe: sticky ingredients next to the method */
+.larkspur .recipe {
+  display: grid;
+  grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+  gap: 64px;
+  align-items: start;
+  margin-top: 48px;
+}
+.larkspur h2 { margin: 0 0 20px; font-size: 40px; line-height: 1.1; }
+.larkspur h2 span { color: var(--muted); font-family: 'Newsreader', Georgia, serif; font-size: 18px; font-style: italic; letter-spacing: 0; }
+
+.larkspur .ingredients {
+  position: sticky;
+  top: 24px;
+  padding: 28px 28px 30px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--card);
+  box-shadow: 0 24px 48px -36px rgba(74, 42, 20, .45);
+}
+.larkspur .ingredients h2 { font-size: 30px; }
+.larkspur table { width: 100%; margin: 0 0 22px; border-collapse: collapse; font-size: 17px; }
+.larkspur th { padding: 0 0 8px; color: var(--muted); font-size: 12px; font-weight: 600; letter-spacing: .1em; text-align: left; text-transform: uppercase; }
+.larkspur td { padding: 10px 0; border-top: 1px solid var(--line); color: var(--text); }
+.larkspur :is(th, td):not(:first-child) { padding-left: 12px; text-align: right; white-space: nowrap; }
+.larkspur td:nth-child(2) { color: var(--ink); font-family: 'Fraunces', Georgia, serif; font-size: 19px; }
+
+/* Method */
+.larkspur .steps { margin: 0; padding: 0; list-style: none; counter-reset: step; }
+.larkspur .steps > li { position: relative; padding: 0 0 48px 88px; counter-increment: step; }
+.larkspur .steps > li::before {
+  content: counter(step);
+  position: absolute;
+  top: -4px;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border: 1.5px solid var(--crust);
+  border-radius: 50%;
+  background: var(--card);
+  color: var(--crust);
+  font: 400 26px/1 'Fraunces', Georgia, serif;
+}
+.larkspur .steps > li::after {
+  content: '';
+  position: absolute;
+  top: 60px;
+  bottom: 4px;
+  left: 27px;
+  width: 1.5px;
+  background: var(--line);
+}
+.larkspur .steps > li:last-child::after { display: none; }
+.larkspur .when {
+  margin: 0 0 4px;
+  color: var(--rust);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.larkspur .steps h3 { margin: 0 0 10px; font-size: 32px; line-height: 1.15; }
+.larkspur .steps p { margin: 0 0 16px; color: var(--text); }
+.larkspur .cue {
+  padding: 12px 18px;
+  border-left: 3px solid var(--wheat);
+  border-radius: 0 14px 14px 0;
+  background: #F6EDDB;
+  font-size: 17.5px;
+}
+.larkspur .cue strong { color: var(--ink); font-weight: 600; }
+
+/* stand-button, styled to match the page through its parts */
+.larkspur stand-button { font-family: 'Newsreader', Georgia, serif; font-size: 17px; }
+.larkspur stand-button::part(button) {
+  min-height: 2.6rem;
+  padding: .4rem 1.15rem;
+  border: 1.5px solid var(--crust);
+  border-radius: 999px;
+  background: var(--card);
+  box-shadow: 0 2px 0 var(--crust);
+  color: var(--crust);
+  font-style: italic;
+  font-weight: 600;
+}
+.larkspur stand-button:hover::part(button) { background: var(--crust); color: #FFF7EA; }
+.larkspur stand-button:active::part(button) { box-shadow: none; transform: translateY(2px); }
+.larkspur .hotline stand-button { flex: none; }
+.larkspur .hotline stand-button::part(button) { background: var(--crust); color: #FFF7EA; }
+.larkspur .hotline stand-button:hover::part(button) { background: var(--ink); border-color: var(--ink); }
+
+.larkspur .colophon {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 28px 24px 36px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 16px;
+}
+.larkspur .colophon .brand { font-size: 20px; }
+
+@media (max-width: 900px) {
+  .larkspur .masthead nav { display: none; }
+  .larkspur .hero,
+  .larkspur .recipe { grid-template-columns: 1fr; gap: 32px; }
+  .larkspur .hero-art { order: -1; max-width: 520px; }
+  .larkspur .ingredients { position: static; }
+  .larkspur .hotline { flex-direction: column; align-items: flex-start; }
+  .larkspur .steps > li { padding-left: 72px; }
+}

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!--
+    These tags are your example's entry on the front page and its social card.
+    The folder name is the URL: https://examples.stand.chat/your-folder/
+  -->
+  <title>Example name</title>
+  <meta name="description" content="One or two sentences: what this example shows and when you'd use it.">
+  <meta name="author" content="Your Name">
+  <link rel="author" href="https://your-site.example/">
+  <meta name="keywords" content="stand-button, prompt">
+  <meta property="og:title" content="Example name">
+  <meta property="og:description" content="One or two sentences: what this example shows and when you'd use it.">
+  <meta property="og:image" content="https://examples.stand.chat/_shared/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Site chrome: the top bar and "How it works" styles. Your example must work without them. -->
+  <link rel="stylesheet" href="/_shared/example.css">
+  <script type="module" src="/_shared/example.js"></script>
+
+  <!-- Stand Chat's shared demo site: answers on any domain, including localhost. Your own site uses the snippet from Sites in Stand. -->
+  <script defer src="https://cdn.stand.chat/widget/stand.js" data-stand-id="demo"></script>
+
+  <style>
+    body { margin: 0; font-family: system-ui, sans-serif; }
+    .demo { max-width: 720px; margin: 0 auto; padding: 64px 20px; }
+  </style>
+</head>
+<body>
+  <sx-example-bar></sx-example-bar>
+
+  <!-- Your demo: a realistic page where this Stand integration makes sense. -->
+  <main class="demo">
+    <h1>Your demo</h1>
+    <p>Build the page this example lives on.</p>
+    <stand-button hidden message="What would you like to know?">Ask a question</stand-button>
+  </main>
+
+  <!-- The explanation: what it shows, how to try it, and the code that matters. -->
+  <section id="how-it-works" class="sx-explainer">
+    <div class="sx-wrap">
+      <p class="sx-eyebrow">How it works</p>
+      <h2>What this example shows</h2>
+      <p class="sx-lead">One paragraph on the problem and how Stand solves it here.</p>
+
+      <h3>Try it</h3>
+      <ol class="sx-steps">
+        <li>What to click or type.</li>
+      </ol>
+
+      <h3>The code</h3>
+      <pre class="sx-code" data-file="index.html"><code class="language-html">&lt;stand-button hidden message="What would you like to know?"&gt;Ask a question&lt;/stand-button&gt;</code></pre>
+
+      <h3>Copy this example</h3>
+      <pre class="sx-code"><code class="language-sh">npx degit standchat/examples/your-folder my-copy</code></pre>
+    </div>
+  </section>
+</body>
+</html>
