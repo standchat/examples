@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title>Vintage terminal</title>
+  <meta name="description" content="A fully custom chat UI on Stand's Visitor API: a 3D CRT terminal in the corner of the page that fills the screen when you approach, and prints the conversation in green phosphor at 1200 baud.">
+  <meta name="author" content="Stand Chat">
+  <link rel="author" href="https://stand.chat/">
+  <meta name="keywords" content="Visitor API, custom chat UI, WebSocket, three.js">
+  <meta property="og:title" content="Vintage terminal">
+  <meta property="og:description" content="A fully custom chat UI on Stand's Visitor API: a 3D CRT terminal in the corner of the page that fills the screen when you approach, and prints the conversation in green phosphor at 1200 baud.">
+  <meta property="og:image" content="https://examples.stand.chat/vintage-terminal/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="stylesheet" href="/_shared/example.css">
+  <script type="module" src="/_shared/example.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- VT323 is the terminal's character ROM; the rest is the Kilobaud site. -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=JetBrains+Mono:wght@400;500&family=VT323&display=swap">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="terminal.css">
+
+  <!-- The terminal: no stand.js. It talks to Stand's Visitor API directly. -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.min.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module" src="terminal.js"></script>
+</head>
+<body>
+  <sx-example-bar></sx-example-bar>
+
+  <div class="kilobaud">
+    <header class="nav">
+      <a class="logo" href="#">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2.5" y="4.5" width="27" height="23" rx="6"/><path d="M7 16c1.6-4.8 3.2-4.8 4.8 0s3.2 4.8 4.8 0 3.2-4.8 4.8 0 2.4 3.6 3.6 1.4"/></svg>
+        kilobaud
+      </a>
+      <nav aria-label="Kilobaud">
+        <a href="#docs">Docs</a>
+        <a href="#streaming">Learn</a>
+        <a href="#bench">Benchmarks</a>
+        <a href="#dial-in">Community</a>
+      </nav>
+      <span class="version">v4.1</span>
+      <a class="stars" href="#"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg> 18.2k</a>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-copy">
+          <a class="news" href="#streaming"><span>New</span> Streaming forms in v4.1 <b aria-hidden="true">→</b></a>
+          <h1>The web framework that <em>streams.</em></h1>
+          <p class="lede">Kilobaud renders on the server and streams your interface to the browser as fast as your data arrives. The first line in milliseconds, the rest as it's ready. No spinners, no waterfalls, no megabytes of JavaScript.</p>
+          <div class="install">
+            <code><span aria-hidden="true">$</span> npm create kilobaud@latest</code>
+            <button type="button" data-copy="npm create kilobaud@latest">Copy</button>
+          </div>
+          <div class="cta">
+            <a class="button primary" href="#docs">Get started</a>
+            <button class="button" type="button" data-terminal-open>Talk to a sysop</button>
+          </div>
+        </div>
+        <figure class="editor" aria-label="A Kilobaud page">
+          <figcaption><i></i><i></i><i></i><span>app/inbox/page.kb</span></figcaption>
+<pre><code><span class="k">import</span> { live } <span class="k">from</span> <span class="s">'kilobaud'</span>
+
+<span class="c">// Every yield is flushed to the browser.</span>
+<span class="k">export default async function*</span> <span class="f">Inbox</span>({ db }) {
+  <span class="k">yield</span> &lt;<span class="t">Header</span> title=<span class="s">"Inbox"</span> /&gt;
+
+  <span class="k">for await</span> (<span class="k">const</span> thread <span class="k">of</span> <span class="f">live</span>(db.threads.<span class="f">recent</span>())) {
+    <span class="k">yield</span> &lt;<span class="t">Thread</span> key={thread.id} {...thread} /&gt;
+  }
+}</code></pre>
+        </figure>
+      </section>
+
+      <dl class="stats">
+        <div><dt>First byte</dt><dd>38 ms</dd></div>
+        <div><dt>Runtime</dt><dd>9.6 kB</dd></div>
+        <div><dt>Loading spinners</dt><dd>0</dd></div>
+        <div><dt>Weekly installs</dt><dd>1.2 M</dd></div>
+      </dl>
+
+      <section class="streaming" id="streaming">
+        <div class="section-head">
+          <p class="eyebrow">Line by line</p>
+          <h2>Pages arrive the way text arrived over a modem.</h2>
+          <p>A Kilobaud page is an async generator. Every <code>yield</code> flushes to the browser, so people read the first line while your server is still fetching the tenth.</p>
+        </div>
+        <ol class="timeline">
+          <li>
+            <span class="time">0 ms</span>
+            <h3>Request</h3>
+            <p>The router matches the page and starts its generator. Headers and the shell leave right away.</p>
+          </li>
+          <li>
+            <span class="time">38 ms</span>
+            <h3>First line</h3>
+            <p>The header renders while your queries run. The browser paints it before the database answers.</p>
+          </li>
+          <li>
+            <span class="time">40–400 ms</span>
+            <h3>The rest, in order</h3>
+            <p>Each row streams as its data lands. Slow parts never hold fast parts hostage.</p>
+          </li>
+          <li>
+            <span class="time">Forever</span>
+            <h3>Live</h3>
+            <p>Wrap a query in <code>live()</code> and changes stream down one shared socket. No client state library.</p>
+          </li>
+        </ol>
+        <div class="browser" aria-hidden="true">
+          <div class="browser-bar"><i></i><i></i><i></i><span>localhost:1200/inbox</span></div>
+          <div class="browser-page">
+            <b class="line w60"></b><b class="line w90"></b><b class="line w75"></b><b class="line w85"></b><b class="line w40"></b><b class="line w70"></b><b class="line w95"></b><b class="line w55"></b>
+          </div>
+        </div>
+      </section>
+
+      <section class="features" id="docs">
+        <div class="section-head">
+          <p class="eyebrow">Why Kilobaud</p>
+          <h2>Everything a fast page needs. Nothing it doesn't.</h2>
+        </div>
+        <div class="grid">
+          <article>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h11M4 18h7"/></svg>
+            <h3>Streams by default</h3>
+            <p>Components are async generators. Yield markup as soon as you have it, and it goes down the wire in order.</p>
+          </article>
+          <article>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M6.5 17.5 17.5 6.5"/></svg>
+            <h3>Zero-JS pages</h3>
+            <p>Pages ship no JavaScript until an island asks for it. Most of them never do.</p>
+          </article>
+          <article>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h3l3-7 4 14 3-7h5"/></svg>
+            <h3>Live queries</h3>
+            <p>Wrap any query in <code>live()</code> and the page stays current over one shared socket.</p>
+          </article>
+          <article>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 18c2-6 4-6 7 0s5 6 7 0M5 9c2-4 4-4 7 0s5 4 7 0"/></svg>
+            <h3>Works at 300 baud</h3>
+            <p>Forms post without JavaScript and resume after a dropped connection. Your app slows down like a modem, but it never breaks.</p>
+          </article>
+          <article>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 7 3 12l5 5M16 7l5 5-5 5M14 4l-4 16"/></svg>
+            <h3>Types end to end</h3>
+            <p>Loaders, actions and routes are typed from the database to the markup. Rename a column and the compiler finds every line.</p>
+          </article>
+          <article>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 20h14"/></svg>
+            <h3>Deploys anywhere</h3>
+            <p>Node, Bun, Deno or the edge. One adapter, no lock-in, and no config file longer than this sentence.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="bench" id="bench">
+        <div class="section-head">
+          <p class="eyebrow">Benchmarks</p>
+          <h2>Time to first line</h2>
+          <p>A mid-range phone on a slow 3G connection, loading a 200-row inbox. Lower is better.</p>
+        </div>
+        <ul class="bars">
+          <li style="--v: .11"><span>Kilobaud 4.1</span><b>0.41 s</b></li>
+          <li style="--v: .53"><span>Server-rendered SPA</span><b>1.9 s</b></li>
+          <li style="--v: 1"><span>Client-rendered SPA</span><b>3.6 s</b></li>
+        </ul>
+      </section>
+
+      <section class="quotes" aria-label="What developers say">
+        <figure>
+          <blockquote>We deleted 212 kB of client JavaScript and conversions went up 9%. The spinners were the product, apparently.</blockquote>
+          <figcaption>Mira Castellanos <span>Staff engineer, Parcelwise</span></figcaption>
+        </figure>
+        <figure>
+          <blockquote>It feels like the web in 1996, except fast. I mean that as the highest compliment.</blockquote>
+          <figcaption>Dev Okafor <span>Indie hacker</span></figcaption>
+        </figure>
+        <figure>
+          <blockquote>Our dashboards stream forty live panels over one socket. Ops thinks it's magic. It's a generator.</blockquote>
+          <figcaption>Hanna Virtanen <span>Platform lead, Tidewater Grid</span></figcaption>
+        </figure>
+      </section>
+
+      <section class="dial" id="dial-in">
+        <p class="eyebrow">Community</p>
+        <h2>Questions? The sysop is in.</h2>
+        <p>Our maintainers, and a very well-read AI, answer on the Kilobaud BBS. Walk up to the terminal in the corner, or dial in from here.</p>
+        <button class="button primary" type="button" data-terminal-open>Dial in</button>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <span class="logo">kilobaud</span>
+      <span>A fictional framework, made up for this Stand Chat example.</span>
+    </footer>
+  </div>
+
+  <section id="how-it-works" class="sx-explainer">
+    <div class="sx-wrap">
+      <p class="sx-eyebrow">How it works</p>
+      <h2>A custom chat UI on Stand's Visitor API</h2>
+      <p class="sx-lead">Stand's widget is optional. This terminal is a complete Stand chat built from scratch: it asks Stand who can answer, starts a conversation with the visitor's first message, sends over HTTP, listens on a WebSocket, and recovers after reloads and dropped connections. Everything else is presentation.</p>
+
+      <h3>Try it</h3>
+      <ol class="sx-steps">
+        <li>Watch the monitor in the corner for a moment. It turns towards your pointer, tilts as you scroll, and now and then draws its sysop in characters.</li>
+        <li>Move your pointer close to it, or tap it. It fills the screen, dials, and types its greeting at 1200 baud.</li>
+        <li>Ask something, or play along: <code>LOOK</code>, <code>INVENTORY</code> and <code>XYZZY</code> all work. <code>/help</code> lists the terminal's own commands, like <code>/baud 9600</code> and <code>/bye</code>.</li>
+        <li>Reload the page mid-conversation. The chat comes back, and replies sent meanwhile arrive.</li>
+        <li>Click outside the monitor or press <kbd>Esc</kbd> to send it back to its corner.</li>
+      </ol>
+
+      <div class="sx-note">This example uses <code>siteId: 'demo'</code>, Stand Chat's shared demo site, which works on any domain. Its demo Stand-in follows the terminal's greeting and prompt, but won't speak for the made-up framework. With your own Site ID, your own Stand-ins answer.</div>
+
+      <h3>1. Discover who can answer</h3>
+      <p>Before anything is created, one public request asks Stand for an available responder on this page. It returns their name, avatar, greeting, and the attribution to show. If nobody can answer, the modem says <code>BUSY</code>.</p>
+      <pre class="sx-code" data-file="stand-client.js"><code class="language-js">const query = new URLSearchParams({ siteId, page: location.href, greetingsEnabled: 'false' });
+const offer = await (await fetch(`https://api.stand.chat/v1/reps/find?${query}`, { credentials: 'omit' })).json();
+// { available, responderType, standinProfileId | repId, repName, avatar, showId, poweredByUrl, … }</code></pre>
+
+      <h3>2. Create the conversation on the first message</h3>
+      <p>Only a visitor's message creates a session. The greeting the terminal typed goes along as the opening message, and <code>prompt</code> gives the AI Stand-in its sysop persona. The response carries a visitor token for everything that follows.</p>
+      <pre class="sx-code" data-file="stand-client.js"><code class="language-js">const session = await post('/v1/sessions', {
+  siteId, page: location.href,
+  standinProfileId: offer.standinProfileId, // or repId for a person
+  initialMessage: text,
+  includeOpeningGreeting: true, openingMessage: greeting,
+  prompt: 'You are the sysop on duty at the Kilobaud BBS… Plain text only, under 300 characters.',
+  showId: offer.showId,
+});
+// Later requests send Authorization: Bearer ${session.visitorToken}</code></pre>
+
+      <h3>3. Send over HTTP, receive over a WebSocket</h3>
+      <p>Each send carries a <code>clientMessageId</code>, so a retry after a dropped connection can never post twice. Replies, typing, handoffs and the end of the chat arrive on the socket. After it connects, one snapshot fills any gap, and everything merges by <code>messageId</code> in <code>seq</code> order.</p>
+      <pre class="sx-code" data-file="stand-client.js"><code class="language-js">const pending = { body: text, type: 'text', clientMessageId: crypto.randomUUID() };
+await post(`/v1/sessions/${sessionId}/messages`, pending); // retry with the same object
+
+const socket = new WebSocket(`wss://api.stand.chat/ws/sessions/${sessionId}?token=${token}`);
+socket.onmessage = ({ data }) =&gt; {
+  const frame = JSON.parse(data);
+  if (frame.type === 'connected') refreshSnapshot(); // covers messages sent meanwhile
+  else if (frame.type === 'session.closed') finish(); // NO CARRIER
+  else if (frame.event === 'message') merge([frame]);
+};</code></pre>
+
+      <h3>4. Print it at 1200 baud</h3>
+      <p>The terminal never draws text directly. <code>screen.js</code> queues styled text and reveals it at a modem's pace (baud / 10 characters per second), <code>crt.js</code> turns the cells into a video signal through a character ROM, and the glass draws each scanline as an electron beam, with phosphor afterglow and a soft halo.</p>
+      <pre class="sx-code" data-file="screen.js"><code class="language-js">// 8 data bits, a start bit and a stop bit: 1200 baud is 120 characters a second.
+const cps = block.cps ?? this.baud / 10;
+while (count &lt; block.chars.length &amp;&amp; this.#budget &gt; 0) {
+  this.#budget -= (block.chars[count].ch === '\n' ? 2 : 1) / cps; // CR + LF
+  count++;
+}</code></pre>
+
+      <h3>The files</h3>
+      <ul>
+        <li><strong><code>stand-client.js</code></strong> is the part to copy: discovery, one-time creation, idempotent sends, WebSocket receive, recovery, handoffs, follow-ups and link clicks, with no framework and no UI.</li>
+        <li><strong><code>bbs.js</code></strong> is the chat program: IRC-style lines, <code>CONNECT</code>, <code>BUSY</code> and <code>NO CARRIER</code>, commands, and the portrait loop.</li>
+        <li><strong><code>screen.js</code></strong> and <strong><code>rom.js</code></strong> are the text mode: 80×25 cells (40×25 on phones) of VT323 glyphs, sampled onto a 10 × 12 dot grid.</li>
+        <li><strong><code>crt.js</code></strong> is three.js: the monitor from <code>monitor.glb</code>, the phosphor passes and the glass shader.</li>
+        <li><strong><code>monitor.py</code></strong> builds <code>monitor.glb</code> in headless Blender, from an empty scene to baked textures, in about a minute. Change the monitor there, not in the GLB.</li>
+        <li><strong><code>terminal.js</code></strong> puts it on the page: the corner, the zoom, pointer and scroll motion, the keyboard, and a screen-reader log of the conversation.</li>
+      </ul>
+
+      <h3>Good to know</h3>
+      <ul>
+        <li><strong>The prompt is a persona, not a secret.</strong> Visitors don't see it, but it lives in the page. It asks the Stand-in for short, plain-text answers that read well on 80 columns, and to play along with text-adventure commands without getting in the way.</li>
+        <li><strong>Portraits need CORS.</strong> The terminal draws the responder's avatar in characters by reading its pixels, which browsers only allow when the image server sends <code>Access-Control-Allow-Origin</code>. Without it, and for responders with no avatar, the terminal draws Stand's logo.</li>
+        <li><strong>It only draws when something changes.</strong> The text passes run at 800 × 300 dots and only when the picture changes. Left alone, the monitor settles and the GPU rests. The monitor is 26,000 triangles and 1.2 MB, textures included.</li>
+        <li><strong>Accessible under the phosphor.</strong> A real textarea takes the typing, a live region announces each reply as a whole, and <kbd>Esc</kbd>, the control strip and reduced-motion settings all work.</li>
+        <li><strong>Keep the attribution.</strong> A custom UI keeps the notices and the Powered by Stand link that discovery returns, like the widget does.</li>
+      </ul>
+
+      <details class="made">
+        <summary>How this was made</summary>
+        <div class="made-body">
+          <p>This example is nearly a one-shot. <strong>Claude Opus 5.5, with max effort, in Claude Code</strong>, built it in one session from the prompt below and one follow-up about the Stand-in's personality. It read the custom chat UI guide, ran real conversations against Stand's demo site in headless Chrome, and iterated on its own screenshots. A sub-agent modeled the monitor in parallel, from a written brief, as the Blender script <code>monitor.py</code>.</p>
+          <p>Now that AI writes the front end, a chat that belongs to your site's world is a prompt away. Stand's Visitor API keeps the conversation, the AI Stand-in and your team behind it.</p>
+
+          <p class="made-label">The prompt, lightly edited</p>
+          <blockquote class="made-prompt">Let's add a super fancy example: Vintage Terminal.
+
+A completely custom chat UI that looks like an old terminal: glowing green characters, 80×25, a blinking cursor. I'm adding a couple of images for inspiration.
+
+Model the CRT monitor the terminal runs on in 3D. You have Blender (with its MCP server) on this machine. It should be photorealistic.
+
+For the website itself, be creative. It could be a developer website for a framework; that isn't very important.
+
+The 3D monitor sits in the corner of the website, subtly turning towards the mouse cursor and tilting while you scroll. Make it VERY subtle, but enough to show that it's a 3D element.
+
+When someone moves the mouse close to the terminal, or taps it, it grows to fill the screen and the chat greeting is typed on the screen. All messages appear as if they came over a 1200 baud modem, character by character. A blinking cursor invites the visitor to type. Clicking outside the monitor minimizes it back into the corner.
+
+When the screen isn't zoomed in, the responder's avatar is sometimes printed on it as ASCII graphics, again character by character like on an old BBS, and then scrolled away. This is to catch attention. If there is no avatar image, use the Stand logo, again as ASCII graphics.
+
+It's a fully functional chat, with all the functions from https://stand.chat/guide/custom-chat-ui.
+
+The target is modern browsers on up-to-date hardware: assume an iPhone 16 Pro or newer. Use 3D web graphics and shader effects to make it realistic. It should run at 60 fps, so keep the model's complexity and the number of shaders under control.
+
+If you need a style balance between IBM, cyberpunk and Fallout, lean towards fiction over boring realism. This is supposed to be a fun chat widget that developers visiting the site immediately fall in love with.
+
+Be creative and pay deep attention to detail. Take your time to make this perfect.
+
+[Five reference photos of green-screen terminals]</blockquote>
+
+          <p class="made-label">The follow-up</p>
+          <blockquote class="made-prompt">You can ask the Stand-in to behave a bit like a CLI or an old text adventure with a custom prompt. Test what gives a good balance between goofiness and actual usability.</blockquote>
+
+          <p class="made-label">If you try this yourself</p>
+          <ul>
+            <li>Link the <a href="https://stand.chat/guide/custom-chat-ui">custom chat UI guide</a>. It is written as a contract for coding agents, with a brief to paste.</li>
+            <li>Start on the <code>demo</code> Site ID, so the agent can hold real conversations while it builds and tests, then switch to yours.</li>
+            <li>Let the agent tune the Stand-in's voice through <code>prompt</code>, and have it test a few variants for real. Here, a sysop who answers first and jokes second won.</li>
+            <li>Give it reference images, a device to target and a frame rate, and ask it to check its own work in a browser.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h3>Copy this example</h3>
+      <pre class="sx-code"><code class="language-sh">npx degit standchat/examples/vintage-terminal my-terminal</code></pre>
+
+      <ul class="sx-links">
+        <li><a href="https://stand.chat/guide/custom-chat-ui">Guide: build a custom chat UI ↗</a></li>
+        <li><a href="https://stand.chat/features/custom-chat-ui">Custom chat UI reference ↗</a></li>
+        <li><a href="https://github.com/standchat/examples/tree/main/vintage-terminal/">Source on GitHub ↗</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <script type="module">
+    // The Kilobaud site's own copy button. Not part of the terminal.
+    for (const button of document.querySelectorAll('.kilobaud [data-copy]')) {
+      button.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(button.dataset.copy);
+          button.textContent = 'Copied';
+        } catch {
+          button.textContent = 'Select it';
+        }
+        setTimeout(() => (button.textContent = 'Copy'), 1600);
+      });
+    }
+  </script>
+</body>
+</html>

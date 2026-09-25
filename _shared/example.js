@@ -47,6 +47,8 @@ function renderBar() {
 // Silent while the chat works: the chat itself shows that. Speaks up only when
 // the Stand UI is missing, so nobody mistakes that for a broken example.
 function watchStand(pill) {
+  // Custom chat UIs call Stand's API without stand.js and show their own status.
+  if (!document.querySelector('script[src*="stand.js"]')) return;
   const show = (label, detail) => {
     pill.querySelector('.label').textContent = label;
     pill.title = detail;
