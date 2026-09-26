@@ -11,6 +11,7 @@ const SITE = 'https://examples.stand.chat';
 // here follow alphabetically, until someone gives them a place.
 const ORDER = [
   'chat-mascot',
+  'adventure-game-chat',
   'vintage-terminal',
   'stand-inline',
   'stand-card',
