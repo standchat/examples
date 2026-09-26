@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+  <!-- One repeat of a plain weave: each thread crosses over, then under, the next. -->
+  <defs>
+    <linearGradient id="weft" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F9F0E5"/>
+      <stop offset=".5" stop-color="#FFFCF8"/>
+      <stop offset="1" stop-color="#F6EBDE"/>
+    </linearGradient>
+    <linearGradient id="warp" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#F9F0E5"/>
+      <stop offset=".5" stop-color="#FFFCF8"/>
+      <stop offset="1" stop-color="#F6EBDE"/>
+    </linearGradient>
+  </defs>
+  <rect width="36" height="36" fill="#F1E4D4"/>
+  <rect x="1" y="4" width="16" height="10" rx="5" fill="url(#weft)"/>
+  <rect x="22" y="1" width="10" height="16" rx="5" fill="url(#warp)"/>
+  <rect x="4" y="19" width="10" height="16" rx="5" fill="url(#warp)"/>
+  <rect x="19" y="22" width="16" height="10" rx="5" fill="url(#weft)"/>
+</svg>

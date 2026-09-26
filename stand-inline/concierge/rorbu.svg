@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 260">
+<title>Red fishermen’s cabins on stilts over the water, below steep snowy peaks in pink twilight</title>
+<defs>
+  
+  <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#4F63A8"/>
+    <stop offset=".45" stop-color="#9C98D2"/>
+    <stop offset=".8" stop-color="#F0BCC4"/>
+    <stop offset="1" stop-color="#FAD5C6"/>
+  </linearGradient>
+  <linearGradient id="lit" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#FFF4F4"/>
+    <stop offset="1" stop-color="#E3D6EA"/>
+  </linearGradient>
+  <linearGradient id="shade" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#9AA3D6"/>
+    <stop offset="1" stop-color="#7580BA"/>
+  </linearGradient>
+  <linearGradient id="water" x1="0" y1="150" x2="0" y2="260" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#B7A9D8"/>
+    <stop offset=".25" stop-color="#7A83C0"/>
+    <stop offset="1" stop-color="#34487F"/>
+  </linearGradient>
+  <linearGradient id="red" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#C24A34"/>
+    <stop offset="1" stop-color="#A33A2A"/>
+  </linearGradient>
+  <filter id="ripple" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="1.4 .6"/></filter>
+  <radialGradient id="warm-glow">
+    <stop offset="0" stop-color="#FFC872" stop-opacity=".8"/>
+    <stop offset=".45" stop-color="#FFB257" stop-opacity=".25"/>
+    <stop offset="1" stop-color="#FFB257" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="window" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#FFE6B0"/>
+    <stop offset="1" stop-color="#FFB85C"/>
+  </linearGradient>
+  <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4"/></filter>
+</defs>
+
+<rect width="400" height="260" fill="url(#sky)"/>
+<circle cx="330" cy="40" r="1.2" fill="#fff" opacity=".8"/><circle cx="364" cy="22" r=".9" fill="#fff" opacity=".7"/><circle cx="286" cy="16" r=".8" fill="#fff" opacity=".6"/>
+<path d="M232 150 262 112l14 12 20-30 26 32 16-10 30 34Z" fill="#C3BCE0" opacity=".8"/>
+<path d="M60 150L96 86L103.92 150Z" fill="url(#lit)"/><path d="M96 86L140 150L103.92 150Z" fill="url(#shade)"/><path d="M120 150L178 34L189.88 150Z" fill="url(#lit)"/><path d="M178 34L244 150L189.88 150Z" fill="url(#shade)"/><path d="M196 150L222 80L229.2 150Z" fill="url(#lit)"/><path d="M222 80L262 150L229.2 150Z" fill="url(#shade)"/><path d="M0 150L30 98L38.28 150Z" fill="url(#lit)"/><path d="M30 98L76 150L38.28 150Z" fill="url(#shade)"/>
+<path d="M168 60l10-26 8 22-5-3-4 8-4-6Z" fill="#fff" opacity=".9"/>
+<path d="M0 150h400v110H0Z" fill="url(#water)"/>
+<g opacity=".32" filter="url(#ripple)" transform="matrix(1 0 0 -.55 0 232.5)"><path d="M60 150L96 86L103.92 150Z" fill="url(#lit)"/><path d="M96 86L140 150L103.92 150Z" fill="url(#shade)"/><path d="M120 150L178 34L189.88 150Z" fill="url(#lit)"/><path d="M178 34L244 150L189.88 150Z" fill="url(#shade)"/><path d="M196 150L222 80L229.2 150Z" fill="url(#lit)"/><path d="M222 80L262 150L229.2 150Z" fill="url(#shade)"/><path d="M0 150L30 98L38.28 150Z" fill="url(#lit)"/><path d="M30 98L76 150L38.28 150Z" fill="url(#shade)"/></g>
+<path d="M0 150h270" stroke="#F1EDF6" stroke-width="3"/>
+<g stroke="#fff" stroke-linecap="round" opacity=".4"><path d="M20 176h40M90 188h60M36 206h30M120 222h70M16 238h54M200 170h24"/></g>
+<g>
+  <path d="M224 150h176v5H224z" fill="#4A3434"/>
+  <path d="M230 155v14M246 155v14M262 155v14M300 155v14M318 155v14M350 155v14M372 155v14M392 155v14" stroke="#3B2A2A" stroke-width="2.2"/>
+  <path d="M234 150v-30l22-20 22 20v30Z" fill="url(#red)"/>
+  <path d="M230 121 256 97l26 24" fill="none" stroke="#F4F6FB" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+  <path d="M290 150v-36l27-24 27 24v36Z" fill="url(#red)"/>
+  <path d="M286 115 317 87l31 28" fill="none" stroke="#F4F6FB" stroke-width="4.4" stroke-linejoin="round" stroke-linecap="round"/>
+  <path d="M348 150v-26l20-18 20 18v26Z" fill="#9C3828"/>
+  <path d="M344 125 368 103l24 22" fill="none" stroke="#F4F6FB" stroke-width="3.6" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="256" cy="128" r="16" fill="url(#warm-glow)"/>
+  <circle cx="317" cy="124" r="18" fill="url(#warm-glow)"/>
+  <path d="M250 122h12v10h-12zM310 117h14v11h-14zM362 128h11v9h-11z" fill="url(#window)"/>
+  <path d="M256 122v10M317 117v11M367.5 128v9" stroke="#8E3326" stroke-width="1.2"/>
+  <path d="M252 150v-11h8v11zM301 150v-12h8v12z" fill="#5A2520"/>
+  <path d="M234 120v30M278 120v30M290 114v36M344 114v36" stroke="#F4E9E6" stroke-width="1.4" opacity=".8"/>
+</g>
+<g opacity=".4" filter="url(#ripple)">
+  <path d="M234 169h44v18h-44zM290 169h54v22h-54zM348 169h40v14h-40z" fill="#B0463A"/>
+  <path d="M250 171h12v5h-12zM310 172h14v6h-14z" fill="#FFC872"/>
+</g>
+<g stroke="#fff" stroke-linecap="round" opacity=".35"><path d="M236 196h34M300 200h40M356 190h30"/></g>
+<path d="M186 178c7 3.5 26 3.5 33 0l-3.5 5.5h-26Z" fill="#3A3350"/>
+<path d="M186 178h33" stroke="#E9DCE8" stroke-width="1" opacity=".7"/>
+<path d="M190 188h24" stroke="#fff" stroke-linecap="round" opacity=".35"/>
+</svg>

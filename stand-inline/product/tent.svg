@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 760">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#B9CFD6"/>
+      <stop offset=".55" stop-color="#E4E1D2"/>
+      <stop offset=".78" stop-color="#F2D2AE"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="760" cy="330" r="220" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFF1D6" stop-opacity=".95"/>
+      <stop offset=".35" stop-color="#FCE3BF" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#FCE3BF" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="far" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#94AAB4"/>
+      <stop offset="1" stop-color="#B7C6C8"/>
+    </linearGradient>
+    <linearGradient id="mid" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6F8C8C"/>
+      <stop offset="1" stop-color="#8FA39B"/>
+    </linearGradient>
+    <linearGradient id="mist" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F4EEE2" stop-opacity="0"/>
+      <stop offset=".5" stop-color="#F4EEE2" stop-opacity=".75"/>
+      <stop offset="1" stop-color="#F4EEE2" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="hill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5F7E5C"/>
+      <stop offset="1" stop-color="#4A6849"/>
+    </linearGradient>
+    <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3F5D45"/>
+      <stop offset="1" stop-color="#26392C"/>
+    </linearGradient>
+    <linearGradient id="front" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#E08457"/>
+      <stop offset="1" stop-color="#C8643B"/>
+    </linearGradient>
+    <linearGradient id="side" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#A9532F"/>
+      <stop offset="1" stop-color="#8E4426"/>
+    </linearGradient>
+    <linearGradient id="inner" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F3E6CF"/>
+      <stop offset="1" stop-color="#D8C3A1"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1000" height="760" fill="url(#sky)"/>
+  <circle cx="760" cy="330" r="220" fill="url(#glow)"/>
+  <circle cx="760" cy="336" r="44" fill="#FFF3DC"/>
+
+  <!-- Terns -->
+  <g fill="none" stroke="#3D4A4B" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M190 150c9-9 17-9 24 0 7-9 15-9 24 0"/>
+    <path d="M262 196c6-6 11-6 16 0 5-6 10-6 16 0" stroke-width="2.6"/>
+  </g>
+
+  <!-- Far range with snow -->
+  <path d="M0 440 90 360l60 42 88-110 70 70 64-44 96 104 84-92 58 44 92-120 104 130 70-58 76 64 48-30v300H0Z" fill="url(#far)"/>
+  <path d="m238 292-22 28 12-4 10 10 12-10 16 4Zm464-38-22 29 12-4 10 11 12-10 13 5Zm-330 64-20 14 10-1 10 8 10-6 10 7Z" fill="#F4F2EC" opacity=".9"/>
+  <!-- Mid range -->
+  <path d="M0 500 110 420l86 56 102-86 110 92 96-64 118 80 104-70 120 86 86-48 68 40v250H0Z" fill="url(#mid)"/>
+  <rect y="460" width="1000" height="110" fill="url(#mist)"/>
+  <!-- Near hill -->
+  <path d="M0 540c120-40 240-50 360-34s250 34 380 20 190-36 260-30v264H0Z" fill="url(#hill)"/>
+  <!-- Foreground slope -->
+  <path d="M0 600c170-44 330-58 520-40s330 40 480 24v176H0Z" fill="url(#ground)"/>
+
+  <!-- Tent shadow -->
+  <ellipse cx="580" cy="590" rx="250" ry="16" fill="#132019" opacity=".45"/>
+
+  <!-- Guylines and stakes -->
+  <g stroke="#1E2A22" stroke-width="2" opacity=".7" stroke-linecap="round">
+    <path d="M500 398 452 618M690 470 812 596M430 520 350 610" fill="none"/>
+    <path d="M452 618v12M812 596v12M350 610v12" stroke-width="4"/>
+  </g>
+
+  <!-- The Tern 2 -->
+  <g id="tern">
+    <path d="M500 396 650 424 770 584 606 588Z" fill="url(#side)"/>
+    <path d="M500 396 650 424" stroke="#E7A07B" stroke-width="3" stroke-linecap="round"/>
+    <path d="M386 588 500 396 606 588Z" fill="url(#front)"/>
+    <path d="M444 588 500 470 556 588Z" fill="url(#inner)"/>
+    <path d="M500 470v118" stroke="#C8B08A" stroke-width="2"/>
+    <path d="M444 588 500 470l-24 118Z" fill="#7C3A20" opacity=".9"/>
+    <path d="M500 396 386 588" stroke="#F0A57F" stroke-width="3" stroke-linecap="round" opacity=".8"/>
+    <path d="m560 486 10 14" stroke="#7C3A20" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M690 470l6 4" stroke="#E7A07B" stroke-width="5" stroke-linecap="round"/>
+  </g>
+
+  <!-- Pack by the door -->
+  <g transform="translate(628 530)">
+    <rect width="46" height="60" rx="14" fill="#2F4A5A"/>
+    <rect x="8" y="30" width="30" height="20" rx="6" fill="#26404F"/>
+    <rect x="10" y="-6" width="26" height="14" rx="6" fill="#E3C074"/>
+  </g>
+
+  <!-- A dog, asleep by the door -->
+  <g transform="translate(300 566)">
+    <path d="M4 18C-10 14-18 6-24 -2" fill="none" stroke="#C49A6C" stroke-width="7" stroke-linecap="round"/>
+    <ellipse cx="46" cy="18" rx="46" ry="16" fill="#C49A6C"/>
+    <ellipse cx="18" cy="24" rx="17" ry="10" fill="#B58A5C"/>
+    <rect x="70" y="26" width="42" height="9" rx="4.5" fill="#D8B287"/>
+    <circle cx="94" cy="4" r="16" fill="#C49A6C"/>
+    <ellipse cx="110" cy="10" rx="12" ry="7.5" fill="#D8B287"/>
+    <circle cx="120" cy="8" r="3.2" fill="#2B2320"/>
+    <path d="M86-10c-8 2-12 12-8 22 4-2 8-8 10-14Z" fill="#8F6440"/>
+    <path d="M94 2c2 2 5 2 7 0" fill="none" stroke="#2B2320" stroke-width="2" stroke-linecap="round"/>
+  </g>
+
+  <!-- Grass -->
+  <g stroke="#1E3325" stroke-width="3" stroke-linecap="round" fill="none" opacity=".8">
+    <path d="M150 650l-6-18m10 18 2-22m8 22 8-16M880 640l-6-16m12 16 2-20m8 20 8-14M720 690l-4-14m10 14 2-18"/>
+  </g>
+</svg>

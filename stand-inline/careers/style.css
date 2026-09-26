@@ -1,0 +1,180 @@
+body { margin: 0; background: #FBF7EF; }
+
+.paperbark {
+  --paper: #FBF7EF;
+  --card: #FFFDF8;
+  --forest: #1F4D3A;
+  --forest-dark: #163A2B;
+  --fern: #6B9A5B;
+  --fern-text: #4A7641;
+  --bark: #C9A27E;
+  --ink: #1B1F1C;
+  --text: #363C38;
+  --muted: #5E655F;
+  --line: #E7E0D2;
+  --sage: #E8EEDF;
+  --display: 'Bricolage Grotesque', 'DM Sans', ui-sans-serif, sans-serif;
+  color: var(--ink);
+  font: 400 18px/1.65 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.paperbark * { box-sizing: border-box; }
+.paperbark a { color: inherit; }
+.paperbark :focus-visible { outline: 2px solid var(--forest); outline-offset: 3px; }
+.paperbark h1, .paperbark h2, .paperbark h3 { margin: 0; font-family: var(--display); font-weight: 700; letter-spacing: -.02em; }
+
+/* Navigation */
+.paperbark .nav { display: flex; align-items: center; gap: 44px; max-width: 1200px; margin: 0 auto; padding: 22px 28px; }
+.paperbark .logo { display: inline-flex; align-items: center; gap: 9px; color: var(--ink); font: 800 23px/1 var(--display); letter-spacing: -.03em; text-decoration: none; }
+.paperbark .logo svg { width: 30px; height: 30px; }
+.paperbark .logo .stem { fill: var(--forest); }
+.paperbark .logo .curl { fill: none; stroke: var(--bark); stroke-width: 3.2; stroke-linecap: round; }
+.paperbark .nav nav { display: flex; gap: 30px; font-size: 16px; font-weight: 500; }
+.paperbark .nav nav a { color: var(--muted); text-decoration: none; transition: color .15s; }
+.paperbark .nav nav a:hover { color: var(--ink); }
+.paperbark .nav nav a[aria-current] { color: var(--forest); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 8px; }
+.paperbark .signin { margin-left: auto; padding: 8px 16px; border: 1.5px solid var(--line); border-radius: 999px; font-size: 15px; font-weight: 600; text-decoration: none; transition: border-color .15s; }
+.paperbark .signin:hover { border-color: var(--ink); }
+
+.paperbark main { max-width: 1200px; margin: 0 auto; padding: 0 28px 96px; }
+.paperbark .crumbs { margin: 4px 0 18px; color: var(--muted); font-size: 14px; }
+.paperbark .crumbs a { text-decoration: none; }
+.paperbark .crumbs a:hover { color: var(--ink); }
+.paperbark .crumbs span { margin: 0 6px; opacity: .55; }
+
+/* Hero: the title, and the paperbark by the water */
+.paperbark .hero { display: grid; grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr); min-height: 440px; overflow: hidden; border-radius: 26px; background: linear-gradient(180deg, #F3EAD9 0%, #EFE9D8 55%, #E4E8D5 100%); }
+.paperbark .hero-copy { align-self: center; padding: 56px 8px 60px 56px; }
+.paperbark .eyebrow { margin: 0 0 16px; color: var(--forest); font-size: 14px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
+.paperbark h1 { max-width: 9em; font-size: clamp(44px, 5vw, 70px); font-weight: 800; line-height: .98; letter-spacing: -.035em; text-wrap: balance; }
+.paperbark .meta { display: flex; flex-wrap: wrap; gap: 10px 22px; margin: 28px 0 0; padding: 0; list-style: none; color: var(--text); font-size: 16px; line-height: 1.35; }
+.paperbark .meta li { display: inline-flex; align-items: center; gap: 8px; }
+.paperbark .meta svg { flex: none; width: 19px; height: 19px; fill: none; stroke: var(--forest); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.paperbark .hero-art { position: relative; min-height: 300px; }
+/* The art crops to fit its column; the mask keeps its left edge soft wherever the crop falls. */
+.paperbark .hero-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 35% 100%;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 76px); mask-image: linear-gradient(90deg, transparent, #000 76px); }
+
+.paperbark .button { display: flex; align-items: center; justify-content: center; padding: 16px 22px; border-radius: 12px; background: var(--forest); color: var(--paper); font-size: 17px; font-weight: 600; line-height: 1.2; text-decoration: none; transition: background-color .15s, transform .15s; }
+.paperbark .button:hover { background: var(--forest-dark); }
+.paperbark .button:active { transform: translateY(1px); }
+.paperbark .button.hero-apply { display: none; }
+
+/* The post and its sidebar */
+.paperbark .post { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 72px; align-items: start; margin-top: 64px; }
+.paperbark .description { max-width: 700px; }
+.paperbark .description section + section { margin-top: 56px; }
+.paperbark .description h2 { margin-bottom: 16px; font-size: 30px; line-height: 1.15; }
+.paperbark .description p { margin: 0 0 16px; color: var(--text); }
+.paperbark .description .intro { color: var(--ink); font-size: 20px; line-height: 1.6; }
+
+.paperbark .bullets { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; color: var(--text); }
+.paperbark .bullets li { position: relative; padding-left: 30px; }
+.paperbark .bullets li::before { content: ''; position: absolute; top: .56em; left: 3px; width: 11px; height: 11px; border-radius: 1px 11px; background: var(--fern); }
+
+.paperbark .perks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 4px 0 0; padding: 0; list-style: none; }
+.paperbark .perks li { display: flex; gap: 14px; align-items: flex-start; padding: 18px 18px 18px 16px; border: 1px solid var(--line); border-radius: 16px; background: var(--card); }
+.paperbark .perks svg { flex: none; width: 42px; height: 42px; padding: 10px; border-radius: 12px; background: var(--sage); fill: none; stroke: var(--forest); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.paperbark .perks p { margin: 0; color: var(--muted); font-size: 15.5px; line-height: 1.5; }
+.paperbark .perks strong { display: block; margin-bottom: 2px; color: var(--ink); font: 700 17px/1.3 var(--display); letter-spacing: -.01em; }
+
+.paperbark .steps { margin: 8px 0 0; padding: 0; list-style: none; counter-reset: step; }
+.paperbark .steps li { position: relative; padding: 0 0 30px 58px; counter-increment: step; }
+.paperbark .steps li::before { content: counter(step); position: absolute; top: -3px; left: 0; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; background: var(--forest); color: var(--paper); font: 700 17px/1 var(--display); }
+.paperbark .steps li::after { content: ''; position: absolute; top: 44px; bottom: 4px; left: 18.5px; width: 1.5px; border-radius: 1px; background: var(--line); }
+.paperbark .steps li:last-child { padding-bottom: 8px; }
+.paperbark .steps li:last-child::after { display: none; }
+.paperbark .steps h3 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; font-size: 20px; line-height: 1.3; }
+.paperbark .steps .time { color: var(--muted); font: 500 15px/1 'DM Sans', sans-serif; letter-spacing: 0; }
+.paperbark .steps .tag { align-self: center; padding: 4px 10px; border-radius: 999px; background: var(--sage); color: var(--forest); font: 600 13px/1.2 'DM Sans', sans-serif; letter-spacing: .01em; }
+.paperbark .steps p { margin: 6px 0 0; }
+.paperbark .description .decision { display: flex; align-items: center; gap: 12px; margin: 12px 0 0; padding: 14px 18px; border-radius: 14px; background: #F3EBDD; color: var(--ink); font-size: 16.5px; font-weight: 500; }
+.paperbark .decision svg { flex: none; width: 24px; height: 24px; fill: none; stroke: var(--forest); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+/* The last line of the post: Stand Inline. Three tokens, a size and two parts;
+   font and text color come from the page. */
+.paperbark .description .questions { margin-top: 64px; padding-top: 44px; border-top: 1px solid var(--line); scroll-margin-top: 24px; }
+.paperbark .questions h2 { margin-bottom: 6px; font-size: 24px; }
+.paperbark .questions > p { margin: 0 0 18px; color: var(--muted); }
+.paperbark stand-inline {
+  --si-accent: #1F4D3A;
+  --si-visitor-bg: #EFE6D8;
+  --si-max-height: min(76vh, 700px);
+  font-size: 18px;
+}
+.paperbark stand-inline::part(avatar) { background: #EBDDCB; color: #1F4D3A; }
+.paperbark stand-inline::part(suggestion) { border-radius: 8px; }
+/* A hairline under whoever is answering, so a long transcript scrolls under it. */
+.paperbark stand-inline::part(header) { margin-bottom: .4em; border-bottom: 1px solid var(--line); }
+
+/* Sidebar */
+.paperbark .apply { position: sticky; top: 28px; padding: 26px; border: 1px solid var(--line); border-radius: 20px; background: var(--card); box-shadow: 0 1px 0 var(--line), 0 24px 48px -32px rgb(31 77 58 / .35); }
+.paperbark .apply-note { margin: 12px 0 0; color: var(--muted); font-size: 14.5px; text-align: center; }
+.paperbark .facts { margin: 22px 0 0; font-size: 15.5px; line-height: 1.4; }
+.paperbark .facts div { display: flex; justify-content: space-between; gap: 16px; padding: 12px 0; border-top: 1px solid var(--line); }
+.paperbark .facts dt { color: var(--muted); }
+.paperbark .facts dd { margin: 0; font-weight: 600; text-align: right; }
+.paperbark .facts dd span { display: block; color: var(--muted); font-size: 14px; font-weight: 400; }
+.paperbark .hiring { padding-top: 16px; border-top: 1px solid var(--line); }
+.paperbark .hiring .label { margin: 0 0 12px; color: var(--muted); font-size: 12.5px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+.paperbark .person { display: flex; align-items: center; gap: 12px; }
+.paperbark .person p { margin: 0; font-size: 15.5px; line-height: 1.35; }
+.paperbark .person p strong, .paperbark .person p span { display: block; }
+.paperbark .person p span { color: var(--muted); font-size: 14.5px; }
+.paperbark .avatar { display: grid; flex: none; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: #EBDDCB; color: var(--forest); font: 700 15px/1 var(--display); letter-spacing: .02em; }
+.paperbark .ask-link { display: flex; align-items: center; gap: 9px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--forest); font-size: 15px; font-weight: 600; line-height: 1.35; text-decoration: none; }
+.paperbark .ask-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+.paperbark .ask-link svg { flex: none; width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linejoin: round; }
+/* Once a conversation is going, the sidebar points back to it. */
+.paperbark .ask-link .when-talking { display: none; }
+.paperbark:has(stand-inline[data-state="conversation"]) .ask-link .when-idle { display: none; }
+.paperbark:has(stand-inline[data-state="conversation"]) .ask-link .when-talking { display: inline; }
+
+/* Other roles */
+.paperbark .roles { margin-top: 88px; padding-top: 48px; border-top: 1px solid var(--line); }
+.paperbark .roles-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px; }
+.paperbark .roles h2 { font-size: 30px; }
+.paperbark .roles-head a { color: var(--forest); font-size: 16px; font-weight: 600; text-decoration: none; }
+.paperbark .roles-head a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.paperbark .roles .row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 24px; }
+.paperbark .roles .row a { display: grid; gap: 4px; padding: 22px 24px; border: 1px solid var(--line); border-radius: 16px; background: var(--card); text-decoration: none; transition: border-color .15s, transform .15s; }
+.paperbark .roles .row a:hover { border-color: var(--forest); transform: translateY(-2px); }
+.paperbark .roles .dept { color: var(--fern-text); font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+.paperbark .roles strong { font: 700 20px/1.25 var(--display); letter-spacing: -.015em; }
+.paperbark .roles .row span:last-child { color: var(--muted); font-size: 15px; }
+
+.paperbark .foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; max-width: 1200px; margin: 0 auto; padding: 28px; border-top: 1px solid var(--line); color: var(--muted); font-size: 15px; }
+.paperbark .foot .logo { font-size: 19px; }
+
+@media (max-width: 960px) {
+  .paperbark .hero { grid-template-columns: 1fr; min-height: 0; overflow: visible; border-radius: 0; background: none; }
+  .paperbark .hero-art { order: -1; min-height: 0; height: clamp(240px, 50vw, 420px); overflow: hidden; border-radius: 22px; background: linear-gradient(180deg, #F3EAD9 0%, #EFE9D8 55%, #E4E8D5 100%); }
+  .paperbark .hero-art img { object-position: 50% 100%; -webkit-mask-image: none; mask-image: none; }
+  .paperbark .hero-copy { padding: 32px 0 0; }
+  .paperbark .button.hero-apply { display: inline-flex; margin-top: 30px; padding-inline: 28px; }
+  .paperbark .post { grid-template-columns: 1fr; gap: 56px; }
+  .paperbark .apply { position: static; max-width: 520px; }
+  .paperbark .ask-link { display: none; }
+}
+@media (max-width: 760px) {
+  .paperbark .roles .row { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .paperbark { font-size: 17px; }
+  .paperbark .nav { gap: 20px; padding: 16px 20px; }
+  .paperbark .nav nav { display: none; }
+  .paperbark main { padding: 0 20px 72px; }
+  .paperbark .crumbs { margin-bottom: 14px; }
+  .paperbark .hero-art { border-radius: 18px; }
+  .paperbark .hero-copy { padding-top: 26px; }
+  .paperbark .meta { flex-direction: column; gap: 10px; }
+  .paperbark .button.hero-apply { display: flex; }
+  .paperbark .post { margin-top: 48px; }
+  .paperbark .description h2 { font-size: 26px; }
+  .paperbark .description .intro { font-size: 18.5px; }
+  .paperbark .perks { grid-template-columns: 1fr; }
+  .paperbark .steps li { padding-left: 52px; }
+  .paperbark stand-inline { font-size: 17px; }
+  .paperbark .roles { margin-top: 72px; }
+  .paperbark .foot { padding: 24px 20px; }
+}

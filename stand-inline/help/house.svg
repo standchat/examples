@@ -1,0 +1,182 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="40 10 480 480">
+  <defs>
+    <clipPath id="arch">
+      <path d="M40 250a240 240 0 0 1 480 0v212a28 28 0 0 1-28 28H68a28 28 0 0 1-28-28Z"/>
+    </clipPath>
+    <linearGradient id="sky" x1="0" y1="10" x2="0" y2="490" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0C1630"/>
+      <stop offset=".45" stop-color="#14213D"/>
+      <stop offset=".72" stop-color="#23305B"/>
+      <stop offset=".86" stop-color="#3A3D6B"/>
+    </linearGradient>
+    <radialGradient id="dusk" cx="140" cy="400" r="280" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFB870" stop-opacity=".5"/>
+      <stop offset=".45" stop-color="#E7876C" stop-opacity=".14"/>
+      <stop offset="1" stop-color="#E7876C" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="halo" cx="420" cy="112" r="80" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFF4D6" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#FFF4D6" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="lamp" cx="326" cy="390" r="160" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFF0BE" stop-opacity=".95"/>
+      <stop offset=".08" stop-color="#FFD57A" stop-opacity=".7"/>
+      <stop offset=".3" stop-color="#FFC857" stop-opacity=".28"/>
+      <stop offset=".62" stop-color="#FFC857" stop-opacity=".08"/>
+      <stop offset="1" stop-color="#FFC857" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="walk" x1="0" y1="452" x2="0" y2="492" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F6D9A0" stop-opacity=".8"/>
+      <stop offset="1" stop-color="#F6D9A0" stop-opacity=".12"/>
+    </linearGradient>
+    <linearGradient id="pane" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFE3A0"/>
+      <stop offset="1" stop-color="#FFC15A"/>
+    </linearGradient>
+    <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.4"/>
+    </filter>
+    <mask id="crescent">
+      <circle cx="420" cy="112" r="25" fill="#fff"/>
+      <circle cx="432" cy="102" r="22" fill="#000"/>
+    </mask>
+  </defs>
+
+  <g clip-path="url(#arch)">
+    <!-- Dusk sky -->
+    <rect width="560" height="500" fill="url(#sky)"/>
+    <rect width="560" height="500" fill="url(#dusk)"/>
+
+    <!-- Stars -->
+    <g fill="#FFF9EC">
+      <circle cx="122" cy="178" r="1.6" opacity=".8"/>
+      <circle cx="164" cy="112" r="1.2" opacity=".6"/>
+      <circle cx="208" cy="152" r="1.8" opacity=".9"/>
+      <circle cx="194" cy="62" r="1.3" opacity=".7"/>
+      <circle cx="252" cy="84" r="1.4" opacity=".8"/>
+      <circle cx="304" cy="126" r="1.5" opacity=".7"/>
+      <circle cx="346" cy="60" r="1.2" opacity=".6"/>
+      <circle cx="372" cy="170" r="1.6" opacity=".8"/>
+      <circle cx="474" cy="196" r="1.3" opacity=".6"/>
+      <circle cx="96" cy="246" r="1.2" opacity=".6"/>
+      <circle cx="146" cy="282" r="1" opacity=".5"/>
+      <circle cx="236" cy="214" r="1.1" opacity=".6"/>
+      <circle cx="336" cy="206" r="1" opacity=".5"/>
+      <circle cx="482" cy="268" r="1.4" opacity=".6"/>
+      <circle cx="410" cy="232" r="1" opacity=".5"/>
+      <circle cx="290" cy="40" r="1.1" opacity=".6"/>
+    </g>
+    <g fill="#FFD98A">
+      <path d="M270 150q0 10 10 10-10 0-10 10 0-10-10-10 10 0 10-10Z"/>
+      <path d="M448 226q0 7 7 7-7 0-7 7 0-7-7-7 7 0 7-7Z" opacity=".85"/>
+      <path d="M128 208q0 5 5 5-5 0-5 5 0-5-5-5 5 0 5-5Z" opacity=".7"/>
+    </g>
+
+    <!-- Moon -->
+    <circle cx="420" cy="112" r="80" fill="url(#halo)"/>
+    <rect x="380" y="70" width="80" height="80" fill="#FFF4D6" mask="url(#crescent)"/>
+
+    <!-- Far hills, with a village far away -->
+    <path d="M40 394c60-24 128-32 190-20s116 24 176 14 78-24 114-22v134H40Z" fill="#1D2B51"/>
+    <g fill="#FFC857" opacity=".75">
+      <rect x="112" y="382" width="3" height="3" rx=".6"/>
+      <rect x="121" y="379" width="3" height="3" rx=".6"/>
+      <rect x="131" y="381" width="2.6" height="2.6" rx=".6"/>
+      <rect x="452" y="376" width="3" height="3" rx=".6"/>
+      <rect x="462" y="373" width="2.6" height="2.6" rx=".6"/>
+    </g>
+
+    <!-- Spruce behind the house -->
+    <g fill="#132B45">
+      <path d="M108 296 84 352h48Z"/>
+      <path d="M108 324 76 392h64Z"/>
+      <path d="M108 356 70 434h76Z"/>
+    </g>
+    <rect x="105" y="432" width="6" height="12" fill="#0E172C"/>
+
+    <!-- Near ground -->
+    <path d="M40 436c96-12 196-16 284-11s144 11 196 5v70H40Z" fill="#101A33"/>
+
+    <!-- Chimney and a wisp of smoke -->
+    <g fill="#FFF9EC" filter="url(#soft)">
+      <circle cx="336" cy="238" r="7" opacity=".16"/>
+      <circle cx="344" cy="219" r="9" opacity=".11"/>
+      <circle cx="357" cy="198" r="12" opacity=".07"/>
+    </g>
+    <rect x="324" y="258" width="18" height="52" fill="#1B2A50"/>
+    <rect x="320" y="252" width="26" height="9" rx="2" fill="#0E172C"/>
+
+    <!-- The side wing -->
+    <path d="M150 440v-62l58-26v88Z" fill="#26396A"/>
+    <rect x="164" y="392" width="26" height="26" rx="2" fill="#F2B45A"/>
+    <path d="M177 392v26M164 405h26" stroke="#0E172C" stroke-width="2.5"/>
+    <rect x="164" y="392" width="26" height="26" rx="2" fill="none" stroke="#0E172C" stroke-width="3.5"/>
+    <path d="M144 381 208 352" stroke="#0E172C" stroke-width="10" stroke-linecap="round"/>
+
+    <!-- The house -->
+    <path d="M206 440V328l84-66 84 66v112Z" fill="#2E4373"/>
+    <!-- Attic window -->
+    <circle cx="290" cy="302" r="12" fill="url(#pane)"/>
+    <path d="M290 290v24M278 302h24" stroke="#0E172C" stroke-width="2.5"/>
+    <circle cx="290" cy="302" r="12" fill="none" stroke="#0E172C" stroke-width="3.5"/>
+    <!-- Big window -->
+    <rect x="222" y="350" width="44" height="40" rx="2" fill="url(#pane)"/>
+    <path d="M244 350v40M222 370h44" stroke="#0E172C" stroke-width="2.5"/>
+    <rect x="222" y="350" width="44" height="40" rx="2" fill="none" stroke="#0E172C" stroke-width="3.5"/>
+    <rect x="218" y="389" width="52" height="5" rx="1.5" fill="#0E172C"/>
+    <!-- Narrow window -->
+    <rect x="344" y="346" width="20" height="46" rx="2" fill="url(#pane)"/>
+    <path d="M344 369h20" stroke="#0E172C" stroke-width="2.5"/>
+    <rect x="344" y="346" width="20" height="46" rx="2" fill="none" stroke="#0E172C" stroke-width="3.5"/>
+    <!-- Front door -->
+    <path d="M282 440v-50a16 16 0 0 1 32 0v50Z" fill="#2A9D8F"/>
+    <path d="M290 398v-6a8 8 0 0 1 16 0v6Z" fill="url(#pane)"/>
+    <path d="M298 404v30" stroke="#1F7A6F" stroke-width="2"/>
+    <circle cx="308" cy="416" r="2.2" fill="#FFD98A"/>
+    <path d="M282 440v-50a16 16 0 0 1 32 0v50" fill="none" stroke="#0E172C" stroke-width="3.5"/>
+    <!-- Door hood -->
+    <path d="M272 373 298 355l26 18" fill="none" stroke="#0E172C" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Roof -->
+    <path d="M198 332 290 256l92 76-11 9-81-66-81 66Z" fill="#0E172C"/>
+    <path d="M200 330 290 256l90 74" fill="none" stroke="#3D5188" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity=".7"/>
+
+    <!-- Steps and the walk -->
+    <path d="M282 452h32l34 40h-100Z" fill="url(#walk)"/>
+    <rect x="276" y="440" width="44" height="6" rx="1.5" fill="#D7BE8E"/>
+    <rect x="270" y="446" width="56" height="6" rx="1.5" fill="#BFA476"/>
+
+    <!-- Plant by the door -->
+    <g>
+      <path d="M262 420c-6-8-6-16 0-22 2 8 3 14 0 22Z" fill="#2A9D8F"/>
+      <path d="M264 420c2-10 8-15 15-15-3 7-8 12-15 15Z" fill="#23877B"/>
+      <path d="M262 421c-5-4-12-5-16-2 5 4 10 4 16 2Z" fill="#1F7A6F"/>
+      <path d="M254 422h20l-2.5 18h-15Z" fill="#C0703E"/>
+    </g>
+
+    <!-- Round tree and fence -->
+    <rect x="428" y="396" width="8" height="46" fill="#0E172C"/>
+    <circle cx="432" cy="372" r="36" fill="#1B4750"/>
+    <circle cx="408" cy="396" r="24" fill="#1B4750"/>
+    <circle cx="458" cy="398" r="24" fill="#173F48"/>
+    <g fill="#1E2D52">
+      <rect x="470" y="424" width="60" height="4"/>
+      <rect x="470" y="434" width="60" height="4"/>
+      <path d="M474 444v-22l3-4 3 4v22ZM488 444v-22l3-4 3 4v22ZM502 444v-22l3-4 3 4v22ZM516 444v-22l3-4 3 4v22Z"/>
+    </g>
+
+    <!-- Porch light and its glow -->
+    <circle cx="326" cy="390" r="160" fill="url(#lamp)"/>
+    <path d="M320 392h6" stroke="#0E172C" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="m321.5 383 4.5-5 4.5 5Z" fill="#0E172C"/>
+    <rect x="322" y="383" width="8" height="12" rx="1.5" fill="#FFF3C8" stroke="#0E172C" stroke-width="2"/>
+    <rect x="321" y="395" width="10" height="2.5" rx="1" fill="#0E172C"/>
+
+    <!-- A cat, waiting to be let in -->
+    <g fill="#0A1122">
+      <ellipse cx="340" cy="436" rx="8.5" ry="10"/>
+      <circle cx="340" cy="421" r="6.5"/>
+      <path d="m334.2 418.5.8-8.5 4.4 6ZM345.8 418.5l-.8-8.5-4.4 6Z"/>
+      <path d="M348 444c7-1 10-7 7-14" fill="none" stroke="#0A1122" stroke-width="3" stroke-linecap="round"/>
+    </g>
+  </g>
+</svg>

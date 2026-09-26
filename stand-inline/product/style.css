@@ -1,0 +1,120 @@
+body { margin: 0; background: #F4F1EA; }
+
+.northfold {
+  --paper: #F4F1EA;
+  --card: #FFFDF8;
+  --ink: #1E2421;
+  --text: #464D48;
+  --muted: #747A74;
+  --line: #DCD5C6;
+  --spruce: #3F5D45;
+  --clay: #C8643B;
+  color: var(--ink);
+  font: 400 17px/1.6 'Barlow', ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.northfold * { box-sizing: border-box; }
+.northfold a { color: inherit; }
+.northfold h1, .northfold h2 { margin: 0; font-family: 'Barlow Condensed', 'Barlow', sans-serif; font-weight: 700; letter-spacing: .01em; text-transform: uppercase; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* Navigation */
+.northfold .nav { display: flex; align-items: center; gap: 40px; max-width: 1200px; margin: 0 auto; padding: 22px 28px; }
+.northfold .logo { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); font: 700 24px/1 'Barlow Condensed', sans-serif; letter-spacing: .12em; text-decoration: none; text-transform: uppercase; }
+.northfold .logo svg { width: 38px; fill: var(--spruce); }
+.northfold .logo .snow { fill: var(--paper); }
+.northfold .nav nav { display: flex; gap: 28px; font-weight: 500; font-size: 15px; letter-spacing: .08em; text-transform: uppercase; }
+.northfold .nav nav a { text-decoration: none; }
+.northfold .nav nav a:hover, .northfold .nav nav a[aria-current] { color: var(--clay); }
+.northfold .cart { display: inline-flex; align-items: center; gap: 8px; margin-left: auto; padding: 8px 14px; border: 1.5px solid var(--ink); border-radius: 999px; font-weight: 600; font-size: 15px; text-decoration: none; }
+.northfold .cart span { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--clay); color: #fff; font-size: 12px; }
+
+.northfold main { max-width: 1200px; margin: 0 auto; padding: 0 28px 88px; }
+.northfold .crumbs { margin: 6px 0 22px; color: var(--muted); font-size: 14px; }
+.northfold .crumbs a { text-decoration: none; }
+.northfold .crumbs span { margin: 0 6px; opacity: .6; }
+
+/* Product */
+.northfold .product { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 56px; align-items: start; }
+.northfold .gallery .hero { display: block; width: 100%; height: auto; border-radius: 8px; }
+.northfold .thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 12px; }
+.northfold .thumbs span { aspect-ratio: 4 / 3; border-radius: 6px; background: url(tent.svg) var(--x) var(--y) / var(--z) no-repeat #DDE3DF; outline: 2px solid transparent; outline-offset: 3px; }
+.northfold .thumbs .on { outline-color: var(--ink); }
+
+.northfold .tags { margin: 6px 0 0; color: var(--clay); font: 600 14px/1 'Barlow Condensed', sans-serif; letter-spacing: .16em; text-transform: uppercase; }
+.northfold h1 { margin: 12px 0 10px; font-size: clamp(56px, 7vw, 88px); line-height: .9; }
+.northfold .rating { margin: 0; color: var(--text); font-size: 15px; }
+.northfold .rating span { color: var(--clay); letter-spacing: 1px; }
+.northfold .rating a { margin-left: 6px; color: var(--muted); }
+.northfold .price { margin: 22px 0 14px; font: 600 38px/1 'Barlow Condensed', sans-serif; }
+.northfold .blurb { max-width: 32em; margin: 0 0 22px; color: var(--text); }
+
+.northfold .colors { display: flex; gap: 12px; margin: 0 0 26px; padding: 0; border: 0; }
+.northfold .colors legend { margin-bottom: 10px; padding: 0; color: var(--text); font-size: 15px; }
+.northfold .colors label { display: block; width: 34px; height: 34px; border-radius: 50%; background: var(--c); box-shadow: inset 0 0 0 1px rgb(0 0 0 / .12); cursor: pointer; }
+.northfold .colors label:has(:checked) { outline: 2px solid var(--ink); outline-offset: 3px; }
+.northfold .colors label:has(:focus-visible) { outline: 2px solid var(--clay); outline-offset: 3px; }
+.northfold .colors input { position: absolute; opacity: 0; }
+
+.northfold .add { width: 100%; padding: 17px 22px; border: 0; border-radius: 6px; background: var(--ink); color: #fff; font: 600 18px/1 'Barlow', sans-serif; letter-spacing: .02em; cursor: pointer; transition: background-color .15s; }
+.northfold .add:hover { background: var(--spruce); }
+.northfold .assure { margin: 12px 0 0; color: var(--muted); font-size: 14px; text-align: center; }
+
+/* Stand Inline: three tokens and two parts. Font and text color come from the page. */
+.northfold .ask { margin-top: 28px; padding-top: 26px; border-top: 1px solid var(--line); }
+.northfold stand-inline {
+  --si-accent: #C8643B;
+  --si-radius: 6px;
+  --si-surface: #FFFDF8;
+  font-size: 16px;
+}
+.northfold stand-inline::part(send) { border-radius: 4px; }
+.northfold stand-inline::part(suggestion) { border-radius: 4px; }
+
+/* Features */
+.northfold .features { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; margin: 96px 0 0; padding: 48px 0; border-block: 1px solid var(--line); }
+.northfold .features svg { width: 40px; height: 40px; fill: none; stroke: var(--spruce); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.northfold .features h2 { margin: 14px 0 6px; font-size: 24px; }
+.northfold .features p { margin: 0; color: var(--text); }
+
+/* Specs */
+.northfold .specs { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 40px; padding: 72px 0; }
+.northfold .specs h2, .northfold .reviews h2, .northfold .more h2 { font-size: 40px; line-height: 1; }
+.northfold .specs dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 40px; margin: 0; }
+.northfold .specs dl div { display: flex; justify-content: space-between; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.northfold .specs dt { color: var(--muted); }
+.northfold .specs dd { margin: 0; font-weight: 600; text-align: right; }
+
+/* Reviews */
+.northfold .reviews { padding: 24px 0 72px; }
+.northfold .reviews-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 28px; }
+.northfold .reviews-head p { margin: 0; color: var(--text); }
+.northfold .reviews-head strong { font: 700 28px/1 'Barlow Condensed', sans-serif; }
+.northfold .reviews .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.northfold blockquote { margin: 0; padding: 26px 28px; border-radius: 8px; background: var(--card); box-shadow: 0 1px 0 var(--line); }
+.northfold blockquote p { margin: 0 0 14px; color: var(--text); }
+.northfold blockquote .stars { margin-bottom: 10px; color: var(--clay); letter-spacing: 2px; }
+.northfold blockquote footer { color: var(--muted); font-size: 15px; font-weight: 600; }
+
+/* More */
+.northfold .more .row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 28px; }
+.northfold .more a { display: grid; gap: 4px; padding: 22px; border: 1px solid var(--line); border-radius: 8px; text-decoration: none; transition: border-color .15s; }
+.northfold .more a:hover { border-color: var(--ink); }
+.northfold .more .swatch { width: 100%; height: 120px; margin-bottom: 14px; border-radius: 6px; background: linear-gradient(160deg, color-mix(in srgb, var(--c) 70%, white), var(--c)); }
+.northfold .more strong { font: 700 22px/1.1 'Barlow Condensed', sans-serif; text-transform: uppercase; }
+.northfold .more span:not(.swatch) { color: var(--muted); font-size: 15px; }
+
+.northfold .foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; max-width: 1200px; margin: 0 auto; padding: 28px; border-top: 1px solid var(--line); color: var(--muted); font-size: 15px; }
+.northfold .foot .logo { font-size: 18px; }
+
+@media (max-width: 960px) {
+  .northfold .product, .northfold .specs { grid-template-columns: 1fr; gap: 32px; }
+  .northfold .features, .northfold .reviews .grid, .northfold .more .row { grid-template-columns: 1fr; gap: 20px; }
+  .northfold .features { margin-top: 64px; }
+}
+@media (max-width: 640px) {
+  .northfold .nav { gap: 20px; padding: 18px 20px; }
+  .northfold .nav nav { display: none; }
+  .northfold main { padding: 0 20px 64px; }
+  .northfold .specs dl { grid-template-columns: 1fr; }
+}

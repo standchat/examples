@@ -1,0 +1,184 @@
+body { margin: 0; background: #FFF9EC; }
+
+.porchlight {
+  --navy: #14213D;
+  --amber: #FFC857;
+  --amber-tint: #FFF0CC;
+  --cream: #FFF9EC;
+  --card: #FFFFFF;
+  --text: #2B2F3A;
+  --muted: #667085;
+  --line: #EFE6D2;
+  --teal: #2A9D8F;
+  --teal-ink: #1D7A6E;
+  --shadow: 0 1px 2px rgb(20 33 61 / .05), 0 18px 40px -30px rgb(20 33 61 / .35);
+  color: var(--text);
+  font: 400 17px/1.6 'Nunito Sans', ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.porchlight * { box-sizing: border-box; }
+.porchlight a { color: inherit; }
+.porchlight h1, .porchlight h2, .porchlight h3 { margin: 0; color: var(--navy); font-family: 'Nunito', 'Nunito Sans', sans-serif; font-weight: 800; letter-spacing: -.012em; }
+.porchlight :focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; border-radius: 6px; }
+.porchlight .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* Header and hero share the porch light's glow */
+.porchlight .top {
+  background:
+    radial-gradient(640px 480px at 78% 58%, rgb(255 200 87 / .2), transparent 70%),
+    linear-gradient(#FFF9EC, #FFF4DE);
+  border-bottom: 1px solid var(--line);
+}
+.porchlight .nav { display: flex; align-items: center; gap: 48px; max-width: 1200px; margin: 0 auto; padding: 22px 28px; }
+.porchlight .logo { display: inline-flex; align-items: center; gap: 10px; color: var(--navy); font: 800 25px/1 'Nunito', sans-serif; letter-spacing: -.02em; text-decoration: none; }
+.porchlight .logo svg { flex: none; width: 38px; height: 38px; }
+.porchlight .logo .tile { fill: var(--navy); }
+.porchlight .logo .line { fill: none; stroke: var(--amber); stroke-width: 2.6; stroke-linecap: round; }
+.porchlight .logo .cap { fill: var(--amber); stroke: var(--amber); stroke-width: 1.6; stroke-linejoin: round; }
+.porchlight .logo .lamp { fill: #FFF3C8; stroke: var(--amber); stroke-width: 2.6; }
+.porchlight .nav nav { display: flex; gap: 32px; font-weight: 700; font-size: 16px; }
+.porchlight .nav nav a { padding: 6px 0; border-bottom: 2px solid transparent; color: var(--text); text-decoration: none; }
+.porchlight .nav nav a:hover { color: var(--navy); border-color: var(--line); }
+.porchlight .nav nav a[aria-current] { color: var(--navy); border-color: var(--amber); }
+.porchlight .login { display: inline-flex; align-items: center; gap: 8px; margin-left: auto; padding: 10px 18px 10px 14px; border-radius: 999px; background: var(--navy); color: #fff; font-weight: 700; font-size: 15px; line-height: 1.2; text-decoration: none; transition: background-color .15s; }
+.porchlight .login:hover { background: #22335A; }
+.porchlight .login svg { width: 20px; height: 20px; fill: none; stroke: var(--amber); stroke-width: 2; stroke-linecap: round; }
+
+.porchlight .hero { display: grid; grid-template-columns: minmax(0, 720px) minmax(0, 1fr); gap: 56px; align-items: start; max-width: 1200px; margin: 0 auto; padding: 44px 28px 88px; }
+.porchlight .eyebrow { margin: 0 0 14px; color: var(--teal-ink); font: 800 14px/1 'Nunito', sans-serif; letter-spacing: .14em; text-transform: uppercase; }
+.porchlight h1 { font-size: clamp(42px, 5.6vw, 66px); line-height: 1.02; letter-spacing: -.03em; }
+.porchlight .lede { max-width: 32em; margin: 16px 0 0; color: var(--muted); font-size: 20px; line-height: 1.5; }
+.porchlight .lede .offline, .porchlight .hero:has(stand-inline[data-state="offline"]) .lede .online { display: none; }
+.porchlight .hero:has(stand-inline[data-state="offline"]) .lede .offline { display: inline; }
+/* The house stays beside a long conversation. */
+.porchlight .hero-art { position: sticky; top: 24px; margin-top: 4px; }
+.porchlight .hero-art img { display: block; width: 100%; height: auto; filter: drop-shadow(0 26px 34px rgb(20 33 61 / .2)); }
+
+/* Stand Inline: the search box that answers. Font and text color come from the page. */
+.porchlight .search { margin-top: 30px; }
+.porchlight stand-inline {
+  font-size: 18px;
+  --si-accent: #14213D;
+  --si-surface: #FFFFFF;
+  --si-line: #E6DBC3;
+  --si-radius: 16px;
+  --si-visitor-bg: #FFEDC4;
+  --si-shadow: 0 1px 2px rgb(20 33 61 / .06), 0 30px 60px -34px rgb(20 33 61 / .5);
+}
+/* Room for the box and its suggestions while the script loads, so nothing jumps. */
+.porchlight stand-inline:not(:defined) { display: block; min-height: 116px; }
+/* Until the conversation starts, the box sits up off the page like a search box. */
+.porchlight stand-inline:not([data-state="conversation"])::part(composer) {
+  padding: .5em .5em .5em 1.1em;
+  box-shadow: 0 1px 2px rgb(20 33 61 / .06), 0 18px 40px -22px rgb(20 33 61 / .45);
+}
+.porchlight stand-inline:not([data-state="conversation"]):focus-within::part(composer) {
+  box-shadow: 0 0 0 4px rgb(20 33 61 / .14), 0 18px 40px -22px rgb(20 33 61 / .45);
+}
+.porchlight stand-inline::part(suggestion) { background: #FFFFFF; }
+.porchlight stand-inline::part(avatar) { background: #FFE3A0; color: var(--navy); }
+.porchlight stand-inline::part(badge) { background: #FFE3A0; }
+
+/* The plain article search, for when nobody can answer. */
+.porchlight .fallback { display: none; gap: 8px; padding: 9px 9px 9px 20px; border: 1px solid #E6DBC3; border-radius: 16px; background: #fff; box-shadow: 0 1px 2px rgb(20 33 61 / .06), 0 18px 40px -22px rgb(20 33 61 / .45); font-size: 18px; }
+.porchlight .fallback:focus-within { box-shadow: 0 0 0 4px rgb(20 33 61 / .14), 0 18px 40px -22px rgb(20 33 61 / .45); }
+.porchlight .fallback input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; color: inherit; font: inherit; }
+.porchlight .fallback input::placeholder { color: var(--muted); }
+.porchlight .fallback button { padding: 10px 18px; border: 0; border-radius: 11px; background: var(--navy); color: #fff; font: 700 16px/1.2 'Nunito Sans', sans-serif; cursor: pointer; }
+.porchlight .search:has(stand-inline[data-state="offline"]) .fallback { display: flex; }
+
+.porchlight .urgent { display: flex; align-items: center; gap: 10px; margin: 26px 0 0; color: var(--muted); font-size: 15px; }
+.porchlight .urgent svg { flex: none; width: 30px; height: 30px; padding: 6px; border-radius: 50%; background: var(--amber-tint); fill: var(--amber); stroke: #B7791F; stroke-width: 1.4; stroke-linejoin: round; }
+.porchlight .urgent a { color: var(--navy); font-weight: 700; text-decoration-color: var(--amber); text-decoration-thickness: 2px; text-underline-offset: 3px; white-space: nowrap; }
+
+/* Topics */
+.porchlight main { max-width: 1200px; margin: 0 auto; padding: 80px 28px 96px; }
+.porchlight .section-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; margin-bottom: 26px; }
+.porchlight .section-head h2, .porchlight .popular h2 { font-size: clamp(28px, 3vw, 34px); line-height: 1.15; }
+.porchlight .section-head a { color: var(--teal-ink); font-weight: 700; text-decoration: none; }
+.porchlight .section-head a::after { content: ' →'; }
+.porchlight .section-head a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.porchlight .topics .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.porchlight .topic { padding: 26px 26px 14px; border: 1px solid var(--line); border-radius: 20px; background: var(--card); box-shadow: var(--shadow); }
+.porchlight .topic .icon { display: grid; place-items: center; width: 50px; height: 50px; border-radius: 15px; background: var(--amber-tint); }
+.porchlight .topic .icon svg { width: 28px; height: 28px; fill: none; stroke: var(--navy); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.porchlight .topic h3 { margin: 18px 0 8px; font-size: 21px; line-height: 1.25; }
+.porchlight .topic ul { margin: 0; padding: 0; list-style: none; }
+.porchlight .topic li + li { border-top: 1px solid var(--line); }
+.porchlight .topic li a { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 11px 0; font-size: 16px; text-decoration: none; }
+.porchlight .topic li a::after { content: '→'; flex: none; color: #B9AE96; transition: transform .15s, color .15s; }
+.porchlight .topic li a:hover { color: var(--navy); text-decoration: underline; text-decoration-color: var(--amber); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.porchlight .topic li a:hover::after { color: var(--teal); transform: translateX(3px); }
+
+/* Popular right now */
+.porchlight .popular { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); gap: 40px; align-items: start; margin-top: 88px; }
+.porchlight .popular ol { margin: 22px 0 0; padding: 0; list-style: none; counter-reset: popular; border-top: 1px solid var(--line); }
+.porchlight .popular li { border-bottom: 1px solid var(--line); counter-increment: popular; }
+.porchlight .popular li a { display: grid; grid-template-columns: 48px minmax(0, 1fr) auto; align-items: baseline; gap: 12px; padding: 17px 4px; text-decoration: none; }
+.porchlight .popular li a::before { content: counter(popular, decimal-leading-zero); color: #946510; font: 800 17px/1 'Nunito', sans-serif; }
+.porchlight .popular .title { color: var(--navy); font-size: 18px; font-weight: 700; }
+.porchlight .popular .meta { color: var(--muted); font-size: 14px; white-space: nowrap; }
+.porchlight .popular li a:hover .title { text-decoration: underline; text-decoration-color: var(--amber); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+
+.porchlight .notice { position: relative; overflow: hidden; margin-top: 4px; padding: 30px 30px 28px; border-radius: 22px; background: var(--amber); color: var(--navy); }
+.porchlight .notice::after { content: ''; position: absolute; top: -70px; right: -70px; width: 190px; height: 190px; border-radius: 50%; background: radial-gradient(circle, rgb(255 246 214 / .9), rgb(255 246 214 / 0) 70%); }
+.porchlight .notice .tag { position: relative; z-index: 1; display: inline-block; margin: 0 0 16px; padding: 5px 11px; border-radius: 999px; background: var(--navy); color: var(--amber); font: 800 12px/1.2 'Nunito', sans-serif; letter-spacing: .1em; text-transform: uppercase; }
+.porchlight .notice h3 { position: relative; z-index: 1; font-size: 24px; line-height: 1.2; }
+.porchlight .notice p:not(.tag) { margin: 12px 0 18px; font-size: 16px; line-height: 1.55; }
+.porchlight .notice a { font-weight: 800; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.porchlight .notice a::after { content: ' →'; }
+.porchlight .notice a:focus-visible { outline-color: var(--navy); }
+
+/* Still need us? */
+.porchlight .contact { background: var(--navy); color: #C9D2E3; }
+.porchlight .contact-inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr); gap: 56px; align-items: center; max-width: 1200px; margin: 0 auto; padding: 72px 28px; }
+.porchlight .contact h2 { color: #fff; font-size: clamp(30px, 3.2vw, 40px); line-height: 1.1; }
+.porchlight .contact-copy p { max-width: 26em; margin: 14px 0 0; font-size: 17px; }
+.porchlight .ways { margin: 0; padding: 0; overflow: hidden; border: 1px solid rgb(255 255 255 / .1); border-radius: 22px; background: rgb(255 255 255 / .04); list-style: none; }
+.porchlight .ways li { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; align-items: center; gap: 18px; padding: 20px 24px; }
+.porchlight .ways li + li { border-top: 1px solid rgb(255 255 255 / .08); }
+.porchlight .ways svg { width: 44px; height: 44px; padding: 10px; border-radius: 13px; background: rgb(255 200 87 / .14); fill: none; stroke: var(--amber); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.porchlight .ways p { display: grid; margin: 0; }
+.porchlight .ways strong { color: #fff; font: 800 17px/1.3 'Nunito', sans-serif; }
+.porchlight .ways span { color: #A9B4C9; font-size: 14.5px; line-height: 1.45; }
+.porchlight .ways a { color: var(--amber); font: 800 18px/1.3 'Nunito', sans-serif; text-decoration-color: rgb(255 200 87 / .4); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.porchlight .ways a:hover { text-decoration-color: var(--amber); }
+.porchlight .ways a:focus-visible { outline-color: var(--amber); }
+
+.porchlight .foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; max-width: 1200px; margin: 0 auto; padding: 28px; color: var(--muted); font-size: 15px; }
+.porchlight .foot .logo { font-size: 19px; }
+
+@media (max-width: 960px) {
+  .porchlight .hero { grid-template-columns: minmax(0, 1fr) minmax(0, 270px); gap: 36px; padding-bottom: 72px; }
+  .porchlight .hero-art { margin-top: 30px; }
+  .porchlight .topics .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .porchlight .popular { grid-template-columns: 1fr; gap: 28px; }
+  .porchlight .contact-inner { grid-template-columns: 1fr; gap: 28px; }
+}
+@media (max-width: 640px) {
+  .porchlight .nav { gap: 16px; padding: 16px 20px; }
+  .porchlight .nav nav { display: none; }
+  .porchlight .logo { font-size: 22px; }
+  .porchlight .logo svg { width: 34px; height: 34px; }
+  .porchlight .hero { grid-template-columns: 1fr; padding: 20px 20px 56px; }
+  .porchlight .hero-art { display: none; }
+  .porchlight .lede { font-size: 18px; }
+  /* 16px: the longest example question fits a 390px phone, and iOS doesn't zoom the box. */
+  .porchlight stand-inline, .porchlight .fallback { font-size: 16px; }
+  .porchlight stand-inline:not([data-state="conversation"])::part(composer) { padding-left: .9em; }
+  .porchlight stand-inline:not(:defined) { min-height: 142px; }
+  .porchlight main { padding: 56px 20px 72px; }
+  .porchlight .topics .grid { grid-template-columns: 1fr; gap: 14px; }
+  .porchlight .topic { display: grid; grid-template-columns: 44px minmax(0, 1fr); column-gap: 14px; align-items: center; padding: 18px 20px 8px; }
+  .porchlight .topic .icon { width: 44px; height: 44px; border-radius: 13px; }
+  .porchlight .topic .icon svg { width: 25px; height: 25px; }
+  .porchlight .topic h3 { margin: 0; font-size: 19px; }
+  .porchlight .topic ul { grid-column: 1 / -1; margin-top: 8px; }
+  .porchlight .ways li { grid-template-columns: 44px minmax(0, 1fr); padding: 18px 20px; }
+  .porchlight .ways a { grid-column: 2; }
+  .porchlight .popular { margin-top: 64px; }
+  .porchlight .popular li a { grid-template-columns: 36px minmax(0, 1fr); }
+  .porchlight .popular .meta { grid-column: 2; }
+  .porchlight .contact-inner { padding: 56px 20px; }
+  .porchlight .foot { padding: 24px 20px; }
+}

@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Stand Inline on a docs page</title>
+  <meta name="description" content="Developer docs where the chat is a quiet line in the margin. Ask a question, or select a sentence and ask about it, and the answer grows as a thread right beside the text.">
+  <meta name="author" content="Stand Chat">
+  <link rel="author" href="https://stand.chat/">
+  <meta name="keywords" content="stand-inline, look=whisper, grow=unfold, ask-selection, two elements, --si-max-height">
+  <meta property="og:title" content="Stand Inline on a docs page">
+  <meta property="og:description" content="Developer docs where the chat is a quiet line in the margin. Ask a question, or select a sentence and ask about it, and the answer grows as a thread right beside the text.">
+  <meta property="og:image" content="https://examples.stand.chat/stand-inline/docs/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="stylesheet" href="/_shared/example.css">
+  <script type="module" src="/_shared/example.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Stand Inline: the whole conversation, in the page. No stand.js needed. -->
+  <script type="module" src="../stand-inline.js"></script>
+</head>
+<body>
+  <sx-example-bar></sx-example-bar>
+
+  <div class="tidewire">
+    <header class="top">
+      <a class="brand" href="#">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8"/><path class="wave" d="M6.5 13.5c2.4 0 3-3 5.4-3s3 3 5.4 3 3-3 5.4-3"/><path class="tide" d="M6.5 20.5c2.4 0 3-3 5.4-3s3 3 5.4 3 3-3 5.4-3"/><circle cx="25.6" cy="10.5" r="1.9"/></svg>
+        <span class="brand-name">Tidewire</span>
+        <span class="brand-docs">Docs</span>
+      </a>
+      <label class="search">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.75" cy="8.75" r="5.25"/><path d="m12.75 12.75 3.75 3.75"/></svg>
+        <input type="search" placeholder="Search docs" aria-label="Search docs">
+        <kbd>⌘K</kbd>
+      </label>
+      <nav class="links" aria-label="Tidewire">
+        <a href="#">API reference</a>
+        <a href="#">Changelog</a>
+        <a href="#"><span class="up" aria-hidden="true"></span>Status</a>
+      </nav>
+      <a class="dash" href="#">Dashboard</a>
+      <button class="menu" type="button">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3.5 6h13M3.5 10h13M3.5 14h13"/></svg>
+        Menu
+      </button>
+    </header>
+
+    <div class="layout">
+      <nav class="side" aria-label="Docs">
+        <div class="side-in">
+          <p class="group">Getting started</p>
+          <ul>
+            <li><a href="#">Quickstart</a></li>
+            <li><a href="#">Authentication</a></li>
+          </ul>
+          <p class="group">Webhooks</p>
+          <ul>
+            <li><a href="#">Overview</a></li>
+            <li><a href="#" aria-current="page">Verify signatures</a></li>
+            <li><a href="#">Retries and idempotency</a></li>
+            <li><a href="#">Event types</a></li>
+            <li><a href="#">Testing locally</a></li>
+          </ul>
+          <p class="group">API reference</p>
+          <ul>
+            <li><a href="#">Endpoints</a></li>
+            <li><a href="#">Events</a></li>
+            <li><a href="#">Deliveries</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <main class="main">
+        <article class="doc">
+          <nav class="crumbs" aria-label="Breadcrumb">
+            <a href="#">Docs</a><span aria-hidden="true">/</span><a href="#">Webhooks</a><span aria-hidden="true">/</span><span aria-current="page">Verify signatures</span>
+          </nav>
+
+          <h1>Verify webhook signatures</h1>
+          <p class="lede">Tidewire signs every delivery, so your endpoint can check that it really came from Tidewire and wasn’t changed on the way. Verify the signature before you trust the payload: the SDKs do it in one call, and doing it yourself takes about twenty lines.</p>
+
+          <h2 id="how-signing-works">How signing works</h2>
+          <p>Every delivery carries a <code>Tidewire-Signature</code> header with a timestamp and a signature:</p>
+          <div class="code">
+            <div class="code-head"><span>HTTP header</span></div>
+            <pre class="wrap"><code><span class="f">Tidewire-Signature</span>: t=<span class="n">1727354000</span>,<wbr>v1=<span class="s">5257a869e7ecebeda32affa62cdca3fa51cad7e77a0e56ff536d0ce8e108d8bd</span></code></pre>
+          </div>
+          <div class="table">
+            <table>
+              <thead><tr><th scope="col">Part</th><th scope="col">What it is</th></tr></thead>
+              <tbody>
+                <tr><td><code>t</code></td><td>When Tidewire signed the delivery, as a Unix timestamp in seconds.</td></tr>
+                <tr><td><code>v1</code></td><td>The signature: an HMAC-SHA256, hex-encoded. During a secret rotation there are two.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>To make the signature, Tidewire joins the timestamp and the raw request body with a period, and signs the result with your endpoint secret:</p>
+          <div class="code">
+            <div class="code-head"><span>Signature</span></div>
+            <pre><code>signed_payload = timestamp + <span class="s">"."</span> + raw_body
+v1             = <span class="f">hex</span>(<span class="f">HMAC_SHA256</span>(endpoint_secret, signed_payload))</code></pre>
+          </div>
+          <div class="callout" role="note">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5"/><path d="M10 9v4.5M10 6.4v.1"/></svg>
+            <p><strong>Your endpoint secret starts with <code>twsec_</code>.</strong> It isn’t your API key: every endpoint has its own secret, which you’ll find under <strong>Endpoints</strong> in the dashboard. Keep it on your server.</p>
+          </div>
+
+          <h2 id="verify-with-the-sdk">Verify with the SDK</h2>
+          <p>Install the SDK with <code>npm install @tidewire/node</code> or <code>pip install tidewire</code>. Then call <code>verify()</code> with the raw body, the header and your secret. It returns the event, or throws if the signature is wrong or too old.</p>
+          <div class="code tabs">
+            <div class="code-head">
+              <div class="tablist" role="radiogroup" aria-label="Language">
+                <input type="radio" name="sdk-language" id="lang-node" checked><label for="lang-node">Node.js</label>
+                <input type="radio" name="sdk-language" id="lang-python"><label for="lang-python">Python</label>
+              </div>
+              <span class="file" data-lang="node">server.js</span>
+              <span class="file" data-lang="python">app.py</span>
+            </div>
+            <pre data-lang="node"><code><span class="k">import</span> express <span class="k">from</span> <span class="s">"express"</span>;
+<span class="k">import</span> Tidewire <span class="k">from</span> <span class="s">"@tidewire/node"</span>;
+
+<span class="k">const</span> tidewire = <span class="k">new</span> <span class="f">Tidewire</span>(process.env.TIDEWIRE_API_KEY);
+<span class="k">const</span> app = <span class="f">express</span>();
+<span class="k">const</span> raw = express.<span class="f">raw</span>({ type: <span class="s">"application/json"</span> });
+
+<span class="c">// The raw body, on this route only: the signature covers the exact bytes.</span>
+app.<span class="f">post</span>(<span class="s">"/webhooks/tidewire"</span>, raw, (req, res) =&gt; {
+  <span class="k">let</span> event;
+  <span class="k">try</span> {
+    event = tidewire.webhooks.<span class="f">verify</span>(
+      req.body,
+      req.<span class="f">get</span>(<span class="s">"Tidewire-Signature"</span>),
+      process.env.TIDEWIRE_WEBHOOK_SECRET, <span class="c">// twsec_…</span>
+    );
+  } <span class="k">catch</span> (err) {
+    <span class="k">return</span> res.<span class="f">status</span>(<span class="n">400</span>).<span class="f">send</span>(<span class="s">`Webhook error: ${err.message}`</span>);
+  }
+
+  res.<span class="f">sendStatus</span>(<span class="n">200</span>); <span class="c">// Acknowledge first, process later.</span>
+  jobs.<span class="f">enqueue</span>(event);
+});</code></pre>
+            <pre data-lang="python"><code><span class="k">import</span> os
+<span class="k">from</span> flask <span class="k">import</span> Flask, request
+<span class="k">from</span> tidewire <span class="k">import</span> Tidewire, SignatureError
+
+tidewire = <span class="f">Tidewire</span>(os.environ[<span class="s">"TIDEWIRE_API_KEY"</span>])
+app = <span class="f">Flask</span>(__name__)
+
+<span class="d">@app.post</span>(<span class="s">"/webhooks/tidewire"</span>)
+<span class="k">def</span> <span class="f">tidewire_webhook</span>():
+    <span class="k">try</span>:
+        event = tidewire.webhooks.<span class="f">verify</span>(
+            request.<span class="f">get_data</span>(),  <span class="c"># the raw bytes, not request.json</span>
+            request.headers.<span class="f">get</span>(<span class="s">"Tidewire-Signature"</span>, <span class="s">""</span>),
+            os.environ[<span class="s">"TIDEWIRE_WEBHOOK_SECRET"</span>],  <span class="c"># twsec_…</span>
+        )
+    <span class="k">except</span> SignatureError <span class="k">as</span> err:
+        <span class="k">return</span> <span class="s">f"Webhook error: {err}"</span>, <span class="n">400</span>
+
+    jobs.<span class="f">enqueue</span>(event)  <span class="c"># Acknowledge first, process later.</span>
+    <span class="k">return</span> <span class="s">""</span>, <span class="n">200</span></code></pre>
+          </div>
+          <p>The Go and Ruby SDKs work the same way: <code>webhooks.verify</code> takes the raw body, the header and your secret.</p>
+
+          <h2 id="verify-it-yourself">Verify it yourself</h2>
+          <p>No SDK for your language? Verifying takes five steps:</p>
+          <ol class="steps">
+            <li><strong>Read the header.</strong> Split <code>Tidewire-Signature</code> on commas, then each part on <code>=</code>. Keep <code>t</code> and every <code>v1</code>.</li>
+            <li><strong>Rebuild the signed payload:</strong> the timestamp, a period, and the raw request body, byte for byte.</li>
+            <li><strong>Sign it</strong> with HMAC-SHA256, using your endpoint secret as the key, and hex-encode the result.</li>
+            <li><strong>Compare</strong> it with each <code>v1</code> in constant time. If none match, reject the delivery with a <code>400</code>.</li>
+            <li><strong>Check the timestamp.</strong> Reject it if it’s more than 300 seconds away from your clock.</li>
+          </ol>
+          <div class="code">
+            <div class="code-head"><span>Node.js</span><span class="file">verify.js</span></div>
+            <pre><code><span class="k">import</span> crypto <span class="k">from</span> <span class="s">"node:crypto"</span>;
+
+<span class="k">export</span> <span class="k">function</span> <span class="f">verifySignature</span>(rawBody, header, secret, tolerance = <span class="n">300</span>) {
+  <span class="k">const</span> parts = header.<span class="f">split</span>(<span class="s">","</span>).<span class="f">map</span>((part) =&gt; part.<span class="f">split</span>(<span class="s">"="</span>));
+  <span class="k">const</span> timestamp = <span class="f">Number</span>(parts.<span class="f">find</span>(([key]) =&gt; key === <span class="s">"t"</span>)?.[<span class="n">1</span>]);
+  <span class="k">const</span> signatures = parts.<span class="f">filter</span>(([key]) =&gt; key === <span class="s">"v1"</span>).<span class="f">map</span>(([, v]) =&gt; v);
+
+  <span class="k">const</span> expected = crypto.<span class="f">createHmac</span>(<span class="s">"sha256"</span>, secret)
+    .<span class="f">update</span>(<span class="s">`${timestamp}.`</span>)
+    .<span class="f">update</span>(rawBody)
+    .<span class="f">digest</span>(<span class="s">"hex"</span>);
+
+  <span class="k">const</span> matches = signatures.<span class="f">some</span>((signature) =&gt;
+    signature.length === expected.length &amp;&amp;
+    crypto.<span class="f">timingSafeEqual</span>(Buffer.<span class="f">from</span>(signature), Buffer.<span class="f">from</span>(expected)));
+  <span class="k">if</span> (!matches) <span class="k">throw</span> <span class="k">new</span> <span class="f">Error</span>(<span class="s">"No matching signature"</span>);
+
+  <span class="k">if</span> (Math.<span class="f">abs</span>(Date.<span class="f">now</span>() / <span class="n">1000</span> - timestamp) &gt; tolerance) {
+    <span class="k">throw</span> <span class="k">new</span> <span class="f">Error</span>(<span class="s">"Signature is too old"</span>);
+  }
+  <span class="k">return</span> JSON.<span class="f">parse</span>(rawBody);
+}</code></pre>
+          </div>
+          <div class="callout warn" role="note">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3.2 17.4 16H2.6Z"/><path d="M10 8.2v3.6M10 13.9v.1"/></svg>
+            <p><strong>Never compare signatures with <code>===</code>.</strong> A normal string comparison stops at the first different character, and the time that takes leaks how much of a forged signature is right.</p>
+          </div>
+
+          <h2 id="replay-protection">Replay protection</h2>
+          <p>Every signature includes the moment it was made, which makes a captured request useless later. Signatures older than five minutes are rejected, to stop replayed deliveries. The SDKs check this for you: <code>verify()</code> accepts a <code>tolerance</code> option in seconds (default 300), but keep the window as short as your setup allows.</p>
+          <p>Retries are signed again when they’re sent, so a retried delivery never arrives with an old timestamp. If fresh deliveries still fail the check, look at your server’s clock, or at a queue that holds requests before verifying them.</p>
+          <div class="callout" role="note">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5"/><path d="M10 9v4.5M10 6.4v.1"/></svg>
+            <p>The time window stops old requests from being replayed, not duplicates. To handle the same delivery twice safely, store each <code>Tidewire-Delivery-Id</code> and skip the ones you’ve seen. See <a href="#">Retries and idempotency</a>.</p>
+          </div>
+
+          <h2 id="rotate-your-secret">Rotate your secret</h2>
+          <p>Rotate the secret on a schedule, or when someone with access leaves. Nothing goes down while you do:</p>
+          <ol class="steps">
+            <li>In the dashboard, open <strong>Endpoints</strong>, choose the endpoint, and click <strong>Roll secret</strong>.</li>
+            <li>For the next 24 hours, two secrets are valid. Tidewire signs every delivery with both, so the header carries two <code>v1</code> signatures, and servers with either secret accept it.</li>
+            <li>Deploy the new secret before the 24 hours are up. After that, only the new one signs.</li>
+          </ol>
+          <p>If a secret has leaked, choose <strong>Expire now</strong> instead, and the old secret stops working immediately.</p>
+
+          <h2 id="common-problems">Common problems</h2>
+          <h3>The signature never matches</h3>
+          <p>You’re almost certainly verifying a parsed body. Tidewire signs the raw bytes, and JSON that was parsed and serialized again never matches: whitespace and key order change. In Express, use <code>express.raw({ type: "application/json" })</code> on the webhook route only, and keep <code>express.json()</code> for the rest of your app.</p>
+          <h3>Valid deliveries are rejected as too old</h3>
+          <p>Your server’s clock is probably off. The five-minute check uses your clock, so keep it in sync with NTP. On containers and serverless platforms, the host’s clock is usually right; on long-running VMs, it drifts.</p>
+          <h3>It works in testing, but not in production</h3>
+          <p>Check that you’re using the right endpoint’s secret. Every endpoint has its own, and test mode endpoints never share secrets with live ones. The endpoint that sent a delivery is in its <code>Tidewire-Endpoint</code> header.</p>
+        </article>
+
+        <nav class="pager" aria-label="Previous and next page">
+          <a class="prev" href="#"><span>Previous</span>Webhooks overview</a>
+          <a class="next" href="#"><span>Next</span>Retries and idempotency →</a>
+        </nav>
+      </main>
+
+      <aside class="rail">
+        <div class="rail-in">
+          <nav class="toc" aria-labelledby="toc-title">
+            <div class="toc-in">
+              <p class="rail-title" id="toc-title">On this page</p>
+              <ul>
+                <li><a href="#how-signing-works">How signing works</a></li>
+                <li><a href="#verify-with-the-sdk">Verify with the SDK</a></li>
+                <li><a href="#verify-it-yourself">Verify it yourself</a></li>
+                <li><a href="#replay-protection">Replay protection</a></li>
+                <li><a href="#rotate-your-secret">Rotate your secret</a></li>
+                <li><a href="#common-problems">Common problems</a></li>
+              </ul>
+            </div>
+          </nav>
+
+          <!-- Stand Inline, as a whisper in the margin. Select text in the article
+               to ask about it; the conversation grows here as a thread. scope keeps
+               this example's conversation apart from the other examples, which all
+               share the demo site. -->
+          <div class="rail-ask">
+            <stand-inline
+              id="ask-docs"
+              site="demo"
+              scope="tidewire"
+              look="whisper"
+              ask-selection="article"
+              placeholder="Ask about this page"
+              greeting="Stuck on signatures? Ask me anything about this page."
+              suggestions="Why does my signature never match? | How do I rotate the secret? | Show me this in Go"
+              prompt="The visitor is reading 'Verify webhook signatures' in the docs of Tidewire, a fictional webhooks API for developers. Facts from the page: every delivery has a Tidewire-Signature header like t=1727354000,v1=5257a869…; t is a Unix timestamp in seconds, v1 is the hex HMAC-SHA256 of the signed payload, timestamp + '.' + the raw request body, keyed with the endpoint secret. Secrets start with twsec_, and every endpoint has its own; test and live endpoints differ. SDKs for Node, Python, Go and Ruby verify in one call, tidewire.webhooks.verify(rawBody, header, secret, options), which throws when the signature is wrong. Signatures older than five minutes are rejected, to stop replayed deliveries; the tolerance option sets the window in seconds (default 300). Retries are signed again with a fresh timestamp. Compare signatures in constant time (crypto.timingSafeEqual in Node, hmac.compare_digest in Python). Most failures come from verifying a parsed body instead of the raw bytes: in Express, use express.raw({ type: 'application/json' }) on the webhook route only. Other causes: clock skew (sync with NTP) and using another endpoint's secret. Rotation: Roll secret in the dashboard; for 24 hours both secrets are valid and the header carries two v1 signatures; Expire now revokes the old one at once. For duplicates, store the Tidewire-Delivery-Id header (see Retries and idempotency). Answer like a senior engineer on the Tidewire team: brief and concrete, with a short code sample when it helps."
+              analytics-id="docs-verify-signatures">
+            </stand-inline>
+          </div>
+        </div>
+      </aside>
+
+      <!-- The same conversation, offered again where the article ends: this is
+           the one people use on phones, where the margin is hidden. -->
+      <section class="still" aria-label="Ask about this page">
+        <stand-inline
+          id="ask-docs-end"
+          site="demo"
+          scope="tidewire"
+          look="whisper"
+          ask-selection="article"
+          placeholder="Still stuck? Ask about this page"
+          greeting="Stuck on signatures? Ask me anything about this page."
+          suggestions="Why does my signature never match? | How do I rotate the secret? | Show me this in Go"
+          prompt="The visitor is reading 'Verify webhook signatures' in the docs of Tidewire, a fictional webhooks API for developers. Facts from the page: every delivery has a Tidewire-Signature header like t=1727354000,v1=5257a869…; t is a Unix timestamp in seconds, v1 is the hex HMAC-SHA256 of the signed payload, timestamp + '.' + the raw request body, keyed with the endpoint secret. Secrets start with twsec_, and every endpoint has its own; test and live endpoints differ. SDKs for Node, Python, Go and Ruby verify in one call, tidewire.webhooks.verify(rawBody, header, secret, options), which throws when the signature is wrong. Signatures older than five minutes are rejected, to stop replayed deliveries; the tolerance option sets the window in seconds (default 300). Retries are signed again with a fresh timestamp. Compare signatures in constant time (crypto.timingSafeEqual in Node, hmac.compare_digest in Python). Most failures come from verifying a parsed body instead of the raw bytes: in Express, use express.raw({ type: 'application/json' }) on the webhook route only. Other causes: clock skew (sync with NTP) and using another endpoint's secret. Rotation: Roll secret in the dashboard; for 24 hours both secrets are valid and the header carries two v1 signatures; Expire now revokes the old one at once. For duplicates, store the Tidewire-Delivery-Id header (see Retries and idempotency). Answer like a senior engineer on the Tidewire team: brief and concrete, with a short code sample when it helps."
+          analytics-id="docs-verify-signatures-end">
+        </stand-inline>
+      </section>
+    </div>
+
+    <footer class="foot">
+      <span class="foot-brand">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8"/><path class="wave" d="M6.5 13.5c2.4 0 3-3 5.4-3s3 3 5.4 3 3-3 5.4-3"/><path class="tide" d="M6.5 20.5c2.4 0 3-3 5.4-3s3 3 5.4 3 3-3 5.4-3"/><circle cx="25.6" cy="10.5" r="1.9"/></svg>
+        Tidewire
+      </span>
+      <span>A fictional webhooks company, made up for this example.</span>
+      <span>Updated 12 September 2026</span>
+    </footer>
+  </div>
+
+  <section id="how-it-works" class="sx-explainer">
+    <div class="sx-wrap">
+      <p class="sx-eyebrow">How it works · <a href="../">Stand Inline</a></p>
+      <h2>A whisper in the margin of your docs</h2>
+      <p class="sx-lead">Developers open the docs to fix things on their own, and a chat bubble in the corner only gets in the way. Here the chat is one quiet line under the table of contents. When someone does ask, the answer grows as a thread in the margin, right beside the sentence they were stuck on.</p>
+
+      <h3>Try it</h3>
+      <ol class="sx-steps">
+        <li>In the right margin, under <strong>On this page</strong>, click <strong>Ask about this page</strong>. A greeting and three questions appear: pick one or type your own. The table of contents folds away and the conversation grows in its place, while the article stays where it is.</li>
+        <li>Select a sentence in <a href="#replay-protection">Replay protection</a> and click <strong>Ask about this</strong>. The sentence travels with your question as a quote, so <em>“Can I make that window longer?”</em> is all you need to type.</li>
+        <li>Scroll to the end of the article. The line there offers to continue the same conversation: both lines share one. On a phone, where the margin is hidden, that line is where you ask.</li>
+        <li>Or <button type="button" class="sx-inline-button" data-sample="docs">watch a sample conversation</button>: scripted, nothing is sent. <button type="button" class="sx-inline-button" data-live hidden>Back to the live chat</button></li>
+      </ol>
+
+      <div class="sx-note">Chats here use <code>site="demo"</code>, Stand Chat's shared demo site. Its demo Stand-in reads the page's private prompt, but it may still decline to speak for a made-up webhooks company. With your own Site ID, your own Stand-ins answer, trained on your website.</div>
+
+      <h3>The element</h3>
+      <pre class="sx-code" data-file="index.html" data-wrap><code class="language-html">&lt;script type="module" src="stand-inline.js"&gt;&lt;/script&gt;
+
+&lt;!-- In the margin, under "On this page" --&gt;
+&lt;stand-inline
+  id="ask-docs"
+  site="YOUR-SITE-ID"
+  look="whisper"
+  ask-selection="article"
+  placeholder="Ask about this page"
+  greeting="Stuck on signatures? Ask me anything about this page."
+  suggestions="Why does my signature never match? | How do I rotate the secret? | Show me this in Go"
+  prompt="The visitor is reading 'Verify webhook signatures'. Header: t=…,v1=…, the HMAC-SHA256 of timestamp + '.' + raw body; secrets start with twsec_; 300 s tolerance…"
+  analytics-id="docs-verify-signatures"&gt;
+&lt;/stand-inline&gt;
+
+&lt;!-- Where the article ends, and on phones --&gt;
+&lt;stand-inline
+  id="ask-docs-end"
+  site="YOUR-SITE-ID"
+  look="whisper"
+  ask-selection="article"
+  placeholder="Still stuck? Ask about this page"
+  prompt="…the same prompt…"
+  analytics-id="docs-verify-signatures-end"&gt;
+&lt;/stand-inline&gt;</code></pre>
+      <ul>
+        <li><code>look="whisper"</code> is the quietest look: a line of text with a sparkle and a dashed underline. Once a conversation starts, it becomes a thread with a thin rule on its left, like a note in the margin.</li>
+        <li><code>greeting</code> and <code>suggestions</code> wait until someone clicks into the line, so the margin stays quiet for everyone who doesn’t need help.</li>
+        <li><code>ask-selection="article"</code> watches text selections inside the <code>&lt;article&gt;</code>. Select a sentence and an <strong>Ask about this</strong> button appears next to it; the quote goes out with the next message, so the answer knows what “that” means.</li>
+        <li>Two elements with the same <code>site</code> share one conversation. The one where it started shows it; the other offers <strong>Continue your conversation</strong>. Give each its own <code>id</code> and <code>analytics-id</code>, so you can see which placement people use.</li>
+        <li><code>prompt</code> is private context for whoever answers: the facts on the page, in short. Visitors don’t see it, but it’s in your HTML, so keep it to public facts.</li>
+      </ul>
+
+      <h3>Make it yours</h3>
+      <p>It takes its font, text color and background from the page. Tidewire sets the accent, keeps the thread inside the sticky margin, and lets the page make room with <code>data-state</code>, which the element sets on itself:</p>
+      <pre class="sx-code" data-file="style.css"><code class="language-css">stand-inline {
+  --si-accent: #0E7C86;
+  --si-muted: #57606A;
+  --si-radius: 8px;
+}
+
+.rail stand-inline {
+  font-size: 14px;
+  /* Past this height, the thread scrolls inside the sticky rail. */
+  --si-max-height: clamp(200px, 100vh - 320px, 680px);
+}
+
+/* A narrow margin skips the status line: the AI badge says enough. */
+.rail stand-inline::part(status) { display: none; }
+stand-inline::part(selection-button) { background: #0E7C86; }
+
+/* Once a conversation starts, the contents fold away. */
+.rail:has(stand-inline[data-state="conversation"]) .toc {
+  grid-template-rows: 0fr;
+  opacity: 0;
+}</code></pre>
+
+      <h3>Good to know</h3>
+      <ul>
+        <li><strong>Keep the thread shorter than the rail.</strong> The margin is sticky, so the conversation stays beside the text while people scroll. If <code>--si-max-height</code> lets it grow taller than the screen, the reply box slides out of reach. Tidewire subtracts the rest of the rail from the screen height.</li>
+        <li><strong>Only one element answers a selection:</strong> the one holding the conversation, or else the first one on screen. Below 1100 pixels the margin is hidden, so the line at the end of the article answers.</li>
+        <li><strong>Long selections are shortened</strong> to 400 characters, and the visitor can remove the quote before sending.</li>
+      </ul>
+
+      <h3>Copy this example</h3>
+      <pre class="sx-code"><code class="language-sh">npx degit standchat/examples/stand-inline my-stand-inline</code></pre>
+
+      <ul class="sx-links">
+        <li><a href="../">Stand Inline studio and reference</a></li>
+        <li><a href="../#how-this-was-made">How this was made</a></li>
+        <li><a href="https://stand.chat/guide/custom-chat-ui">Guide: custom chat UI ↗</a></li>
+        <li><a href="https://github.com/standchat/examples/tree/main/stand-inline/">Source on GitHub ↗</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <script type="module" src="../demo.js"></script>
+</body>
+</html>
