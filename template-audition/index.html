@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Foldcraft — Template audition</title>
+  <meta name="description" content="Try your business in three original website templates. Keep what fits, flag what doesn't, and discuss each section in a contextual Stand conversation.">
+  <meta name="author" content="Stand Chat Examples">
+  <meta name="keywords" content="custom-ui, inline-chat, design-brief, template-preview">
+  <meta property="og:title" content="Foldcraft — Audition this template for your business">
+  <meta property="og:description" content="Same business. Three very different first impressions. A template audition with section-level feedback and real Stand conversations.">
+  <meta property="og:image" content="https://examples.stand.chat/template-audition/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='9' fill='%231a1a1a'/%3E%3Cpath d='M10 10h22L10 32zm0 0v22h22z' fill='%23f7f6f2'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/_shared/example.css">
+  <script type="module" src="/_shared/example.js"></script>
+  <script defer src="https://cdn.stand.chat/widget/stand.js" data-stand-id="demo"></script>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <sx-example-bar></sx-example-bar>
+  <a class="skip" href="#audition">Skip to template audition</a>
+  <header class="site-nav wrap">
+    <a href="#" class="wordmark" aria-label="Foldcraft home"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M2 2h28L2 30Zm0 0v28h28Z"/></svg>foldcraft<span class="brand-dot">®</span></a>
+    <nav aria-label="Main navigation"><a href="#audition">Templates</a><a href="#method">The idea</a><a href="#how-it-works">Behind the build ↗</a></nav>
+    <a class="nav-cta" href="#business-name">Find your starting point <span>↗</span></a>
+  </header>
+  <main>
+    <section class="hero wrap">
+      <div><p class="eyebrow"><span class="little-cross">✳</span> A website that feels like you</p><h1>A different look.<br>The same <em>you.</em></h1></div>
+      <div class="hero-note"><span class="edition">THE TEMPLATE AUDITION / 001</span><p>Good design starts with recognition.<br>Put your business in the picture.<br>Then tell us what feels right.</p><a href="#audition">Audition this template for your business <span>↓</span></a></div>
+    </section>
+    <section class="workspace wrap" id="audition" aria-label="Template audition">
+      <div class="work-heading"><h2><span>01</span> Make it yours</h2><p>Three starting points. Zero blank canvases.</p><button class="text-button" id="reset">Reset audition ↺</button></div>
+      <div class="business-inputs">
+        <label>YOUR BUSINESS<input id="business-name" type="text" maxlength="60" value="Sunday Supply" autocomplete="organization"></label>
+        <label>IN A SENTENCE<textarea id="business-description" rows="1" maxlength="240">Everyday objects for a slower, more considered life.</textarea></label>
+        <p><span class="local-dot"></span> Your words. Instantly in the preview.<small>Local demo · no AI generation</small></p>
+      </div>
+      <div class="audition-grid">
+        <div class="stage">
+          <div class="template-tabs" role="tablist" aria-label="Choose a template">
+            <button role="tab" id="tab-field" aria-controls="preview-field" aria-selected="true" tabindex="0" data-template="field"><span class="swatch swatch-field" aria-hidden="true"><i></i><b></b></span><span><strong>Fieldwork</strong><small>The considered one</small></span><span class="tab-number">01</span></button>
+            <button role="tab" id="tab-signal" aria-controls="preview-signal" aria-selected="false" tabindex="-1" data-template="signal"><span class="swatch swatch-signal" aria-hidden="true"><i></i><b></b></span><span><strong>Signal</strong><small>The expressive one</small></span><span class="tab-number">02</span></button>
+            <button role="tab" id="tab-form" aria-controls="preview-form" aria-selected="false" tabindex="-1" data-template="form"><span class="swatch swatch-form" aria-hidden="true"><i></i><b></b></span><span><strong>Good Form</strong><small>The focused one</small></span><span class="tab-number">03</span></button>
+          </div>
+          <div class="preview-toolbar"><span><i></i> <span id="preview-label">Fieldwork</span><span class="toolbar-divider">/</span> PREVIEW</span><div class="device-control" role="group" aria-label="Preview width"><button data-device="desktop" aria-pressed="true" title="Desktop preview fits the available canvas width">▰ <span>Desktop</span></button><button data-device="mobile" aria-pressed="false" title="Mobile preview is capped at 375 pixels">▯ <span>Mobile</span></button></div></div>
+          <div id="previews" class="preview-surface" data-device="desktop"></div>
+          <p class="preview-disclaimer">Your name & description are live. Artwork and supporting copy are placeholders. Mark a section to shape your brief.</p>
+        </div>
+        <aside class="brief" aria-labelledby="brief-title">
+          <div class="brief-title"><span class="eyebrow">YOURS, TAKING SHAPE</span><span class="paper-icon" aria-hidden="true">↗</span><h2 id="brief-title">The design brief.</h2><p>A little less “I’ll know it when I see it.”<br>A little more “this is me.”</p></div>
+          <div class="brief-selection"><span>ON THE TABLE</span><strong id="brief-template">Fieldwork</strong><small id="brief-character">Editorial · organic · unhurried</small></div>
+          <div class="choices-heading"><h3>Your section notes</h3><span id="choice-count">0 / 9</span></div>
+          <div id="brief-choices"><p class="empty-brief">Something click? Mark it <b>Keep</b>.<br>Something off? Try <b>Wrong</b> or <b>Missing</b> to start a conversation there.</p></div>
+          <label class="direction-label" for="direction">MY DIRECTION</label><textarea id="direction" maxlength="500" rows="4" placeholder="e.g. Warm, but less lifestyle. Lead with what our product actually does."></textarea>
+          <p class="brief-footnote" id="save-status">Your choices stay in this tab. Only Send shares them with Stand.</p>
+          <button class="primary-button" id="download">Take your brief with you <span>↓</span></button>
+          <button class="text-button copy-button" id="copy">Copy brief</button>
+          <p class="brief-next">Next: download your brief and use it to guide your build. No account needed.</p>
+        </aside>
+      </div>
+    </section>
+    <section class="method wrap" id="method"><div><p class="eyebrow">FROM “MAYBE” TO “THAT’S IT”</p><h2>Don’t just browse.<br>Find your fit.</h2><p>Foldcraft is an invented visual website builder and template marketplace. This audition explores the part before building: finding a direction worth making your own.</p></div><ol><li><span>01 /</span><div><h3>See your own story</h3><p>One business, three genuinely different compositions. Switch the canvas, keep your words.</p></div></li><li><span>02 /</span><div><h3>Name what’s not working</h3><p>Is it the visual style, or the story? Mark any section and talk it through with Stand’s demo AI, right there.</p></div></li><li><span>03 /</span><div><h3>Leave with a direction</h3><p>Your explicit choices and notes become a brief you can download. Advice stays in chat; you make the decisions.</p></div></li></ol></section>
+    <section id="how-it-works" class="how wrap sx-explainer"><p class="eyebrow">BEHIND THE BUILD</p><h2>How it works</h2><div class="how-grid"><div><h3>A preview you can disagree with.</h3><p>Type a business name and description, switch templates, and try desktop or mobile width. Desktop fills the available canvas; mobile caps it at 375 pixels. Each layout is authored HTML and CSS. There is no model-generated design, scoring, or inferred preference.</p><p><b>Keep</b> saves a choice. <b>Wrong</b> and <b>Missing</b> open an inline thread at that section. Choose “look & feel,” “story,” or both, leave a note, then send your question. Every send includes a fresh, visible snapshot of your business, selected layout, section, choices, notes, and assumptions.</p><h3>A real conversation, with clear boundaries.</h3><p>The local <code>stand-inline.js</code> and <code>stand-visitor.js</code> use Stand’s <a href="https://stand.chat/guide/custom-chat-ui">visitor API (beta)</a>. Separate scopes keep the nine section threads apart. They preserve drafts, recover sessions, reconcile messages, and show availability, failures, AI/human identity, handoffs, and offered email follow-up.</p><p>Site ID <code>demo</code> uses Stand’s shared AI Stand-in. It may discuss the context, but isn’t configured as a Foldcraft designer and cannot edit the preview. Your own Site ID is needed for your team, knowledge, and instructions. Conversation recovery uses this tab’s session storage; if storage is unavailable it lasts only for this page.</p></div><div><h3>Copy the complete folder</h3><pre><code>npx degit standchat/examples/template-audition my-audition</code></pre><p>Serve that folder from any static HTTP server. No installation or build step is needed. Keep <code>index.html</code>, <code>style.css</code>, <code>app.js</code>, <code>model.js</code>, and both Stand files together. The <code>/_shared/</code> assets only add this repository’s example bar and can be removed when copied.</p><h3>Connect your Stand site</h3><p>Replace <code>SITE_ID = 'demo'</code> in <code>app.js</code> and the Stand script’s <code>data-stand-id</code> in this page with the Site ID from <b>Sites</b> in Stand. Configure an eligible responder and register your real domain.</p><pre><code>// A separate thread at each section.
+chat.setAttribute('site', SITE_ID);
+chat.setAttribute('scope',
+  `foldcraft-${template}-${section}`);
+
+// This folder adds a local pre-send hook.
+chat.addEventListener('stand-before-send', event =&gt; {
+  event.detail.text = conversationText(
+    state, template, section, event.detail.text
+  );
+});</code></pre><p>The hook builds a regular visitor text message; it is a local component extension, not a Stand API event. The supplied widget script remains for the example bar’s status. The actual conversation uses the inline client.</p></div></div></section>
+  </main>
+  <footer class="wrap"><a class="wordmark" href="#">foldcraft.</a><p>An original, fictional product demo.</p><a href="https://stand.chat">Conversations powered by Stand ↗</a></footer>
+  <p id="announcement" class="sr-only" role="status" aria-live="polite"></p>
+  <dialog id="reset-dialog"><form method="dialog"><p class="eyebrow">A FRESH PAIR OF EYES</p><h2>Reset your audition?</h2><p>This clears your local business inputs, section choices, and brief. Existing Stand conversations remain available at their sections; end a chat inside its thread.</p><div><button value="cancel" class="secondary-button">Keep exploring</button><button value="reset" class="primary-button">Reset audition</button></div></form></dialog>
+  <noscript><p class="noscript">Please enable JavaScript to audition templates and connect to Stand. This demo uses local scripts with no build step.</p></noscript>
+</body>
+</html>
