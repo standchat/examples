@@ -1,0 +1,649 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Leave a comment on the page — Framefield</title>
+    <meta
+      name="description"
+      content="Pin a real Stand Chat conversation to an interactive design, a product promise, or a pricing row. A fictional Framefield design canvas."
+    />
+    <meta name="author" content="Stand Chat Examples" />
+    <meta
+      name="keywords"
+      content="custom-chat-ui, contextual-chat, comment-pins, design-canvas"
+    />
+    <meta
+      property="og:title"
+      content="Framefield — Good work is a conversation."
+    />
+    <meta
+      property="og:description"
+      content="An interactive design canvas. A question right where it belongs. Try contextual comment threads powered by Stand Chat."
+    />
+    <meta
+      property="og:image"
+      content="https://examples.stand.chat/comment-the-page/og.png"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='9' fill='%2320201b'/%3E%3Cpath d='M10 29V10h20v6H16v4h11v6H16v3' fill='%23dcef81'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="/_shared/example.css" />
+    <script type="module" src="/_shared/example.js"></script>
+    <script
+      defer
+      src="https://cdn.stand.chat/widget/stand.js"
+      data-stand-id="demo"
+    ></script>
+    <link rel="stylesheet" href="style.css" />
+    <script type="module" src="app.js"></script>
+  </head>
+  <body>
+    <sx-example-bar></sx-example-bar>
+    <a class="skip" href="#main">Skip to canvas</a>
+    <header class="nav wrap">
+      <a class="brand" href="#" aria-label="Framefield home"
+        ><span class="brandmark" aria-hidden="true">f</span>framefield<span
+          class="brand-dot"
+          >®</span
+        ></a
+      >
+      <nav aria-label="Main navigation">
+        <a href="#canvas">The canvas</a><a href="#handoff">The handoff</a
+        ><a href="#pricing">Pricing</a>
+      </nav>
+      <button class="button dark nav-comment" data-enter>
+        Leave a comment <span aria-hidden="true">↗</span>
+      </button>
+    </header>
+    <main id="main">
+      <section class="hero wrap">
+        <div>
+          <p class="eyebrow">
+            <span class="tiny-cross" aria-hidden="true">✳</span> A little space
+            for your next big thing
+          </p>
+          <h1>Good work is<br />a conversation<span class="period">.</span></h1>
+        </div>
+        <div class="hero-note">
+          <p>
+            A shared canvas for the people who<br class="desktop" />
+            dream it, design it, and build it.
+          </p>
+          <p class="quiet">Less lost context. More making together.</p>
+          <a href="#canvas" class="text-link"
+            >Make yourself at home <span aria-hidden="true">↘</span></a
+          >
+        </div>
+      </section>
+
+      <section
+        id="canvas"
+        class="workspace wrap"
+        aria-label="Interactive product specimen"
+        data-og-focus
+      >
+        <div class="workspace-bar">
+          <div class="file-name">
+            <span aria-hidden="true">▧</span> A small study in possibility
+            <span class="file-tag">Playground</span>
+          </div>
+          <span class="local-indicator"><i></i> Local design demo</span>
+        </div>
+        <div class="workspace-layout">
+          <div class="canvas-side">
+            <div class="canvas-toolbar">
+              <div class="segmented" aria-label="Canvas tools">
+                <button id="edit-mode" aria-pressed="true">
+                  <span aria-hidden="true">↖</span> Design</button
+                ><button id="comment-mode" aria-pressed="false">
+                  <span aria-hidden="true">▢</span> Comment
+                </button>
+              </div>
+              <span id="mode-hint">Go on, change a few things.</span>
+            </div>
+            <div class="artboard-area">
+              <div
+                class="specimen target"
+                id="target-design"
+                data-target="design"
+              >
+                <div class="poster" id="poster">
+                  <div class="poster-top">
+                    <span>FIELD NOTES — 001</span
+                    ><span>IDEAS IN MOTION ↗</span>
+                  </div>
+                  <div class="poster-title">
+                    Small shifts.<br />Big possibilities.
+                  </div>
+                  <svg
+                    class="art"
+                    viewBox="0 0 550 190"
+                    role="img"
+                    aria-label="Original geometric study: a striped circle, a cut-out arch, and an orange pinwheel"
+                  >
+                    <defs>
+                      <pattern
+                        id="stripes"
+                        patternUnits="userSpaceOnUse"
+                        width="10"
+                        height="10"
+                        patternTransform="rotate(35)"
+                      >
+                        <rect width="4" height="10" fill="currentColor" />
+                      </pattern>
+                    </defs>
+                    <g class="art-orbit">
+                      <circle cx="97" cy="93" r="82" fill="url(#stripes)" />
+                      <circle cx="97" cy="93" r="25" fill="var(--paper)" />
+                    </g>
+                    <path
+                      class="art-arch"
+                      d="M190 176V85a85 85 0 0 1 170 0v91h-57V85a28 28 0 0 0-56 0v91z"
+                      fill="currentColor"
+                    />
+                    <g class="art-star" fill="var(--accent)">
+                      <path
+                        d="m454 8 17 45 44-20-20 44 45 17-45 17 20 44-44-20-17 45-17-45-44 20 20-44-45-17 45-17-20-44 44 20z"
+                      />
+                      <circle cx="454" cy="94" r="14" fill="var(--paper)" />
+                    </g>
+                  </svg>
+                  <div class="poster-bottom">
+                    <span
+                      >A creative workshop<br />for beautifully unfinished
+                      ideas.</span
+                    ><span>COME AS YOU ARE.<br />MAKE WHAT’S NEXT.</span>
+                  </div>
+                </div>
+                <button
+                  class="target-overlay"
+                  data-select="design"
+                  hidden
+                  aria-label="Attach a question anywhere on the design canvas"
+                >
+                  <span class="target-label">01 · Comment on this design</span>
+                </button>
+                <button
+                  class="pin"
+                  data-pin="design"
+                  hidden
+                  aria-label="Open comment on the design canvas"
+                >
+                  01
+                </button>
+              </div>
+              <div class="frame-caption">
+                <span>POSTER EXPLORATION / V.01</span
+                ><span>Made of a few good decisions.</span>
+              </div>
+            </div>
+            <fieldset class="design-controls" id="design-controls">
+              <legend class="sr-only">Customize the specimen</legend>
+              <div class="palette">
+                <span>Palette</span
+                ><button
+                  class="swatch citrus"
+                  data-palette="citrus"
+                  aria-label="Citrus palette"
+                  aria-pressed="true"
+                ></button
+                ><button
+                  class="swatch iris"
+                  data-palette="iris"
+                  aria-label="Iris palette"
+                  aria-pressed="false"
+                ></button
+                ><button
+                  class="swatch pool"
+                  data-palette="pool"
+                  aria-label="Pool palette"
+                  aria-pressed="false"
+                ></button>
+              </div>
+              <label class="layout-label"
+                >Layout
+                <select id="layout">
+                  <option value="poster">Poster</option>
+                  <option value="split">Split</option>
+                </select></label
+              ><label class="spacing-label"
+                >Space
+                <input
+                  type="range"
+                  min="16"
+                  max="48"
+                  step="4"
+                  value="24"
+                  id="spacing"
+                /><output for="spacing" id="spacing-value">24</output></label
+              >
+            </fieldset>
+            <div class="token-strip">
+              <code id="token-summary">padding: 24px · accent: #f14c2e</code
+              ><button class="text-link" id="copy-css">
+                Copy CSS <span aria-hidden="true">↗</span>
+              </button>
+            </div>
+          </div>
+          <div class="thread-slot" id="slot-design">
+            <div class="thread-invitation" id="invitation">
+              <div class="comment-symbol" aria-hidden="true">
+                ↗<span>?</span>
+              </div>
+              <p class="eyebrow">Less guessing. More asking.</p>
+              <h2>A question belongs<br />right here.</h2>
+              <p>
+                Something catch your eye? Leave a comment on the design, a
+                promise, or a price. We’ll keep the context with the
+                conversation.
+              </p>
+              <button class="button dark" data-enter>
+                Try comment mode <span aria-hidden="true">↗</span>
+              </button>
+              <p class="micro">
+                Real conversations, powered by
+                <a
+                  href="https://stand.chat"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Stand Chat</a
+                >.<br />You choose when to send.
+              </p>
+              <div class="target-index">
+                <span>01 / DESIGN</span><span>02 / PROMISE</span
+                ><span>03 / PRICE</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="selection-bar" id="selection-bar" hidden>
+          <p>
+            <span class="live-dot"></span> Comment mode
+            <span class="quiet">— pick a spot or a target</span>
+          </p>
+          <div aria-label="Comment targets">
+            <button data-jump="design">01 Design</button
+            ><button data-jump="claim">02 Promise</button
+            ><button data-jump="pricing">03 Pricing</button>
+          </div>
+          <button id="exit-mode" class="text-link">
+            Done <span aria-hidden="true">×</span>
+          </button>
+        </div>
+      </section>
+      <div class="under-canvas wrap">
+        <span>FROM FIRST “WHAT IF” TO FINAL “THAT’S IT.”</span
+        ><span>One canvas. Everyone on the same page.</span>
+      </div>
+
+      <section class="section wrap" id="handoff">
+        <div class="section-heading">
+          <p class="eyebrow">01 / Think together. Make together.</p>
+          <h2>A little less translating.<br />A lot more understanding.</h2>
+        </div>
+        <div class="context-row">
+          <article
+            class="claim-card target"
+            id="target-claim"
+            data-target="claim"
+          >
+            <span class="claim-icon" aria-hidden="true">↗<span>↙</span></span>
+            <p class="eyebrow">From design to done</p>
+            <h3>Less “which version?”<br />More “let’s ship.”</h3>
+            <p>
+              Bring the design, the decisions, and the details into one shared
+              place. So the next person can pick up where you left off.
+            </p>
+            <div class="claim-points">
+              <span>01 / A canvas for the idea</span
+              ><span>02 / Comments with context</span
+              ><span>03 / Values ready to inspect</span>
+            </div>
+            <p class="micro">
+              Explore the concept above: change a palette, adjust spacing, and
+              copy its CSS values. Team sync and version history are
+              illustrative product features.
+            </p>
+            <button
+              class="target-overlay"
+              data-select="claim"
+              hidden
+              aria-label="Attach a question to the handoff promise"
+            >
+              <span class="target-label"
+                >02 · Comment on this promise</span
+              ></button
+            ><button
+              class="pin"
+              data-pin="claim"
+              hidden
+              aria-label="Open comment on the handoff promise"
+            >
+              02
+            </button>
+          </article>
+          <div class="thread-slot supporting-slot" id="slot-claim">
+            <div class="side-note">
+              <span class="handwritten" aria-hidden="true"
+                >the details matter ↙</span
+              >
+              <h3>
+                “Ready for handoff”<br />means different things<br />to
+                different teams.
+              </h3>
+              <p>
+                Comment on the promise. Ask what’s included. A useful question
+                makes the page better for everyone who comes next.
+              </p>
+              <button class="text-link" data-jump="claim">
+                Ask about this promise ↗
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section pricing-section wrap" id="pricing">
+        <div class="section-heading">
+          <p class="eyebrow">02 / Room for your people</p>
+          <h2>Good company.<br />Simple numbers.</h2>
+        </div>
+        <div class="context-row">
+          <article
+            class="pricing-card target"
+            id="target-pricing"
+            data-target="pricing"
+          >
+            <div class="plan-heading">
+              <h3>Studio</h3>
+              <span class="pill">For teams making together</span>
+            </div>
+            <p>Pay for the makers.<br />Invite the whole team.</p>
+            <div class="plan-price">
+              <strong id="unit-price">$12</strong><span>/ editor / month</span>
+            </div>
+            <p class="micro">Reviewers join free. A fictional plan, in USD.</p>
+            <div class="pricing-inputs">
+              <label
+                >Editors
+                <input
+                  id="seats"
+                  type="number"
+                  min="1"
+                  max="50"
+                  value="4"
+                  inputmode="numeric" /></label
+              ><label
+                >Billing
+                <select id="billing">
+                  <option value="monthly">Monthly</option>
+                  <option value="annual">Annually · $10/editor/mo</option>
+                </select></label
+              >
+            </div>
+            <div class="total-row">
+              <span id="billing-detail">4 editors · billed monthly</span
+              ><strong id="total-price">$48 / month</strong>
+            </div>
+            <p class="micro">
+              Illustrative estimate: editor count × rate. Annual billing charges
+              12 months upfront. Excludes taxes, add-ons, and prorating. No
+              payment is taken.
+            </p>
+            <button
+              class="target-overlay"
+              data-select="pricing"
+              hidden
+              aria-label="Attach a question to Studio pricing"
+            >
+              <span class="target-label"
+                >03 · Comment on this price</span
+              ></button
+            ><button
+              class="pin"
+              data-pin="pricing"
+              hidden
+              aria-label="Open comment on Studio pricing"
+            >
+              03
+            </button>
+          </article>
+          <div class="thread-slot supporting-slot" id="slot-pricing">
+            <div class="side-note">
+              <span class="small-star" aria-hidden="true">✳</span>
+              <h3>Every line item<br />can start a<br />conversation.</h3>
+              <p>
+                What counts as an editor? What happens as your team grows? Ask
+                with the numbers you’re looking at attached.
+              </p>
+              <button class="text-link" data-jump="pricing">
+                Ask about this price ↗
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="closing wrap">
+        <span class="brandmark" aria-hidden="true">f</span>
+        <h2>Leave a little clarity<br />where you found a question.</h2>
+        <button class="button dark" data-enter>
+          Leave your first comment ↗
+        </button>
+      </section>
+    </main>
+    <footer class="wrap footer">
+      <a class="brand" href="#">framefield</a>
+      <p>
+        A fictional product. A real conversation.<br />Built as a Stand Chat
+        example.
+      </p>
+      <a href="#how-it-works">See how it works ↓</a>
+    </footer>
+
+    <section id="how-it-works" class="explainer">
+      <div class="wrap">
+        <p class="eyebrow">Behind the canvas</p>
+        <h2>How it works</h2>
+        <p class="explainer-lead">
+          The page is the starting point. Stand is the conversation.
+        </p>
+        <div class="docs-grid">
+          <div>
+            <h3>Try it</h3>
+            <ol>
+              <li>
+                Change the specimen’s palette, layout, or spacing. Pricing
+                controls calculate a local estimate.
+              </li>
+              <li>
+                Choose <strong>Comment</strong>, then click a spot or use the
+                three target buttons. Each target also has a keyboard-focusable
+                selection surface.
+              </li>
+              <li>
+                Review the attached context. Write a question and choose
+                <strong>Start conversation</strong> to send it to Stand.
+              </li>
+              <li>
+                Close the panel to keep browsing; reopen its pin to return.
+                <strong>End conversation</strong> actually ends the session.
+                Escape closes the panel, then exits comment mode.
+              </li>
+            </ol>
+            <p>
+              Each target has its own session and draft. The context snapshot is
+              captured when you first select the target. Before sending, you can
+              update it under View attached context. A snapshot stays attached
+              to that thread; later design or pricing edits do not silently
+              change what was sent. Pin positions and context are kept in
+              session storage when available.
+            </p>
+            <h3>Honest by design</h3>
+            <p>
+              Framefield, its features, and prices are invented. The specimen
+              and estimates run locally. Replies come from Stand’s real shared
+              demo AI, labeled as AI. Human handoff and email follow-up appear
+              only when Stand sends the corresponding event; test these with
+              your own registered site and responders. AI replies cannot edit
+              the page.
+            </p>
+          </div>
+          <div>
+            <h3>Copy this example</h3>
+            <pre><code>npx degit standchat/examples/comment-the-page my-canvas</code></pre>
+            <p>
+              Serve the folder with any static server. No install or build step.
+              Keep <code>index.html</code>, <code>style.css</code>,
+              <code>app.js</code>, <code>model.js</code>, and
+              <code>stand-visitor.js</code> together. The optional
+              <code>/_shared/</code> files only provide the examples bar.
+            </p>
+            <h3>Context, attached at the first send</h3>
+            <pre><code>import { getClient } from './stand-visitor.js';
+import { conversationPrompt } from './model.js';
+
+const client = getClient({
+  site: 'demo',
+  scope: 'framefield:design',
+});
+client.mount(); // discovery, not a conversation
+
+// Only after the visitor chooses to send:
+await client.send(question, {
+  owner: 'design',
+  prompt: conversationPrompt(contextSnapshot),
+  analyticsId: 'framefield-design',
+});</code></pre>
+            <p>
+              Replace <code>demo</code> in the Stand script’s
+              <code>data-stand-id</code> with your Site ID from
+              <strong>Sites</strong>; the app reads that attribute. Configure
+              your responders and registered domain in Stand. The
+              <code>prompt</code> is supported context, not a secret or a
+              control channel.
+            </p>
+            <p>
+              The local client uses HTTP for sends, a WebSocket for replies, and
+              authenticated reads for recovery. It preserves message IDs on
+              retries and asks before repeating an uncertain start. Text uses
+              <code>textContent</code>; outbound links allow HTTP(S) only.
+            </p>
+            <a
+              class="text-link"
+              href="https://stand.chat/guide/custom-chat-ui"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Read the Stand custom UI contract ↗</a
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="thread" id="thread" hidden aria-labelledby="thread-title">
+      <div class="thread-top">
+        <span class="thread-number" id="thread-number">01</span>
+        <div>
+          <p class="eyebrow">Attached conversation</p>
+          <h2 id="thread-title" tabindex="-1">The design canvas</h2>
+        </div>
+        <button
+          class="icon-button"
+          id="close-thread"
+          aria-label="Close conversation panel"
+        >
+          ×
+        </button>
+      </div>
+      <div class="thread-content">
+        <div class="context-quote">
+          <span class="eyebrow">Commenting on</span>
+          <p id="context-quote"></p>
+          <details>
+            <summary>View attached context</summary>
+            <p id="context-text"></p>
+            <button class="text-link" id="refresh-context" type="button" hidden>
+              Use current page settings
+            </button>
+          </details>
+        </div>
+        <div class="host-row">
+          <span class="host-avatar" aria-hidden="true">✳</span>
+          <div>
+            <strong id="host-name">Stand Chat</strong
+            ><span id="host-kind">Checking availability</span>
+          </div>
+          <span class="connection-dot" id="connection-dot"></span>
+        </div>
+        <p class="thread-status" id="thread-status" role="status"></p>
+        <p class="thread-hint" id="thread-hint"></p>
+        <div
+          id="messages"
+          role="log"
+          aria-live="polite"
+          aria-label="Conversation messages"
+        ></div>
+        <p class="activity" id="activity" role="status" hidden></p>
+        <p class="error" id="error" role="alert" hidden></p>
+        <p class="micro" id="notice" hidden></p>
+        <form id="message-form">
+          <label for="question">Your question</label
+          ><textarea
+            id="question"
+            rows="3"
+            maxlength="4000"
+            placeholder="What would you like to know?"
+          ></textarea>
+          <p class="micro" id="send-note">
+            Sends your question and the attached context to Stand’s demo AI.
+            Nothing is sent until you choose to start.
+          </p>
+          <button class="button dark send" id="send" type="submit" disabled>
+            Start conversation <span aria-hidden="true">↗</span>
+          </button>
+        </form>
+        <form id="email-form" hidden>
+          <label for="email">The team offered to follow up by email</label
+          ><input
+            type="email"
+            id="email"
+            autocomplete="email"
+            required
+            placeholder="you@example.com"
+          /><button class="button" type="submit">Request follow-up</button>
+        </form>
+        <div class="recovery-actions">
+          <button class="text-link" id="retry" hidden>Retry connection</button
+          ><button class="text-link" id="retry-message" hidden>
+            Retry this message</button
+          ><button class="text-link" id="new-chat" hidden>
+            New conversation</button
+          ><button class="text-link" id="end-chat" hidden>
+            End conversation
+          </button>
+        </div>
+      </div>
+      <div class="thread-footer">
+        <span>Context stays with the question.</span
+        ><a
+          id="attribution"
+          href="https://stand.chat"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Powered by Stand ↗</a
+        >
+      </div>
+    </aside>
+    <p class="sr-only" id="announcement" role="status"></p>
+    <noscript
+      ><p class="noscript">
+        Enable JavaScript to customize the specimen or start a Stand
+        conversation. Framefield is a fictional product demo.
+      </p></noscript
+    >
+  </body>
+</html>
