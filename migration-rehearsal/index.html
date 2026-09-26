@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Threadlane — Migration rehearsal</title>
+  <meta name="description" content="Try switching without switching. Rehearse a software team's workflow and discuss uncertain mappings in a contextual Stand Chat conversation.">
+  <meta name="author" content="Stand Chat Examples">
+  <meta name="keywords" content="custom-chat-ui, workflow, migration, contextual-chat">
+  <meta property="og:title" content="Threadlane — Try switching without switching">
+  <meta property="og:description" content="Your workflow, a little clearer. An interactive migration rehearsal with contextual Stand Chat.">
+  <meta property="og:image" content="https://examples.stand.chat/migration-rehearsal/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%23101014'/%3E%3Cpath d='M11 28V14h9v14M20 12h9v14' fill='none' stroke='%23b5a1f4' stroke-width='3'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/_shared/example.css">
+  <script type="module" src="/_shared/example.js"></script>
+  <script defer src="https://cdn.stand.chat/widget/stand.js" data-stand-id="demo" data-stand-hide-button="true"></script>
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <sx-example-bar></sx-example-bar>
+  <a class="skip-link" href="#rehearsal">Skip to the rehearsal</a>
+  <header class="site-header wrap">
+    <a class="wordmark" href="#" aria-label="Threadlane home"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 25V9h10v16M17 7h10v16"/></svg>Threadlane<span class="demo-tag">DEMO</span></a>
+    <nav aria-label="Main"><a href="#approach">The approach</a><a class="nav-cta" href="#rehearsal">Find your fit <span aria-hidden="true">↗</span></a></nav>
+  </header>
+  <main>
+    <section class="hero wrap">
+      <div><p class="eyebrow"><span class="tiny-line"></span> WORK MOVES. YOUR WAY.</p>
+      <h1>Try switching<br><span>without switching.</span></h1>
+      <p class="hero-copy">A calmer home for your team's issues and projects.<br class="desktop-break"> See how your workflow fits before you make a move.</p></div>
+      <div class="hero-note"><span class="note-index">01 / A SMALL REHEARSAL</span><p>Bring the way you work.<br>Keep the parts that matter.</p><a href="#rehearsal">Make yourself at home <span aria-hidden="true">↓</span></a></div>
+    </section>
+
+    <section class="workspace wrap" id="rehearsal" aria-labelledby="rehearsal-title">
+      <span class="og-anchor" data-og-focus aria-hidden="true"></span>
+      <div class="workspace-top"><div class="workspace-title"><span class="app-icon" aria-hidden="true">⌘</span><h2 id="rehearsal-title">Your migration rehearsal</h2><span class="pill local-pill">LOCAL PREVIEW</span></div><span class="saved" id="saved-state">Saved in this tab</span></div>
+      <div class="toolbar"><div class="sample-control"><label for="starting-workflow">Start with</label><select id="starting-workflow"><option value="product">Product &amp; engineering</option><option value="delivery">Client delivery</option><option value="simple">A simple kanban</option></select></div><button id="reset" class="text-button">↺ Reset sample</button></div>
+      <fieldset class="requirements"><legend>Keep the important bits</legend><label><input type="checkbox" value="custom" checked> Custom statuses</label><label><input type="checkbox" value="reporting"> Reporting</label><label><input type="checkbox" value="approvals" checked> Approvals</label><span>Pick your non-negotiables.</span></fieldset>
+      <div class="workbench">
+        <div class="mapping-area">
+          <div class="board-head"><div><span class="overline">01 / YOUR WORKFLOW</span><h3>Where you are</h3></div><span aria-hidden="true">→</span><div><span class="overline violet">02 / THREADLANE</span><h3>How it could fit</h3></div></div>
+          <div id="mapping-rows" class="mapping-rows"></div>
+          <div class="board-bottom"><button id="add-column" class="text-button">＋ Add a column</button><span>Drag the grip or use ↑ ↓ to reorder.</span></div>
+          <div class="fit-summary" aria-live="polite"><span class="summary-mark" aria-hidden="true">↳</span><div><strong id="summary-title"></strong><p id="summary-copy"></p></div><a href="#transfer-summary" aria-label="Read the transfer summary">View summary <span aria-hidden="true">↗</span></a></div>
+        </div>
+        <aside id="conversation" class="conversation" aria-labelledby="conversation-title">
+          <div class="chat-top"><span class="eyebrow">A CONVERSATION, IN CONTEXT</span><span class="chat-orbit" aria-hidden="true">✳</span></div>
+          <div id="selected-mapping" class="selected-mapping"></div>
+          <h3 id="conversation-title">Keep the important bits.</h3>
+          <p id="mapping-question" class="mapping-question"></p>
+          <p class="chat-explanation">Talk through this step with Stand's demo AI. Your rehearsal stays right here.</p>
+          <div class="chat-status"><span class="status-dot" aria-hidden="true"></span><span id="chat-status" role="status">Checking availability…</span></div>
+          <div id="chat-notice" class="notice" hidden></div>
+          <div id="messages" class="messages" role="log" aria-label="Stand conversation" aria-live="polite" aria-relevant="additions text"></div>
+          <div id="activity" class="activity" role="status" hidden></div>
+          <div id="chat-error" class="chat-error" role="status" hidden></div>
+          <div class="recovery-actions"><button id="retry-connection" class="text-button" hidden>Reconnect</button><button id="retry-message" class="text-button" hidden>Retry unsent message</button><button id="new-chat" class="text-button" hidden>New conversation</button></div>
+          <form id="chat-form"><label class="sr-only" for="question">Your question about this workflow</label><textarea id="question" rows="3" maxlength="1500" placeholder="What would you need to preserve?"></textarea><button id="send" class="primary-button" disabled>Start a conversation <span aria-hidden="true">↗</span></button></form>
+          <p class="consent">Sending shares your board, choices, selected mapping, and question with Stand Chat.</p>
+          <details class="context-preview"><summary>Context included with your question</summary><pre id="context-preview"></pre></details>
+          <form id="followup-form" class="followup-form" hidden><label for="followup-email">The responder offered an email follow-up</label><input id="followup-email" type="email" maxlength="320" required placeholder="you@company.com"><button class="secondary-button" type="submit">Request follow-up</button></form>
+          <div class="chat-footer"><a id="stand-attribution" href="https://stand.chat/" target="_blank" rel="noopener noreferrer">Powered by Stand Chat ↗</a><button id="end-chat" class="text-button" hidden>End chat</button></div>
+        </aside>
+      </div>
+      <div class="workspace-foot"><span><span class="small-dot" aria-hidden="true"></span> A rehearsal, not an import.</span><p>Nothing connects to your tools. No signup. No changes to your real workspace.</p></div>
+    </section>
+    <p class="local-note wrap">Illustrative rules run in your browser. Live replies come from Stand Chat. Threadlane is a fictional product.</p>
+
+    <section id="transfer-summary" class="transfer-section wrap" aria-labelledby="transfer-title">
+      <div><p class="eyebrow">THE SHAPE OF YOUR MOVE</p><h2 id="transfer-title">Familiar where it counts.<br>Clear where it changes.</h2><p class="section-intro">A useful first pass makes the open questions visible.</p></div>
+      <div class="transfer-card"><h3><span class="positive">✓</span> What carries into this preview</h3><ul id="transfer-list"></ul><h3 class="decision-heading"><span class="violet">◇</span> What needs a decision</h3><ul id="decision-list"></ul><details class="assumptions"><summary>Read the rehearsal assumptions</summary><p>We match a small, fixed set of familiar status names to Backlog, Ready, In progress, In review, or Done. With Custom statuses selected, your labels remain unchanged. Unknown names, repeated names, approval gates, and Done before another step need review.</p><p>Reporting adds a decision about metrics and history. Approvals without an approval column adds a decision about gate placement. Counts describe these rules, never migration readiness. Tickets, attachments, history, permissions, automations, and report data are not imported or verified.</p></details></div>
+    </section>
+    <section id="approach" class="approach wrap"><div class="approach-heading"><p class="eyebrow">LESS FRICTION. MORE FORWARD.</p><h2>The next tool should<br>understand the last one.</h2></div><div class="principle"><span>01</span><h3>Start with your reality</h3><p>The column names, review steps, and little rituals your team already understands.</p></div><div class="principle"><span>02</span><h3>Leave room for nuance</h3><p>A label isn't a policy. Work out who approves, what reports mean, and where exceptions live.</p></div><div class="principle"><span>03</span><h3>Make the move a choice</h3><p>Explore a familiar shape for your work. Then decide what deserves a closer look.</p></div></section>
+    <section id="how-it-works" class="explainer wrap"><p class="eyebrow">BEHIND THE EXAMPLE</p><h2>How it works</h2><p>This plain HTML, CSS, and JavaScript example pairs a deterministic workflow rehearsal with a real custom Stand Chat client. Edit columns, use the grip or arrow buttons to reorder, and select a proposed mapping. Only Send starts a conversation or shares your current rehearsal.</p><div class="explain-grid"><div><h3>Copy the whole folder</h3><pre class="sx-code"><code>npx degit standchat/examples/migration-rehearsal my-threadlane</code></pre><p>Serve the copied folder over HTTP with any static server; no install or build is needed. All product styles and conversation code are local. The optional <code>/_shared/</code> stylesheet and script provide the example bar and code-copy buttons. They can be removed on your own site.</p><h3>Use your own Stand site</h3><p>Replace <code>data-stand-id="demo"</code> in the script tag with the Site ID from Sites in Stand. The custom client reads that same ID. Demo conversations use Stand's shared AI and do not appear in your account. Your own site is needed for your knowledge, human routing, and history.</p></div><div><h3>Context travels with the question</h3><pre class="sx-code"><code class="language-js">import { getClient } from './stand-visitor.js';
+const client = getClient({
+  site: 'demo', scope: 'threadlane-migration-v1'
+});
+client.subscribe(renderConversation);
+client.mount(); // discovery or same-tab recovery
+// Only inside the visitor's submit handler:
+await client.send(question + '\n\n' + contextFor(board, selected), {
+  owner: selected,
+  prompt: 'Fictional rehearsal. Discuss blockers; do not promise an import.'
+});</code></pre><p><code>app.js</code> renders text safely and keeps one conversation across mappings. <code>stand-visitor.js</code> handles session creation, HTTP sends, WebSocket replies, handoffs, follow-ups, and recovery. Replies never execute code or modify the board.</p></div></div><p>Board, draft, and conversation recovery use session storage in this tab when available; otherwise they last for this page only. The custom interface owns its presentation. The retained Stand script uses the repository's demo configuration; this interface calls the <a href="https://stand.chat/guide/custom-chat-ui" target="_blank" rel="noopener noreferrer">documented visitor API</a> directly.</p></section>
+  </main>
+  <footer class="site-footer wrap"><span class="wordmark">Threadlane<span class="demo-tag">FICTIONAL DEMO</span></span><p>A little clarity before the next chapter.</p><a href="#rehearsal">Back to your rehearsal ↑</a></footer>
+  <div id="board-announcement" class="sr-only" role="status"></div>
+  <noscript><p class="noscript">Turn on JavaScript to edit the rehearsal and connect to Stand Chat.</p></noscript>
+</body>
+</html>
