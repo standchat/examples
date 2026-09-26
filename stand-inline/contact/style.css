@@ -1,0 +1,156 @@
+body { margin: 0; background: #F6F4F0; }
+
+.halden {
+  --sheet: #FFFFFF;
+  --ink: #222222;
+  --text: #4A463F;
+  --stone: #8C857B;
+  --stone-text: #6E685F; /* stone, dark enough for small text */
+  --hairline: #DCD7CE;
+  --terracotta: #B5532E;
+  --serif: 'Cormorant Garamond', Garamond, 'Times New Roman', serif;
+  --sans: 'Work Sans', ui-sans-serif, system-ui, sans-serif;
+  --gutter: 40px;
+  color: var(--ink);
+  font: 400 16px/1.65 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+.halden * { box-sizing: border-box; }
+.halden a { color: inherit; }
+.halden a:focus-visible { outline: 2px solid var(--terracotta); outline-offset: 3px; }
+.halden h1, .halden h2, .halden h3 { margin: 0; font-family: var(--serif); font-weight: 500; }
+.halden .top, .halden main, .halden .foot { width: min(1120px, 100% - 2 * var(--gutter)); margin-inline: auto; }
+
+/* Small caps labels, the studio's quiet voice */
+.halden .label { margin: 0; color: var(--stone-text); font: 500 12px/1.5 var(--sans); letter-spacing: .14em; text-transform: uppercase; }
+.halden .arrow { display: inline-flex; align-items: center; gap: .6em; padding-bottom: 3px; border-bottom: 1px solid var(--ink); font: 500 12px/1.5 var(--sans); letter-spacing: .14em; text-decoration: none; text-transform: uppercase; }
+.halden .arrow::after { content: '→'; content: '→' / ''; transition: transform .2s; }
+.halden .arrow:hover { color: var(--terracotta); border-color: var(--terracotta); }
+.halden .arrow:hover::after { transform: translateX(3px); }
+
+/* Header */
+.halden .top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 40px; padding: 30px 0 24px; border-bottom: 1px solid var(--hairline); }
+.halden .wordmark { font: 600 27px/1 var(--serif); letter-spacing: .01em; text-decoration: none; }
+.halden .top nav { display: flex; gap: 34px; }
+.halden .top nav a { padding: 4px 0; border-bottom: 1px solid transparent; font: 500 12px/1.4 var(--sans); letter-spacing: .14em; text-decoration: none; text-transform: uppercase; transition: color .15s, border-color .15s; }
+.halden .top nav a:hover { border-color: currentColor; }
+.halden .top nav a[aria-current] { color: var(--terracotta); border-color: currentColor; }
+
+/* Intro */
+.halden .intro { display: grid; grid-template-columns: minmax(0, 1.75fr) minmax(0, 1fr); gap: 22px 72px; align-items: end; padding-top: clamp(48px, 7vw, 92px); }
+.halden .intro-title .label { margin-bottom: 22px; }
+.halden h1 { font-size: clamp(46px, 6.6vw, 86px); line-height: .98; letter-spacing: -.015em; text-wrap: balance; }
+.halden .intro-text { padding-bottom: 8px; }
+.halden .intro-text p { margin: 0 0 22px; color: var(--text); font-size: 17px; line-height: 1.7; }
+.halden .drawing { position: relative; grid-column: 1 / -1; margin: clamp(28px, 4.5vw, 52px) 0 0; }
+.halden .drawing img { display: block; width: 100%; height: auto; }
+.halden .drawing figcaption { position: absolute; bottom: 5%; left: 0; max-width: 25em; color: var(--text); font-size: 14px; line-height: 1.55; }
+.halden .drawing figcaption .label { display: block; margin-bottom: 5px; }
+
+/* Selected work */
+.halden .work { margin-top: clamp(72px, 9vw, 120px); }
+.halden .section-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px 24px; padding-top: 24px; border-top: 1px solid var(--hairline); }
+.halden h2 { font-size: clamp(34px, 3.6vw, 46px); line-height: 1.05; letter-spacing: -.005em; }
+.halden .projects { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px 32px; margin: 36px 0 0; padding: 0; list-style: none; }
+.halden .projects li { position: relative; }
+.halden .projects img { display: block; width: 100%; height: auto; outline: 1px solid var(--hairline); outline-offset: -1px; transition: outline-color .2s; }
+.halden .projects li:hover img { outline-color: var(--stone); }
+.halden .projects li:has(a:focus-visible) img { outline: 2px solid var(--terracotta); outline-offset: 2px; }
+.halden .projects h3 { margin: 20px 0 3px; font-size: 26px; font-weight: 600; line-height: 1.15; }
+.halden .projects h3 a { text-decoration: none; }
+.halden .projects h3 a::after { content: ''; position: absolute; inset: 0; }
+.halden .projects h3 a:focus-visible { outline: 0; }
+.halden .projects li:hover h3 a, .halden .projects h3 a:focus-visible { color: var(--terracotta); }
+.halden .projects p:not(.label) { max-width: 30em; margin: 10px 0 0; color: var(--text); font-size: 15px; line-height: 1.6; }
+
+/* Start a project: the text, and the conversation where the form would be */
+.halden .start { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 40px clamp(40px, 6.5vw, 96px); align-items: start; margin-top: clamp(88px, 10vw, 136px); padding: 56px 0 clamp(88px, 10vw, 128px); border-top: 1px solid var(--hairline); }
+.halden .start h2 { margin: 16px 0 20px; font-size: clamp(40px, 4.5vw, 56px); line-height: 1; }
+.halden .lede { max-width: 27em; margin: 0 0 40px; color: var(--text); font-size: 18px; line-height: 1.65; }
+.halden .start h3.label { margin-bottom: 10px; font-family: var(--sans); }
+.halden .helps { margin: 0; padding: 0; border-top: 1px solid var(--hairline); list-style: none; counter-reset: help; }
+.halden .helps li { display: flex; gap: 20px; padding: 11px 0; border-bottom: 1px solid var(--hairline); counter-increment: help; }
+.halden .helps li::before { content: counter(help, decimal-leading-zero); min-width: 1.6em; color: var(--terracotta); font: 500 12px/2.2 var(--sans); letter-spacing: .08em; }
+.halden .direct { margin: 28px 0 0; color: var(--stone-text); font-size: 14px; }
+.halden .direct a, .halden .offline a { white-space: nowrap; text-underline-offset: 3px; text-decoration-color: var(--hairline); }
+.halden .direct a:hover, .halden .offline a:hover { color: var(--ink); text-decoration-color: currentColor; }
+
+/* Stand Inline: a flat card on white, square like the rest of the site, with the
+   responder's name in the display serif. Font and text color come from the page. */
+.halden stand-inline {
+  --si-accent: #B5532E;
+  --si-radius: 2px;
+  --si-surface: #FFFFFF;
+  --si-line: #DCD7CE;
+  --si-shadow: none;
+  --si-muted: #6E685F;
+  --si-tint: #F6F4F0;
+  --si-visitor-bg: #F1ECE4;
+  --si-max-height: min(56vh, 480px);
+  font-size: 16px;
+}
+/* Corners follow --si-radius; these go fully square, like the site's own buttons. */
+.halden stand-inline::part(send),
+.halden stand-inline::part(suggestion),
+.halden stand-inline::part(followup-button),
+.halden stand-inline::part(banner-button) { border-radius: 2px; }
+.halden stand-inline::part(badge) { border-radius: 1px; }
+.halden stand-inline::part(name) { font-family: var(--serif); font-size: 1.4em; font-weight: 600; letter-spacing: .005em; line-height: 1.1; }
+.halden stand-inline::part(transcript) {
+  /* Soft edges where the transcript scrolls, under the header and above the box. */
+  -webkit-mask-image: linear-gradient(transparent, #000 14px, #000 calc(100% - 10px), transparent);
+  mask-image: linear-gradient(transparent, #000 14px, #000 calc(100% - 10px), transparent);
+}
+/* Who answers is known a moment after load: fade the header in. */
+.halden stand-inline::part(avatar), .halden stand-inline::part(name), .halden stand-inline::part(status) { transition: opacity .3s; }
+.halden stand-inline[data-state="loading"]::part(avatar),
+.halden stand-inline[data-state="loading"]::part(name),
+.halden stand-inline[data-state="loading"]::part(status) { opacity: 0; }
+
+/* Key facts under the card, like the data strip on a drawing. */
+.halden .facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 28px 0 0; border-top: 1px solid var(--hairline); }
+.halden .facts div { padding: 14px 18px 0 0; }
+.halden .facts div + div { padding-left: 18px; border-left: 1px solid var(--hairline); }
+.halden .facts dt { color: var(--stone-text); font: 500 11px/1.5 var(--sans); letter-spacing: .14em; text-transform: uppercase; }
+.halden .facts dd { margin: 4px 0 0; font: 500 19px/1.3 var(--serif); }
+
+/* Shown in the card's place when nobody can answer. */
+.halden .offline { padding: 28px 28px 30px; border: 1px solid var(--hairline); border-radius: 2px; background: var(--sheet); }
+.halden .offline p { margin: 10px 0 0; color: var(--text); font-size: 17px; }
+.halden .offline .offline-name { margin: 0; color: var(--ink); font: 600 22px/1.1 var(--serif); }
+
+/* Footer */
+.halden .foot { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 36px; padding: 28px 0 44px; border-top: 1px solid var(--hairline); color: var(--stone-text); font-size: 14px; }
+.halden .foot .wordmark { color: var(--ink); font-size: 21px; }
+.halden .foot address { font-style: normal; }
+.halden .foot .note { margin-left: auto; }
+
+@media (max-width: 960px) {
+  .halden .intro { grid-template-columns: 1fr; }
+  .halden .intro-text { max-width: 36em; }
+  .halden .drawing figcaption { position: static; margin-top: 18px; }
+  .halden .projects { gap: 36px 20px; }
+  .halden .projects h3 { font-size: 23px; }
+  .halden .start { column-gap: 48px; }
+}
+@media (max-width: 800px) {
+  .halden .start { grid-template-columns: 1fr; }
+  .halden .start-text { max-width: 36em; }
+  .halden .start-card { max-width: 640px; }
+}
+@media (max-width: 640px) {
+  .halden { --gutter: 20px; }
+  .halden .top { padding: 20px 0 16px; }
+  .halden .wordmark { font-size: 24px; }
+  .halden .top nav a:not([aria-current]) { display: none; }
+  .halden h1 { font-size: 46px; }
+  .halden .drawing img { aspect-ratio: 5 / 4; object-fit: cover; object-position: 53% 50%; }
+  .halden .projects { grid-template-columns: 1fr; }
+  .halden .start { padding-top: 40px; }
+  .halden .start h2 { font-size: 40px; }
+  .halden .lede { font-size: 17px; }
+  .halden .foot .note { margin-left: 0; }
+  .halden .facts { grid-template-columns: 1fr; }
+  .halden .facts div, .halden .facts div + div { display: flex; justify-content: space-between; gap: 16px; padding: 11px 0; border-left: 0; border-bottom: 1px solid var(--hairline); }
+  .halden .facts dd { margin: 0; text-align: right; }
+}

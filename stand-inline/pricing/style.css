@@ -1,0 +1,246 @@
+body { margin: 0; background: #FFFBF5; }
+
+.loomwork {
+  --page: #FFFBF5;
+  --card: #FFFFFF;
+  --ink: #1C1917;
+  --text: #453E38;
+  --muted: #6B635C;
+  --line: #EDE4D8;
+  --line-strong: #E2D5C4;
+  --accent: #E4572E;
+  --accent-strong: #C9431D; /* the accent, deep enough for white text */
+  --accent-deep: #A83716;
+  --apricot: #FFE3D3;
+  --apricot-soft: #FFF3EB;
+  --plum: #3B1F3A;
+  --on-plum: #FBF2F5;
+  --on-plum-muted: #D7C3D1;
+  --ease: cubic-bezier(.2, .8, .2, 1);
+  position: relative;
+  isolation: isolate;
+  overflow-x: clip;
+  color: var(--ink);
+  font: 400 16px/1.6 'Inter', ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.loomwork * { box-sizing: border-box; }
+.loomwork a { color: inherit; }
+.loomwork h1, .loomwork h2, .loomwork h3 { margin: 0; font-family: 'Sora', 'Inter', sans-serif; font-weight: 600; letter-spacing: -.03em; }
+.loomwork :focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 55%, transparent); outline-offset: 3px; }
+.loomwork .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* A woven texture at the edges of the hero, fading out toward the headline. */
+.loomwork::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0 0 auto;
+  height: 680px;
+  background: url(weave.svg) center top / 36px 36px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 110px, #000 300px, transparent 640px), linear-gradient(to right, #000, transparent 34%, transparent 66%, #000);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to bottom, transparent, #000 110px, #000 300px, transparent 640px), linear-gradient(to right, #000, transparent 34%, transparent 66%, #000);
+  mask-composite: intersect;
+  opacity: .7;
+  pointer-events: none;
+}
+
+/* Buttons */
+.loomwork .button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; padding: 11px 20px; border: 1.5px solid var(--ink); border-radius: 12px; background: transparent; color: var(--ink); font: 600 15.5px/1.2 'Inter', sans-serif; text-decoration: none; cursor: pointer; transition: background-color .15s, border-color .15s, color .15s; }
+.loomwork .button:hover { background: var(--ink); color: #fff; }
+.loomwork .button.primary { border-color: var(--accent-strong); background: var(--accent-strong); color: #fff; }
+.loomwork .button.primary:hover { border-color: var(--accent-deep); background: var(--accent-deep); }
+.loomwork .button.small { min-height: 40px; padding: 8px 16px; border-radius: 10px; font-size: 14.5px; }
+.loomwork .button svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform .2s var(--ease); }
+.loomwork .button:hover svg { transform: translateX(3px); }
+
+/* Navigation */
+.loomwork .nav { display: flex; align-items: center; gap: 48px; max-width: 1200px; margin: 0 auto; padding: 20px 28px; }
+.loomwork .logo { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); font: 700 21px/1 'Sora', sans-serif; letter-spacing: -.035em; text-decoration: none; }
+.loomwork .mark { width: 30px; height: 30px; fill: none; stroke-width: 5; stroke-linecap: round; }
+.loomwork .mark .warp { stroke: var(--plum); }
+.loomwork .mark .weft { stroke: var(--accent); }
+.loomwork .mark .gap { stroke: var(--page); stroke-width: 9; stroke-linecap: butt; }
+.loomwork .mark .over { stroke-linecap: butt; }
+.loomwork .nav nav { display: flex; gap: 30px; font-size: 15px; font-weight: 500; }
+.loomwork .nav nav a { color: var(--muted); text-decoration: none; transition: color .15s; }
+.loomwork .nav nav a:hover, .loomwork .nav nav a[aria-current] { color: var(--ink); }
+.loomwork .nav nav a[aria-current] { text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 8px; }
+.loomwork .nav-end { display: flex; align-items: center; gap: 22px; margin-left: auto; font-size: 15px; font-weight: 500; }
+.loomwork .login { text-decoration: none; }
+.loomwork .login:hover { color: var(--accent-strong); }
+
+.loomwork main { max-width: 1200px; margin: 0 auto; padding: 0 28px; }
+
+/* Hero */
+.loomwork .hero { max-width: 860px; margin: 0 auto; padding: 60px 0 40px; text-align: center; }
+.loomwork h1 { font-size: clamp(40px, 5.4vw, 66px); line-height: 1.04; letter-spacing: -.04em; text-wrap: balance; }
+.loomwork .lede { max-width: 33em; margin: 20px auto 0; color: var(--muted); font-size: 19px; line-height: 1.55; text-wrap: pretty; }
+
+/* Monthly or annual: radio buttons, and CSS swaps the prices. */
+.loomwork .billing { display: inline-flex; gap: 2px; margin: 30px 0 0; padding: 4px; border: 1px solid var(--line-strong); border-radius: 999px; background: var(--card); box-shadow: 0 1px 2px rgb(28 25 23 / .05); }
+.loomwork .billing label { display: inline-flex; align-items: center; gap: 8px; padding: 8px 18px; border-radius: 999px; color: var(--muted); font-size: 15px; font-weight: 500; cursor: pointer; transition: background-color .2s, color .2s; }
+.loomwork .billing input { position: absolute; opacity: 0; pointer-events: none; }
+.loomwork .billing label:hover { color: var(--ink); }
+.loomwork .billing label:has(:checked) { background: var(--ink); color: #fff; }
+.loomwork .billing label:has(:focus-visible) { outline: 3px solid color-mix(in srgb, var(--accent) 55%, transparent); outline-offset: 2px; }
+.loomwork .save { padding: 3px 8px; border-radius: 999px; background: var(--apricot); color: var(--accent-deep); font-size: 12.5px; font-weight: 600; line-height: 1.2; }
+.loomwork .annual { display: none; }
+.loomwork:has(.billing [value="annual"]:checked) .annual { display: inline; }
+.loomwork:has(.billing [value="annual"]:checked) .monthly { display: none; }
+
+/* The plan finder: the page's own starter, with Stand Inline under it. */
+.loomwork .finder { padding: 30px 40px 28px; border: 1px solid var(--line); border-radius: 24px; background: var(--card); box-shadow: 0 1px 2px rgb(28 25 23 / .04), 0 32px 64px -40px rgb(59 31 58 / .4); }
+.loomwork .kicker { display: flex; align-items: center; gap: 8px; margin: 0 0 14px; color: var(--accent-strong); font: 600 13px/1 'Inter', sans-serif; letter-spacing: .12em; text-transform: uppercase; }
+.loomwork .kicker svg { width: 16px; height: 16px; fill: var(--accent); }
+.loomwork .sentence { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px 40px; }
+.loomwork .sentence p { flex: 1 1 540px; max-width: 800px; margin: 0; font: 500 clamp(22px, 2.5vw, 30px)/1.55 'Sora', sans-serif; letter-spacing: -.025em; }
+.loomwork .sentence .clause { display: inline-block; } /* Wrap between the two halves first. */
+.loomwork .blank input,
+.loomwork .blank select { margin: 0; padding: 0 .3em; border: 0; border-bottom: 2px solid var(--accent); border-radius: .25em .25em 0 0; background-color: var(--apricot-soft); color: var(--accent-strong); font: inherit; letter-spacing: inherit; field-sizing: content; transition: background-color .15s; }
+.loomwork .blank input:hover, .loomwork .blank select:hover,
+.loomwork .blank input:focus, .loomwork .blank select:focus { background-color: var(--apricot); }
+.loomwork .blank input:focus-visible, .loomwork .blank select:focus-visible { outline-offset: 2px; }
+.loomwork .blank input { width: 2.2em; min-width: 1.4em; text-align: center; -moz-appearance: textfield; appearance: textfield; }
+.loomwork .blank input::-webkit-inner-spin-button, .loomwork .blank input::-webkit-outer-spin-button { margin: 0; -webkit-appearance: none; }
+.loomwork .blank select { max-width: 100%; padding-right: 1.05em; background: var(--apricot-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8' fill='none' stroke='%23C9431D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m1.5 1.5 4.5 4.5 4.5-4.5'/%3E%3C/svg%3E") right .3em center / .42em no-repeat; -webkit-appearance: none; appearance: none; cursor: pointer; }
+@supports (field-sizing: content) { .loomwork .blank input { width: auto; } }
+.loomwork .find { min-height: 54px; padding: 14px 24px; font-size: 16px; }
+
+/* Stand Inline: four tokens and two parts. Font and text color come from the page. */
+.loomwork stand-inline {
+  --si-accent: #E4572E;
+  --si-visitor-bg: #FFE3D3;
+  --si-line: #E6D9C8;
+  --si-max-height: min(56vh, 460px);
+  margin-top: 26px;
+  font-size: 17px;
+}
+.loomwork stand-inline[data-state="conversation"]::part(conversation) { padding-top: 22px; border-top: 1px solid var(--line); }
+.loomwork stand-inline::part(host) { max-width: 46em; } /* Replies keep a readable line length. */
+/* Nobody can answer: the plan finder steps aside, and the plans stay. */
+.loomwork .finder:has(stand-inline[data-state="offline"]) { display: none; }
+
+/* Plans */
+.loomwork .plans { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 64px; }
+.loomwork .plan { position: relative; display: flex; flex-direction: column; gap: 26px; padding: 30px 28px 32px; border: 1px solid var(--line); border-radius: 24px; background: var(--card); outline: 1.5px dashed transparent; outline-offset: 6px;
+  transition: transform .55s var(--ease), box-shadow .55s var(--ease), outline-color .35s; }
+.loomwork .plan h3 { font-size: 23px; line-height: 1.2; }
+.loomwork .plan .for { min-height: 3.2em; margin: 8px 0 22px; color: var(--muted); font-size: 15px; line-height: 1.55; }
+.loomwork .price { display: flex; align-items: flex-end; gap: 12px; margin: 0 0 24px; }
+.loomwork .price strong { font: 600 50px/.9 'Sora', sans-serif; letter-spacing: -.045em; }
+.loomwork .price > span { color: var(--muted); font-size: 14px; line-height: 1.35; }
+.loomwork .plan-head .button { width: 100%; }
+.loomwork .plan-body { padding-top: 24px; border-top: 1px solid var(--line); }
+.loomwork .includes { margin: 0 0 14px; font-size: 14px; font-weight: 600; }
+.loomwork .features { display: grid; gap: 11px; margin: 0; padding: 0; list-style: none; color: var(--text); font-size: 15px; line-height: 1.45; }
+.loomwork .features li { position: relative; padding-left: 30px; }
+.loomwork .features li::before { content: ''; position: absolute; top: 0; left: 0; width: 20px; height: 20px; border-radius: 50%; background: var(--apricot-soft); }
+.loomwork .features li::after { content: ''; position: absolute; top: 5px; left: 5px; width: 10px; height: 10px; background: var(--accent-strong);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1.5 5.2 4 7.6 8.5 2.6'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1.5 5.2 4 7.6 8.5 2.6'/%3E%3C/svg%3E") center / contain no-repeat; }
+
+/* Team: the most popular plan */
+.loomwork .featured { border-color: var(--plum); background: var(--plum); color: var(--on-plum); box-shadow: 0 32px 64px -32px rgb(59 31 58 / .6); }
+.loomwork .featured .for, .loomwork .featured .price > span { color: var(--on-plum-muted); }
+.loomwork .featured .plan-body { border-top-color: rgb(255 255 255 / .14); }
+.loomwork .featured .features { color: var(--on-plum); }
+.loomwork .featured .features li::before { background: rgb(255 227 211 / .14); }
+.loomwork .featured .features li::after { background: #FFB793; }
+.loomwork .plan-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.loomwork .popular { margin: 0; padding: 4px 11px; border-radius: 999px; background: var(--apricot); color: var(--plum); font-size: 12.5px; font-weight: 600; line-height: 1.3; white-space: nowrap; }
+
+/* Plans the conversation names. The first one gets a badge and a ring. */
+.loomwork .pick { position: absolute; top: 0; left: 50%; z-index: 1; display: none; align-items: center; gap: 6px; margin: 0; padding: 7px 13px 7px 11px; border-radius: 999px; background: var(--accent-strong); color: #fff; font-size: 13px; font-weight: 600; line-height: 1.2; white-space: nowrap; box-shadow: 0 8px 20px -8px rgb(169 55 22 / .7); transform: translate(-50%, -50%); }
+.loomwork .pick svg { width: 14px; height: 14px; fill: currentColor; }
+.loomwork .plan.suggested { transform: translateY(-6px); box-shadow: 0 0 0 3px var(--accent), 0 36px 64px -32px rgb(228 87 46 / .55); }
+.loomwork .plan.suggested .pick { display: inline-flex; animation: lw-pick .6s var(--ease) both; }
+.loomwork .plan.suggested::after { content: ''; position: absolute; inset: -1px; border-radius: inherit; pointer-events: none; animation: lw-ping 1.3s var(--ease) both; }
+.loomwork .plan.mentioned { outline-color: color-mix(in srgb, var(--accent) 55%, transparent); }
+@keyframes lw-pick { from { opacity: 0; transform: translate(-50%, 0) scale(.9); } }
+@keyframes lw-ping { from { box-shadow: 0 0 0 3px rgb(228 87 46 / .55); } to { box-shadow: 0 0 0 22px rgb(228 87 46 / 0); } }
+
+.loomwork .plans-note { margin: 28px 0 0; color: var(--muted); font-size: 15px; text-align: center; }
+.loomwork .plans-note strong { color: var(--ink); font-weight: 600; }
+
+/* Compare plans */
+.loomwork .compare { margin-top: 112px; }
+.loomwork .compare h2, .loomwork .faq h2 { font-size: clamp(30px, 3.4vw, 40px); line-height: 1.1; }
+.loomwork .table-wrap { margin-top: 28px; overflow-x: auto; }
+.loomwork table { width: 100%; min-width: 560px; border-collapse: collapse; table-layout: fixed; font-size: 15px; line-height: 1.4; }
+.loomwork thead td { width: 40%; }
+.loomwork thead th { width: 20%; padding: 18px 12px 16px; font: 600 18px/1.2 'Sora', sans-serif; letter-spacing: -.02em; }
+.loomwork th[scope="row"] { padding: 15px 16px 15px 0; font-weight: 500; text-align: left; }
+.loomwork td { padding: 15px 12px; color: var(--text); text-align: center; }
+.loomwork tbody tr:not(.group) > * { border-top: 1px solid var(--line); }
+.loomwork .group th { padding: 36px 0 12px; color: var(--muted); font-size: 12.5px; font-weight: 600; letter-spacing: .12em; text-align: left; text-transform: uppercase; }
+.loomwork tr:not(.group) > :nth-child(3), .loomwork .group > td:first-of-type { background: var(--apricot-soft); }
+.loomwork thead th:nth-child(3) { border-radius: 16px 16px 0 0; }
+.loomwork tbody:last-child tr:last-child > :nth-child(3) { border-radius: 0 0 16px 16px; }
+.loomwork td.yes span, .loomwork td.no span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.loomwork td.yes::before { content: ''; display: inline-block; width: 18px; height: 18px; vertical-align: middle; background: var(--accent-strong);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10' fill='none' stroke='%23000' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1.5 5.2 4 7.6 8.5 2.6'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10' fill='none' stroke='%23000' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1.5 5.2 4 7.6 8.5 2.6'/%3E%3C/svg%3E") center / contain no-repeat; }
+.loomwork td.no::before { content: ''; display: inline-block; width: 12px; height: 2px; vertical-align: middle; border-radius: 1px; background: #BDB2A6; }
+
+/* Billing questions */
+.loomwork .faq { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.7fr); gap: 56px; margin-top: 112px; }
+.loomwork .faq-intro p { margin: 16px 0 0; color: var(--muted); font-size: 17px; }
+.loomwork .faq-intro a { color: var(--accent-strong); font-weight: 500; text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+.loomwork details { border-bottom: 1px solid var(--line); }
+.loomwork details:first-child { border-top: 1px solid var(--line); }
+.loomwork summary { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 21px 0; font: 500 18px/1.4 'Sora', sans-serif; letter-spacing: -.02em; list-style: none; cursor: pointer; }
+.loomwork summary::-webkit-details-marker { display: none; }
+.loomwork summary::after { content: ''; flex: none; width: 12px; height: 12px; background: linear-gradient(currentColor 0 0) center / 100% 2px no-repeat, linear-gradient(currentColor 0 0) center / 2px 100% no-repeat; color: var(--accent-strong); transition: transform .25s var(--ease); }
+.loomwork details[open] summary::after { transform: rotate(45deg); }
+.loomwork details p { max-width: 38em; margin: -4px 0 24px; color: var(--muted); }
+
+/* Footer */
+.loomwork .foot { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px; width: min(1144px, calc(100% - 56px)); margin: 112px auto 0; padding: 30px 0 36px; border-top: 1px solid var(--line); color: var(--muted); font-size: 15px; }
+.loomwork .foot .logo { font-size: 18px; }
+.loomwork .foot .mark { width: 24px; height: 24px; }
+.loomwork .foot .made-up { margin-left: auto; }
+
+@media (prefers-reduced-motion: reduce) {
+  .loomwork .plan { transition: none; }
+  .loomwork .plan.suggested { transform: none; }
+  .loomwork .plan.suggested .pick, .loomwork .plan.suggested::after { animation: none; }
+}
+
+@media (max-width: 960px) {
+  .loomwork .nav { gap: 32px; }
+  .loomwork .finder { padding: 26px 28px 24px; }
+  .loomwork .plans { grid-template-columns: minmax(0, 1fr); gap: 36px; }
+  .loomwork .plan { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 36px; }
+  .loomwork .plan .for { min-height: 0; }
+  .loomwork .plan-body { padding: 0 0 0 36px; border-top: 0; border-left: 1px solid var(--line); }
+  .loomwork .featured .plan-body { border-left-color: rgb(255 255 255 / .14); }
+  .loomwork .faq { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+}
+
+@media (max-width: 640px) {
+  .loomwork::before { height: 520px; opacity: .45; }
+  .loomwork .nav { gap: 16px; padding: 16px 20px; }
+  .loomwork .nav nav, .loomwork .login { display: none; }
+  .loomwork main { padding: 0 16px; }
+  .loomwork .hero { padding: 40px 4px 32px; }
+  .loomwork .lede { font-size: 17px; }
+  .loomwork .billing label { padding: 8px 14px; }
+  .loomwork .finder { margin-inline: -4px; padding: 22px 20px 20px; border-radius: 20px; }
+  .loomwork .sentence p { flex-basis: 100%; font-size: 22px; line-height: 1.6; }
+  .loomwork .find { width: 100%; }
+  .loomwork stand-inline { font-size: 16px; }
+  .loomwork .plans { margin-top: 52px; }
+  .loomwork .plan { display: flex; gap: 24px; padding: 28px 22px; }
+  .loomwork .plan-body { padding: 22px 0 0; border-top: 1px solid var(--line); border-left: 0; }
+  .loomwork .featured .plan-body { border-top-color: rgb(255 255 255 / .14); }
+  .loomwork .compare, .loomwork .faq { margin-top: 80px; }
+  .loomwork table { min-width: 0; font-size: 13.5px; }
+  .loomwork thead td { width: 34%; }
+  .loomwork thead th { width: 22%; padding: 14px 4px 12px; font-size: 15px; }
+  .loomwork th[scope="row"] { padding-right: 8px; }
+  .loomwork td { padding: 13px 4px; }
+  .loomwork .foot { width: calc(100% - 32px); margin-top: 80px; padding: 26px 0 32px; }
+  .loomwork .foot .made-up { margin-left: 0; }
+}

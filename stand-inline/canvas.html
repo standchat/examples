@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stand Inline canvas</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="data:,">
+  <!-- The studio's blank canvas: a plain page whose colors and font the studio sets. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&family=Nunito:wght@400;700&display=swap">
+  <script type="module" src="stand-inline.js"></script>
+  <style>
+    :root { --bg: #FFFFFF; --ink: #1D1D1F; --font: 'Inter', ui-sans-serif, system-ui, sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font: 400 17px/1.65 var(--font); -webkit-font-smoothing: antialiased; transition: background-color .3s, color .3s; }
+    .bar { display: flex; align-items: center; gap: 28px; max-width: 980px; margin: 0 auto; padding: 22px 24px; }
+    .logo { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: -.01em; }
+    .logo i { width: 22px; height: 22px; border-radius: 7px; background: currentColor; opacity: .85; }
+    .bar nav { display: flex; gap: 22px; margin-left: auto; opacity: .6; font-size: 15px; }
+    main { max-width: 980px; margin: 0 auto; padding: 40px 24px 120px; }
+    .kicker { margin: 0 0 12px; font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; opacity: .55; }
+    h1 { max-width: 16ch; margin: 0 0 18px; font-size: clamp(38px, 6vw, 60px); line-height: 1.04; letter-spacing: -.02em; }
+    h2 { margin: 56px 0 12px; font-size: 24px; letter-spacing: -.01em; }
+    p { max-width: 62ch; margin: 0 0 16px; }
+    .lead { font-size: 20px; opacity: .8; }
+    .slot { margin: 36px 0 44px; }
+    .blocks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 24px; }
+    .blocks div { aspect-ratio: 4 / 3; border-radius: 14px; background: color-mix(in srgb, currentColor 7%, transparent); }
+    footer { padding: 28px 24px 40px; opacity: .5; font-size: 14px; text-align: center; }
+    @media (max-width: 640px) { .bar nav { display: none; } .blocks { grid-template-columns: 1fr 1fr; } }
+  </style>
+</head>
+<body>
+  <header class="bar">
+    <span class="logo"><i></i>Your site</span>
+    <nav><span>Product</span><span>Pricing</span><span>About</span></nav>
+  </header>
+  <main>
+    <p class="kicker">A page like yours</p>
+    <h1>Your words, your colors, your font.</h1>
+    <p class="lead">Stand Inline takes its typeface and text color from the page around it, and reads the background to color its panels. Change the page on the left, and it follows.</p>
+
+    <div class="slot">
+      <stand-inline id="canvas-inline" site="demo" scope="studio-canvas" look="field"
+        placeholder="Ask a question about this page"
+        greeting="Hi! Ask me anything about this page."
+        suggestions="What can I ask here? | Can a person take over?"
+        prompt="The visitor is previewing Stand Inline, an in-page chat element for Stand Chat, on a blank canvas page in the Stand Inline studio."
+        analytics-id="studio-canvas">
+      </stand-inline>
+    </div>
+
+    <h2>The conversation stays in the page</h2>
+    <p>Nothing floats over your content, and nothing opens in a new window. Replies appear where the question was asked, in your typography, and the page makes room for them.</p>
+    <div class="blocks"><div></div><div></div><div></div></div>
+
+    <h2>More of your page</h2>
+    <p>Scroll on while a conversation is going: with growth set to Follow, a dock keeps the latest reply at hand. With Focus, the first message lifts the whole conversation into view.</p>
+    <p>Everything below is here to give the page some length, like a real one.</p>
+    <div class="blocks"><div></div><div></div><div></div></div>
+    <div class="blocks"><div></div><div></div><div></div></div>
+  </main>
+  <footer>Your footer</footer>
+</body>
+</html>

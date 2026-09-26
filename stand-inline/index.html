@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Stand Inline: chat that lives in your page</title>
+  <meta name="description" content="A custom chat UI for Stand, built on its visitor API: one element that puts the whole conversation inside your page, from a whisper in the margin to the hero. Five looks, three ways to grow, a studio to tune it, and seven pages to copy.">
+  <meta name="author" content="Stand Chat">
+  <link rel="author" href="https://stand.chat/">
+  <meta name="keywords" content="custom chat UI, visitor API, stand-inline, studio">
+  <meta property="og:title" content="Stand Inline: chat that lives in your page">
+  <meta property="og:description" content="A custom chat UI for Stand, built on its visitor API: one element that puts the whole conversation inside your page, from a whisper in the margin to the hero. Five looks, three ways to grow, a studio to tune it, and seven pages to copy.">
+  <meta property="og:image" content="https://examples.stand.chat/stand-inline/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="stylesheet" href="/_shared/example.css">
+  <script type="module" src="/_shared/example.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=PT+Mono&family=PT+Sans+Caption:wght@400;700&family=PT+Sans:ital,wght@0,400;0,700;1,400&display=swap">
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Stand Inline. studio.js runs this page's studio and gallery. -->
+  <script type="module" src="stand-inline.js"></script>
+  <script type="module" src="studio.js"></script>
+</head>
+<body>
+  <sx-example-bar></sx-example-bar>
+
+  <div class="si-page">
+    <!-- Hero: a live conversation, in the hero's own flow -->
+    <header class="hero">
+      <div class="hero-in">
+        <div class="hero-copy">
+          <p class="eyebrow">Stand Chat add-on · Custom chat UI</p>
+          <h1>Chat that lives <em>in</em> your&nbsp;page.</h1>
+          <p class="lead">Stand Inline puts the whole conversation right where the question comes up: beside the docs, under a product, in your hero. It starts as quietly as a line of text, and grows with the conversation.</p>
+
+          <stand-inline
+            id="ask-hero"
+            class="hero-ask"
+            site="demo"
+            scope="stand-inline"
+            look="line"
+            placeholder="Ask me how this chat works | Ask how to make it match your site | Ask what the five looks are"
+            greeting="Hi! I'm a real Stand-in, answering from inside this page. What would you like to know about Stand Inline?"
+            suggestions="What is Stand Inline? | How do I install it? | Can a person take over?"
+            prompt="The visitor is on the Stand Inline example page at examples.stand.chat. Stand Inline is a public-domain custom chat UI for Stand Chat: a stand-inline web component built on Stand's visitor API (beta), with no stand.js. It shows the whole conversation inside the page instead of a floating widget. Five looks set how present it is before anyone types: whisper, line, field, card and stage. Three growth modes set what happens once the chat starts: unfold in place, follow the visitor as a dock, or lift into a focused view. It inherits the page's font and colors; --si-* custom properties and ::part() restyle it. Install: copy stand-inline.js and stand-visitor.js, load stand-inline.js as a module script, and add a stand-inline element with your Site ID in its site attribute. It handles discovery, one-time session creation, sends, replies over a WebSocket, reload recovery, reconnects, AI-to-human handoff, link cards, email follow-up, notices and attribution. The studio on this page tunes it, and seven example pages show it in context. Answer briefly and concretely."
+            analytics-id="stand-inline-hero">
+          </stand-inline>
+
+          <p class="cta">
+            <a class="button primary" href="#studio">Open the studio</a>
+            <a class="button" href="#in-context">See it on seven pages</a>
+          </p>
+        </div>
+
+        <!-- The presence spectrum: the same element, five ways. Illustration only. -->
+        <figure class="spectrum" aria-label="Five looks, from barely there to impossible to ignore">
+          <ol inert aria-hidden="true">
+            <li style="--n: 1">
+              <span class="level"><b>Whisper</b> a line in your text</span>
+              <div class="mini mini-text">
+                <i style="width: 92%"></i><i style="width: 78%"></i>
+                <stand-inline data-spectrum="docs" look="whisper" placeholder="Ask about this page"></stand-inline>
+              </div>
+            </li>
+            <li style="--n: 2">
+              <span class="level"><b>Line</b> a sentence that answers</span>
+              <div class="mini">
+                <stand-inline data-spectrum="careers" look="line" placeholder="Ask anything about this role"></stand-inline>
+              </div>
+            </li>
+            <li style="--n: 3">
+              <span class="level"><b>Field</b> search that talks</span>
+              <div class="mini">
+                <stand-inline data-spectrum="product" look="field" placeholder="Ask anything about the Tern 2"></stand-inline>
+              </div>
+            </li>
+            <li style="--n: 4">
+              <span class="level"><b>Card</b> a clear invitation</span>
+              <div class="mini">
+                <stand-inline data-spectrum="contact" look="card" greeting="Tell us a little about your project." placeholder="Describe your project"></stand-inline>
+              </div>
+            </li>
+            <li style="--n: 5">
+              <span class="level"><b>Stage</b> impossible to ignore</span>
+              <div class="mini mini-stage">
+                <stand-inline data-spectrum="concierge" look="stage" greeting="Where do you want to wake up?" placeholder="Northern lights with kids"></stand-inline>
+              </div>
+            </li>
+          </ol>
+        </figure>
+      </div>
+    </header>
+
+    <!-- Growth: what happens once the conversation starts -->
+    <section class="grow" aria-labelledby="grow-title">
+      <div class="wrap">
+        <p class="kicker">Then it grows</p>
+        <h2 id="grow-title">The page makes room as the conversation does.</h2>
+        <div class="grow-grid">
+          <article>
+            <svg viewBox="0 0 160 110" aria-hidden="true">
+              <rect x="10" y="8" width="140" height="94" rx="8" class="frame"/>
+              <rect x="24" y="20" width="80" height="6" rx="3" class="text"/>
+              <rect x="24" y="31" width="104" height="6" rx="3" class="text"/>
+              <rect x="24" y="46" width="112" height="36" rx="6" class="chat"/>
+              <rect x="80" y="52" width="48" height="8" rx="4" class="bubble"/>
+              <rect x="32" y="65" width="70" height="5" rx="2.5" class="line"/>
+              <rect x="24" y="88" width="104" height="5" rx="2.5" class="text faint"/>
+              <path d="M140 52v24m-4-5 4 5 4-5" class="arrow"/>
+            </svg>
+            <h3>Unfold</h3>
+            <p>The conversation grows in place and pushes the page down. Past a set height it scrolls inside, so it never takes over. <code>grow="unfold"</code></p>
+          </article>
+          <article>
+            <svg viewBox="0 0 160 110" aria-hidden="true">
+              <rect x="10" y="8" width="140" height="94" rx="8" class="frame"/>
+              <rect x="24" y="20" width="104" height="6" rx="3" class="text"/>
+              <rect x="24" y="31" width="80" height="6" rx="3" class="text"/>
+              <rect x="24" y="42" width="112" height="6" rx="3" class="text faint"/>
+              <rect x="24" y="53" width="92" height="6" rx="3" class="text faint"/>
+              <rect x="40" y="72" width="80" height="22" rx="7" class="dock"/>
+              <circle cx="50" cy="83" r="4.5" class="bubble"/>
+              <rect x="59" y="80" width="46" height="5" rx="2.5" class="line"/>
+            </svg>
+            <h3>Follow</h3>
+            <p>When the visitor scrolls on to specs or reviews, a small dock keeps the latest reply and a reply box at hand. <code>grow="follow"</code></p>
+          </article>
+          <article>
+            <svg viewBox="0 0 160 110" aria-hidden="true">
+              <rect x="10" y="8" width="140" height="94" rx="8" class="frame dim"/>
+              <rect x="38" y="18" width="84" height="76" rx="8" class="chat solid"/>
+              <rect x="80" y="30" width="32" height="8" rx="4" class="bubble"/>
+              <rect x="48" y="44" width="56" height="5" rx="2.5" class="line"/>
+              <rect x="48" y="53" width="44" height="5" rx="2.5" class="line"/>
+              <rect x="46" y="78" width="68" height="9" rx="4.5" class="text"/>
+            </svg>
+            <h3>Focus</h3>
+            <p>The first message lifts the conversation into a focused view over the page. Escape puts it back where it was. <code>grow="focus"</code></p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- The studio -->
+    <section class="studio" id="studio" aria-labelledby="studio-title">
+      <div class="wrap wide">
+        <div class="studio-head">
+          <div>
+            <p class="kicker">Studio</p>
+            <h2 id="studio-title">Tune it on a real page.</h2>
+          </div>
+          <p>Pick a page, choose how present the chat should be and how it grows, match it to the brand, and copy the code. The preview plays a scripted sample; switch to <strong>Live</strong> to talk with Stand's demo Stand-in.</p>
+        </div>
+
+        <div class="studio-grid">
+          <form class="controls" data-controls>
+            <fieldset class="group">
+              <legend>Page</legend>
+              <div class="presets" data-presets></div>
+            </fieldset>
+
+            <fieldset class="group">
+              <legend>Presence <span data-look-name></span></legend>
+              <div class="dial">
+                <input type="range" min="0" max="4" step="1" value="2" name="look" aria-label="Presence" aria-valuetext="Field" data-look>
+                <div class="dial-labels" aria-hidden="true">
+                  <button type="button" data-look-stop="0">Whisper</button>
+                  <button type="button" data-look-stop="1">Line</button>
+                  <button type="button" data-look-stop="2">Field</button>
+                  <button type="button" data-look-stop="3">Card</button>
+                  <button type="button" data-look-stop="4">Stage</button>
+                </div>
+              </div>
+              <p class="hint" data-look-hint></p>
+            </fieldset>
+
+            <fieldset class="group">
+              <legend>Growth</legend>
+              <div class="segmented" role="radiogroup" aria-label="Growth">
+                <label><input type="radio" name="grow" value="unfold"><span>Unfold</span></label>
+                <label><input type="radio" name="grow" value="follow"><span>Follow</span></label>
+                <label><input type="radio" name="grow" value="focus"><span>Focus</span></label>
+              </div>
+              <p class="hint" data-grow-hint></p>
+              <label class="inline-field" data-focus-at hidden>Lift after message <input type="number" name="focusAt" min="1" max="6" value="1"></label>
+            </fieldset>
+
+            <fieldset class="group">
+              <legend>Style</legend>
+              <div class="swatches" data-swatches></div>
+              <label class="row-field">Accent <input type="color" name="accent" value="#1B90B3"></label>
+              <label class="row-field">Corners <input type="range" name="radius" min="0" max="28" step="1" value="14"><output data-radius-out>14px</output></label>
+              <label class="row-field">Size <input type="range" name="size" min="13" max="22" step="1" value="17"><output data-size-out>17px</output></label>
+              <div class="canvas-only" data-canvas-only hidden>
+                <label class="row-field">Page <input type="color" name="pageBg" value="#FFFFFF"></label>
+                <label class="row-field">Text <input type="color" name="pageInk" value="#1D1D1F"></label>
+                <label class="row-field">Font
+                  <select name="pageFont">
+                    <option value="'Inter', ui-sans-serif, system-ui, sans-serif">Sans</option>
+                    <option value="'Fraunces', Georgia, serif">Serif</option>
+                    <option value="'Nunito', ui-rounded, system-ui, sans-serif">Rounded</option>
+                    <option value="'JetBrains Mono', ui-monospace, monospace">Mono</option>
+                  </select>
+                </label>
+              </div>
+            </fieldset>
+
+            <fieldset class="group">
+              <legend>Words</legend>
+              <label class="stack-field">Placeholder <small>Several? Separate them with |</small><input type="text" name="placeholder" autocomplete="off"></label>
+              <label class="stack-field">Greeting <small>The first line from whoever answers</small><input type="text" name="greeting" autocomplete="off"></label>
+              <label class="stack-field">Suggestions <small>Separate with |</small><input type="text" name="suggestions" autocomplete="off"></label>
+              <details class="prompt-field">
+                <summary>Private context</summary>
+                <textarea name="prompt" rows="5" aria-label="Private context"></textarea>
+                <small>Sent with a new conversation. The visitor never sees it, but it's in your HTML: public facts only.</small>
+              </details>
+            </fieldset>
+          </form>
+
+          <div class="stage">
+            <div class="toolbar">
+              <div class="segmented small" role="radiogroup" aria-label="Preview mode">
+                <label><input type="radio" name="mode" value="sample" checked form="preview-form"><span>Sample</span></label>
+                <label><input type="radio" name="mode" value="live" form="preview-form"><span>Live</span></label>
+              </div>
+              <button type="button" class="play" data-play>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5Z"/></svg>
+                <span>Play sample</span>
+              </button>
+              <button type="button" class="ghost" data-reset>Reset</button>
+              <span class="grow-space"></span>
+              <div class="segmented small" role="radiogroup" aria-label="Device">
+                <label><input type="radio" name="device" value="desktop" checked form="preview-form"><span>Desktop</span></label>
+                <label><input type="radio" name="device" value="phone" form="preview-form"><span>Phone</span></label>
+              </div>
+              <a class="ghost" data-open target="_blank" rel="noopener">Open page ↗</a>
+            </div>
+            <form id="preview-form" hidden></form>
+
+            <div class="browser" data-browser>
+              <div class="browser-bar" aria-hidden="true"><i></i><i></i><i></i><span data-url>northfold.example/tents/tern-2</span></div>
+              <iframe data-frame title="Preview: the selected page with Stand Inline" loading="eager"></iframe>
+              <p class="frame-note" data-frame-note hidden></p>
+            </div>
+
+            <div class="code">
+              <div class="code-head"><span>Your code</span><button type="button" data-copy-code>Copy</button></div>
+              <pre><code data-code></code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- In context -->
+    <section class="context" id="in-context" aria-labelledby="context-title">
+      <div class="wrap wide">
+        <div class="studio-head">
+          <div>
+            <p class="kicker">In context</p>
+            <h2 id="context-title">Seven pages, seven places to talk.</h2>
+          </div>
+          <p>Each one is a complete page for a made-up business, from the quietest placement to the loudest. Every chat on them is live, and each has a scripted sample to watch.</p>
+        </div>
+        <ol class="cases">
+          <li><a href="docs/"><img src="docs/og.png" alt="" loading="lazy" width="1200" height="630"><span class="case-body"><span class="tags"><code>whisper</code><code>ask-selection</code></span><strong>Docs</strong><span>A whisper in the margin of developer docs. Select any sentence to ask about it.</span></span></a></li>
+          <li><a href="careers/"><img src="careers/og.png" alt="" loading="lazy" width="1200" height="630"><span class="case-body"><span class="tags"><code>line</code><code>handoff</code></span><strong>Job post</strong><span>The last line of the post answers back, and the hiring team joins when it matters.</span></span></a></li>
+          <li><a href="product/"><img src="product/og.png" alt="" loading="lazy" width="1200" height="630"><span class="case-body"><span class="tags"><code>field</code><code>follow</code></span><strong>Product page</strong><span>The last question before the cart, answered under the price. It follows you to the reviews.</span></span></a></li>
+          <li><a href="help/"><img src="help/og.png" alt="" loading="lazy" width="1200" height="630"><span class="case-body"><span class="tags"><code>field</code><code>typed placeholders</code></span><strong>Help center</strong><span>Search that answers, with a person from customer care one message away.</span></span></a></li>
+          <li><a href="pricing/"><img src="pricing/og.png" alt="" loading="lazy" width="1200" height="630"><span class="case-body"><span class="tags"><code>ask()</code><code>events</code></span><strong>Pricing</strong><span>Your own fill-in-the-blanks starter, and a conversation that highlights the right plan.</span></span></a></li>
+          <li><a href="contact/"><img src="contact/og.png" alt="" loading="lazy" width="1200" height="630"><span class="case-body"><span class="tags"><code>card</code><code>follow-up</code></span><strong>Contact</strong><span>A conversation instead of a contact form, picked up by an architect.</span></span></a></li>
+          <li><a href="concierge/"><img src="concierge/og.png" alt="" loading="lazy" width="1200" height="630"><span class="case-body"><span class="tags"><code>stage</code><code>focus</code></span><strong>Hero concierge</strong><span>The hero is the conversation, and the first message takes the whole screen.</span></span></a></li>
+        </ol>
+
+        <!-- How this was made: the prompt and the model, for people building their own. -->
+        <details class="made" id="how-this-was-made">
+          <summary>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5c.5 4.3 2.2 6 6.5 6.5-4.3.5-6 2.2-6.5 6.5-.5-4.3-2.2-6-6.5-6.5 4.3-.5 6-2.2 6.5-6.5ZM18.5 15c.2 1.7.8 2.3 2.5 2.5-1.7.2-2.3.8-2.5 2.5-.2-1.7-.8-2.3-2.5-2.5 1.7-.2 2.3-.8 2.5-2.5Z"/></svg>
+            <span class="made-title">How this was made</span>
+            <span class="made-meta">One prompt · Claude Opus 5.5, max effort</span>
+          </summary>
+          <div class="made-body">
+            <p>Everything here was generated by <strong>Claude Opus 5.5</strong> at max effort in Claude Code, in a single session, from the prompt below: the element and its protocol client, the studio, the seven example pages and their illustrations. One follow-up message asked for this note.</p>
+            <p>We share it because an AI coding agent can now build a high-fidelity chat front end on top of Stand Chat. Stand keeps the routing, the AI Stand-ins, the handoff to your team and the history. The interface can be anything you can describe.</p>
+
+            <figure class="made-prompt">
+              <figcaption>The prompt, with typos fixed</figcaption>
+              <blockquote>
+                <p>Add a custom chat UI to the examples collection that is easy to embed in context. While <code>stand-card</code> only starts a chat, this should keep the whole conversation in context, a bit like the one at the top of <a href="https://stand.chat/guide/custom-chat-ui">stand.chat/guide/custom-chat-ui</a>.</p>
+                <p>Differences to that example:</p>
+                <ul>
+                  <li>It should be more polished: actually a great tool for many different purposes on a site.</li>
+                  <li>Make it customizable: easy to adapt to any style.</li>
+                  <li>Find innovative variations, from a barely noticeable start that grows progressively during the chat, to impossible to ignore on the page.</li>
+                </ul>
+                <p>Come up with 5–10 different use cases or contexts where it can be used, and generate an example of each. If needed, make one page for each (under the same example), or make it more like a studio for tuning the experience.</p>
+                <p>This should feel like a polished add-on product to Stand Chat, not a one-off experiment. Something people would actually like to use on their sites to get their visitors chatting.</p>
+              </blockquote>
+            </figure>
+
+            <h3>What made it work</h3>
+            <ul class="made-list">
+              <li><strong>A written contract.</strong> The agent built on Stand's <a href="https://stand.chat/guide/custom-chat-ui">custom chat UI guide</a>, which documents discovery, sessions, WebSocket events and recovery precisely so a coding agent can implement them.</li>
+              <li><strong>A real conversation from the first minute.</strong> <code>site="demo"</code> answers from localhost, so the agent tried the API before designing anything and saw what replies really look like: Markdown, system cards, and typing events that arrive a moment before the answer.</li>
+              <li><strong>Samples for the hard states.</strong> A handoff to a person or an email follow-up is hard to trigger by hand. Scripted samples drive the same renderer, so every state could be seen, and fixed.</li>
+              <li><strong>Looking at the result.</strong> Every page was checked in a browser at desktop and phone sizes. Six of the example pages were built in parallel by separate agents from one shared brief, then reviewed.</li>
+            </ul>
+            <p class="made-next">Building your own? Start from the guide's copyable brief for coding agents, add your design brief and your Site ID, and ask for screenshots along the way.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+  </div>
+
+  <section id="how-it-works" class="sx-explainer">
+    <div class="sx-wrap">
+      <p class="sx-eyebrow">How it works</p>
+      <h2>One element, the whole conversation</h2>
+      <p class="sx-lead"><code>&lt;stand-inline&gt;</code> is a custom chat UI for Stand, built on Stand's visitor API. It doesn't load <code>stand.js</code> or open a widget: it finds who can answer, starts the conversation on the visitor's first message, and shows it right there in your page. Stand still routes it, runs your AI Stand-ins, lets your team take over, and keeps the history.</p>
+
+      <h3>Install</h3>
+      <p>Copy <code>stand-inline.js</code> and <code>stand-visitor.js</code> to your site, next to each other. Then:</p>
+      <pre class="sx-code" data-file="index.html" data-wrap><code class="language-html">&lt;script type="module" src="/stand-inline.js"&gt;&lt;/script&gt;
+
+&lt;stand-inline site="YOUR-SITE-ID" look="field" placeholder="Ask about this product"&gt;&lt;/stand-inline&gt;</code></pre>
+      <p>Your Site ID is in the installation snippet under <strong>Sites</strong> in Stand. It's a public identifier, not a secret. Until you have one, <code>site="demo"</code> connects to Stand Chat's demo Stand-in on any domain, including localhost. That's what every chat on these pages uses.</p>
+
+      <h3>Five looks, three ways to grow</h3>
+      <div class="sx-table">
+        <table>
+          <thead><tr><th scope="col"><code>look</code></th><th scope="col">Before anyone types</th><th scope="col">Good for</th></tr></thead>
+          <tbody>
+            <tr><td><code>whisper</code></td><td>A line of text with a spark and a dashed underline. The conversation becomes a thread.</td><td>Docs, articles, the margin</td></tr>
+            <tr><td><code>line</code></td><td>A sentence-sized prompt on a rule.</td><td>The end of a job post, an FAQ, a story</td></tr>
+            <tr><td><code>field</code></td><td>A box that reads like search. It unfolds into the conversation.</td><td>Product pages, help centers</td></tr>
+            <tr><td><code>card</code></td><td>A contained panel with who's answering, the greeting and suggestions.</td><td>Where a contact form would go</td></tr>
+            <tr><td><code>stage</code></td><td>The greeting is the headline, with a big box and suggestions.</td><td>Heroes and landing pages</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><code>grow="unfold"</code> (the default) grows in place and scrolls inside past <code>--si-max-height</code>. <code>grow="follow"</code> also docks the conversation to the bottom of the screen while it's scrolled out of view. <code>grow="focus"</code> lifts it into a focused view on the first message, or on a later one with <code>focus-at="3"</code>. Every look can open the focused view from its header.</p>
+
+      <h3>Attributes</h3>
+      <div class="sx-table">
+        <table>
+          <tbody>
+            <tr><th scope="row"><code>site</code></th><td>Your Stand Site ID. Required.</td></tr>
+            <tr><th scope="row"><code>placeholder</code></th><td>The box's placeholder. Several, separated by <code>|</code>, are typed out in turn.</td></tr>
+            <tr><th scope="row"><code>greeting</code></th><td>An opening line from whoever answers: the card's first message, the stage's headline, and a hint above the other looks when the visitor starts typing. Saved as the first message of the conversation.</td></tr>
+            <tr><th scope="row"><code>suggestions</code></th><td>Up to six questions, separated by <code>|</code>. A click sends one.</td></tr>
+            <tr><th scope="row"><code>prompt</code></th><td>Private context for whoever answers, up to 2,000 characters. Visitors don't see it, but it's in your HTML: never put secrets in it.</td></tr>
+            <tr><th scope="row"><code>analytics-id</code></th><td>Names the placement in Stand's analytics.</td></tr>
+            <tr><th scope="row"><code>scope</code></th><td>Elements with the same site and scope share one conversation, which follows the visitor from page to page. Without it, that's the whole site, like Stand's widget. Give a product line or a section its own scope to keep its conversations apart.</td></tr>
+            <tr><th scope="row"><code>ask-selection</code></th><td>A CSS selector. Selecting text inside it offers <em>Ask about this</em>, which attaches the quote to the next message.</td></tr>
+            <tr><th scope="row"><code>visitor-id</code>, <code>visitor-name</code></th><td>Your signed-in user's ID and name for new conversations. Unverified metadata, never authentication.</td></tr>
+            <tr><th scope="row"><code>label</code></th><td>The message box's accessible name, when the placeholder isn't a good one.</td></tr>
+            <tr><th scope="row"><code>reply-placeholder</code>, <code>no-expand</code></th><td>The placeholder once the chat has started, and hiding the full-view button.</td></tr>
+            <tr><th scope="row"><code>hidden</code></th><td>Keeps it hidden until someone can answer, like <code>&lt;stand-button hidden&gt;</code>. A wrapper marked <code>data-stand-reveal</code> works too.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Two slots: <code>&lt;h1 slot="headline"&gt;</code> brings your own headline to the stage look, and <code>&lt;div slot="offline"&gt;</code> shows when nobody can answer. Without it, the element hides.</p>
+
+      <h3>Make it yours</h3>
+      <p>It takes its font, size and text color from the page and reads the page's background, so it fits in before you change anything. Set one accent to match your brand, and go further with custom properties and parts:</p>
+      <pre class="sx-code" data-file="style.css"><code class="language-css">stand-inline {
+  --si-accent: #C8643B;     /* send button, focus, your bubbles */
+  --si-radius: 6px;
+  --si-surface: #FFFDF8;    /* panels, the dock, the focused view */
+  --si-max-height: 60vh;    /* then the transcript scrolls */
+  font-size: 16px;          /* everything scales with it */
+}
+
+stand-inline::part(send) { border-radius: 4px; }
+stand-inline::part(headline) { font-family: 'Young Serif', serif; }
+stand-inline[data-state="conversation"] { margin-block: 2rem; }</code></pre>
+      <p>Properties: <code>--si-accent</code>, <code>--si-accent-ink</code>, <code>--si-ink</code>, <code>--si-muted</code>, <code>--si-line</code>, <code>--si-tint</code>, <code>--si-page</code>, <code>--si-surface</code>, <code>--si-visitor-bg</code>, <code>--si-visitor-ink</code>, <code>--si-radius</code>, <code>--si-leading</code>, <code>--si-shadow</code>, <code>--si-max-height</code>, <code>--si-stage-size</code>, <code>--si-stage-weight</code>, <code>--si-font</code>, <code>--si-mono</code> and <code>--si-code-bg</code> (code in replies), <code>--si-selection-bg</code> and <code>--si-selection-ink</code> (the <em>Ask about this</em> button), and <code>--si-z</code>.</p>
+      <p>Parts (<code>::part(dialog)::backdrop</code> styles the page behind the focused view): <code>root</code>, <code>headline</code>, <code>conversation</code>, <code>header</code>, <code>avatar</code>, <code>name</code>, <code>badge</code>, <code>status</code>, <code>transcript</code>, <code>message</code>, <code>visitor</code>, <code>host</code>, <code>bubble</code>, <code>author</code>, <code>system</code>, <code>link-card</code>, <code>suggestions</code>, <code>suggestion</code>, <code>composer</code>, <code>input</code>, <code>send</code>, <code>footer</code>, <code>attribution</code>, <code>dock</code>, <code>dialog</code>, <code>sheet</code>.</p>
+      <p>The element reflects its state on itself, so the page around it can follow the conversation with CSS alone:</p>
+      <ul>
+        <li><code>data-state</code>: <code>loading</code>, <code>idle</code>, <code>conversation</code>, <code>elsewhere</code> (another element on the page holds the conversation) or <code>offline</code>.</li>
+        <li><code>data-phase</code>: the conversation's own phase, for example <code>active</code> or <code>ended</code>. <code>data-depth</code> counts the visitor's messages.</li>
+        <li><code>data-responder</code>: <code>ai</code> or <code>person</code>, which changes on a handoff. <code>data-expanded</code> is there while the focused view is open.</li>
+      </ul>
+
+      <h3>Talk to it from your page</h3>
+      <pre class="sx-code" data-file="page.js"><code class="language-js">const chat = document.querySelector('stand-inline');
+
+// Start the conversation from your own UI.
+findPlanButton.addEventListener('click', () =&gt; chat.ask(`We're a team of ${size}.`));
+
+// React to it: highlight what the conversation recommends.
+chat.addEventListener('stand-inline-message', (event) =&gt; {
+  const { from, text } = event.detail; // from: 'visitor', 'ai' or 'person'
+  if (from !== 'visitor') highlightPlans(text);
+});</code></pre>
+      <ul>
+        <li><strong>Methods:</strong> <code>ask(text)</code>, <code>focus()</code>, <code>expand()</code>, <code>collapse()</code>, <code>end()</code>. <strong>Properties:</strong> <code>draft</code>, <code>quote</code>, <code>state</code>, and <code>strings</code> to translate every label.</li>
+        <li><strong>Events:</strong> <code>stand-inline-available</code>, <code>-start</code>, <code>-message</code>, <code>-responder</code> (a person or an AI took over), <code>-end</code>, <code>-expand</code>, <code>-collapse</code>, and <code>-reset</code>: a conversation restored after a reload, or replaced, doesn't replay its messages, so read <code>el.state</code> then.</li>
+      </ul>
+
+      <h3>What it takes care of</h3>
+      <p><code>stand-visitor.js</code> implements <a href="https://stand.chat/guide/custom-chat-ui">Stand's visitor API contract</a> and has no DOM code, so you can reuse it with React or anything else:</p>
+      <ul>
+        <li>Asks Stand who can answer on this page, and stays hidden when nobody can.</li>
+        <li>Starts exactly one conversation, on the visitor's first message, and never repeats an uncertain start.</li>
+        <li>Sends over HTTP and retries a lost message with its original ID, so nothing arrives twice. Replies arrive over a WebSocket, with typing and streamed AI text.</li>
+        <li>Restores the conversation after a reload or on the next page, reconnects with backoff, and treats the server's transcript as the truth.</li>
+        <li>Shows who is answering, AI or person, and updates it on a handoff. Renders link cards, the email follow-up form, your sensitive-data notice and Stand attribution.</li>
+        <li>Several elements on one page share one conversation: the one it started in shows it, the others offer to continue there.</li>
+      </ul>
+
+      <h3>Good to know</h3>
+      <ul>
+        <li><strong>The visitor API is in beta.</strong> Your plan's chat quotas and entitlements apply, and a custom UI doesn't remove Stand attribution. Retest when the contract changes.</li>
+        <li><strong>Using stand.js too?</strong> Hide its floating button on pages that have an inline chat, with <code>StandChat.initiallyHideChatButton()</code>. The two keep separate conversations.</li>
+        <li><strong>Accessible by default:</strong> the transcript is a live region, every control is labelled and keyboard-reachable, the focused view is a modal dialog, and motion respects reduced-motion settings.</li>
+        <li><strong>Modern browsers:</strong> it uses custom elements, <code>color-mix()</code> and <code>&lt;dialog&gt;</code>. In an iframe, a conversation lasts for that page only.</li>
+      </ul>
+
+      <h3>Copy this example</h3>
+      <pre class="sx-code"><code class="language-sh">npx degit standchat/examples/stand-inline my-stand-inline</code></pre>
+      <p>You need <code>stand-inline.js</code> and <code>stand-visitor.js</code>. The rest is the studio (<code>studio.js</code>, <code>samples.js</code>) and the seven example pages.</p>
+
+      <ul class="sx-links">
+        <li><a href="https://stand.chat/guide/custom-chat-ui">Guide: custom chat UI ↗</a></li>
+        <li><a href="https://stand.chat/features/custom-chat-ui">Feature reference ↗</a></li>
+        <li><a href="https://github.com/standchat/examples/tree/main/stand-inline/">Source on GitHub ↗</a></li>
+      </ul>
+    </div>
+  </section>
+</body>
+</html>

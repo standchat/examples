@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Stand Inline on a pricing page</title>
+  <meta name="description" content="A pricing page with its own plan finder: visitors complete one sentence about their team, the answer unfolds right above the plans, and the plans the reply names light up.">
+  <meta name="author" content="Stand Chat">
+  <link rel="author" href="https://stand.chat/">
+  <meta name="keywords" content="stand-inline, look=line, grow=unfold, ask(), stand-inline-message">
+  <meta property="og:title" content="Stand Inline on a pricing page">
+  <meta property="og:description" content="A pricing page with its own plan finder: visitors complete one sentence about their team, the answer unfolds right above the plans, and the plans the reply names light up.">
+  <meta property="og:image" content="https://examples.stand.chat/stand-inline/pricing/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="stylesheet" href="/_shared/example.css">
+  <script type="module" src="/_shared/example.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Stand Inline: the whole conversation, in the page. No stand.js needed. -->
+  <script type="module" src="../stand-inline.js"></script>
+</head>
+<body>
+  <sx-example-bar></sx-example-bar>
+
+  <div class="loomwork">
+    <header class="nav">
+      <a class="logo" href="#">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><path class="warp" d="M11 4v24M21 4v24"/><path class="weft" d="M4 11h24M4 21h24"/><path class="gap" d="M11 7.5v7M21 17.5v7"/><path class="warp over" d="M11 7.5v7M21 17.5v7"/></svg>
+        Loomwork
+      </a>
+      <nav aria-label="Loomwork">
+        <a href="#">Product</a>
+        <a href="#">Templates</a>
+        <a href="#">Customers</a>
+        <a href="#" aria-current="page">Pricing</a>
+      </nav>
+      <div class="nav-end">
+        <a class="login" href="#">Log in</a>
+        <a class="button primary small" href="#">Start free trial</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <h1>Pricing that grows with your team</h1>
+        <p class="lede">Start free with up to three people. When your plans get bigger, pay per person, and only for the people who plan with you.</p>
+        <fieldset class="billing">
+          <legend class="visually-hidden">Billing period</legend>
+          <label><input type="radio" name="billing" value="monthly" checked> Monthly</label>
+          <label><input type="radio" name="billing" value="annual"> Annually <span class="save">Save 20%</span></label>
+        </fieldset>
+      </section>
+
+      <!-- The plan finder: Loomwork's own starter sentence, with Stand Inline
+           under it. The sentence starts the conversation through el.ask(). -->
+      <section class="finder" id="plan-finder" aria-labelledby="finder-title" data-og-focus>
+        <h2 class="kicker" id="finder-title">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1c.45 3.7 1.8 5.1 5.5 5.5C9.8 6.9 8.45 8.3 8 12c-.45-3.7-1.8-5.1-5.5-5.5C6.2 6.1 7.55 4.7 8 1Z"/><path d="M13 10.5c.18 1.55.75 2.1 2.3 2.3-1.55.18-2.12.75-2.3 2.3-.18-1.55-.75-2.12-2.3-2.3 1.55-.2 2.12-.75 2.3-2.3Z"/></svg>
+          Plan finder
+        </h2>
+        <form class="sentence" id="sentence">
+          <p>
+            <span class="clause">We’re a team of
+              <label class="blank"><span class="visually-hidden">Number of people</span><input name="people" type="number" inputmode="numeric" min="1" max="9999" value="12" required></label>
+              people</span>
+            <span class="clause">and we mostly plan
+              <label class="blank"><span class="visually-hidden">What you mostly plan</span><select name="work">
+                <option>product launches</option>
+                <option>marketing campaigns</option>
+                <option>events</option>
+                <option>client projects</option>
+                <option>hiring</option>
+              </select></label>.</span>
+          </p>
+          <button class="button primary find" type="submit">
+            Find my plan
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11.5M11 5.5 15.5 10 11 14.5"/></svg>
+          </button>
+        </form>
+
+        <stand-inline
+          id="ask-plan"
+          site="demo"
+          scope="loomwork"
+          look="line"
+          grow="unfold"
+          placeholder="Or ask about plans and billing"
+          prompt="The visitor is on the pricing page of Loomwork, a fictional planning tool for teams that run launches, events and campaigns. Prices are per person per month, excluding VAT. Starter: €0, for up to 3 people and 3 projects, with timelines and comments. Team, the most popular plan: €12 billed monthly, or €9.60 billed annually (save 20%), with unlimited projects, timelines and dependencies, guest access for agencies and freelancers, the workload view and integrations. Business: €24, or €19.20 billed annually, with everything in Team plus SSO (SAML), audit logs, advanced permissions, priority support and a named success manager. Every workspace starts with a 30-day Team trial, no card needed, and the whole team can join it. When the trial ends, the workspace drops to Starter unless someone subscribes; nothing is deleted and projects stay. Seats: you pay for members, and guests are free. Invoices show the company details and VAT ID. Cancel anytime; the plan runs to the end of the period already paid. Example: 12 people on Team cost €144 a month, or €1,382 a year billed annually. Recommend one plan with the reason, and name it first. Use the plan names Starter, Team and Business exactly. Answer briefly and concretely, and ask at most one follow-up question."
+          analytics-id="pricing-plan-finder">
+        </stand-inline>
+      </section>
+
+      <section class="plans" aria-labelledby="plans-title">
+        <h2 class="visually-hidden" id="plans-title">Plans</h2>
+
+        <article class="plan" data-plan="Starter">
+          <div class="plan-head">
+            <h3>Starter</h3>
+            <p class="pick"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1c.45 3.7 1.8 5.1 5.5 5.5C9.8 6.9 8.45 8.3 8 12c-.45-3.7-1.8-5.1-5.5-5.5C6.2 6.1 7.55 4.7 8 1Z"/></svg>Suggested in your chat</p>
+            <p class="for">For small teams getting their first plans out of a spreadsheet.</p>
+            <p class="price"><strong>€0</strong><span>free for up to 3 people</span></p>
+            <a class="button" href="#">Start for free</a>
+          </div>
+          <div class="plan-body">
+            <p class="includes">Includes</p>
+            <ul class="features">
+              <li>Up to 3 people</li>
+              <li>3 projects</li>
+              <li>Timelines</li>
+              <li>Comments</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="plan featured" data-plan="Team">
+          <div class="plan-head">
+            <div class="plan-title">
+              <h3>Team</h3>
+              <p class="popular">Most popular</p>
+            </div>
+            <p class="pick"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1c.45 3.7 1.8 5.1 5.5 5.5C9.8 6.9 8.45 8.3 8 12c-.45-3.7-1.8-5.1-5.5-5.5C6.2 6.1 7.55 4.7 8 1Z"/></svg>Suggested in your chat</p>
+            <p class="for">For teams that run launches, events and campaigns together.</p>
+            <p class="price"><strong><span class="monthly">€12</span><span class="annual">€9.60</span></strong><span>per person / month<br><span class="monthly">billed monthly</span><span class="annual">billed annually</span></span></p>
+            <a class="button primary" href="#">Start your 30-day trial</a>
+          </div>
+          <div class="plan-body">
+            <p class="includes">Everything in Starter, plus</p>
+            <ul class="features">
+              <li>Unlimited projects</li>
+              <li>Timelines and dependencies</li>
+              <li>Guest access for agencies and freelancers</li>
+              <li>Workload view</li>
+              <li>Integrations</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="plan" data-plan="Business">
+          <div class="plan-head">
+            <h3>Business</h3>
+            <p class="pick"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1c.45 3.7 1.8 5.1 5.5 5.5C9.8 6.9 8.45 8.3 8 12c-.45-3.7-1.8-5.1-5.5-5.5C6.2 6.1 7.55 4.7 8 1Z"/></svg>Suggested in your chat</p>
+            <p class="for">For organisations that need control, security and a direct line to us.</p>
+            <p class="price"><strong><span class="monthly">€24</span><span class="annual">€19.20</span></strong><span>per person / month<br><span class="monthly">billed monthly</span><span class="annual">billed annually</span></span></p>
+            <a class="button" href="#">Talk to sales</a>
+          </div>
+          <div class="plan-body">
+            <p class="includes">Everything in Team, plus</p>
+            <ul class="features">
+              <li>SSO (SAML)</li>
+              <li>Audit logs</li>
+              <li>Advanced permissions</li>
+              <li>Priority support</li>
+              <li>A named success manager</li>
+            </ul>
+          </div>
+        </article>
+      </section>
+
+      <p class="plans-note">Prices per person per month, excluding VAT. Every workspace starts with a <strong>30-day Team trial</strong>, no card needed.</p>
+
+      <section class="compare" aria-labelledby="compare-title">
+        <h2 id="compare-title">Compare plans</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><td></td><th scope="col">Starter</th><th scope="col">Team</th><th scope="col">Business</th></tr>
+            </thead>
+            <tbody>
+              <tr class="group"><th scope="rowgroup" colspan="2">Planning</th><td></td><td></td></tr>
+              <tr><th scope="row">People</th><td>Up to 3</td><td>Unlimited</td><td>Unlimited</td></tr>
+              <tr><th scope="row">Projects</th><td>3</td><td>Unlimited</td><td>Unlimited</td></tr>
+              <tr><th scope="row">Timelines</th><td class="yes"><span>Included</span></td><td class="yes"><span>Included</span></td><td class="yes"><span>Included</span></td></tr>
+              <tr><th scope="row">Comments</th><td class="yes"><span>Included</span></td><td class="yes"><span>Included</span></td><td class="yes"><span>Included</span></td></tr>
+              <tr><th scope="row">Dependencies</th><td class="no"><span>Not included</span></td><td class="yes"><span>Included</span></td><td class="yes"><span>Included</span></td></tr>
+              <tr><th scope="row">Workload view</th><td class="no"><span>Not included</span></td><td class="yes"><span>Included</span></td><td class="yes"><span>Included</span></td></tr>
+            </tbody>
+            <tbody>
+              <tr class="group"><th scope="rowgroup" colspan="2">Working with others</th><td></td><td></td></tr>
+              <tr><th scope="row">Guest access, free for agencies and freelancers</th><td class="no"><span>Not included</span></td><td class="yes"><span>Included</span></td><td class="yes"><span>Included</span></td></tr>
+              <tr><th scope="row">Integrations</th><td class="no"><span>Not included</span></td><td class="yes"><span>Included</span></td><td class="yes"><span>Included</span></td></tr>
+            </tbody>
+            <tbody>
+              <tr class="group"><th scope="rowgroup" colspan="2">Security and support</th><td></td><td></td></tr>
+              <tr><th scope="row">SSO (SAML)</th><td class="no"><span>Not included</span></td><td class="no"><span>Not included</span></td><td class="yes"><span>Included</span></td></tr>
+              <tr><th scope="row">Audit logs</th><td class="no"><span>Not included</span></td><td class="no"><span>Not included</span></td><td class="yes"><span>Included</span></td></tr>
+              <tr><th scope="row">Advanced permissions</th><td class="no"><span>Not included</span></td><td class="no"><span>Not included</span></td><td class="yes"><span>Included</span></td></tr>
+              <tr><th scope="row">Priority support</th><td class="no"><span>Not included</span></td><td class="no"><span>Not included</span></td><td class="yes"><span>Included</span></td></tr>
+              <tr><th scope="row">Named success manager</th><td class="no"><span>Not included</span></td><td class="no"><span>Not included</span></td><td class="yes"><span>Included</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="faq" aria-labelledby="faq-title">
+        <div class="faq-intro">
+          <h2 id="faq-title">Billing questions</h2>
+          <p>Something else on your mind? <a href="#plan-finder">Ask in the plan finder</a> and get an answer in seconds.</p>
+        </div>
+        <div class="faq-list">
+          <details>
+            <summary>What happens when the trial ends?</summary>
+            <p>Your workspace moves to the free Starter plan, unless you choose a paid plan. Nothing is deleted: your projects stay put.</p>
+          </details>
+          <details>
+            <summary>Who counts as a person?</summary>
+            <p>You pay for members: the people who plan in your workspace. Guests, like agencies, freelancers and clients, are free on Team and Business.</p>
+          </details>
+          <details>
+            <summary>Do invoices show our VAT ID?</summary>
+            <p>Yes. Every invoice shows your company details and VAT ID. Prices on this page exclude VAT.</p>
+          </details>
+          <details>
+            <summary>Can we cancel anytime?</summary>
+            <p>Yes, from your workspace settings. Your plan runs to the end of the month or year you've paid for, then moves to Starter.</p>
+          </details>
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <a class="logo" href="#">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><path class="warp" d="M11 4v24M21 4v24"/><path class="weft" d="M4 11h24M4 21h24"/><path class="gap" d="M11 7.5v7M21 17.5v7"/><path class="warp over" d="M11 7.5v7M21 17.5v7"/></svg>
+        Loomwork
+      </a>
+      <span>Plans that hold together.</span>
+      <span class="made-up">A fictional planning tool, made up for this example.</span>
+    </footer>
+  </div>
+
+  <!-- Loomwork's page code: the plan finder starts the conversation, and the
+       conversation points back at the plans. Plain DOM, no framework. -->
+  <script type="module">
+    const chat = document.getElementById('ask-plan');
+
+    // Your own starter: the finished sentence becomes the visitor's first message.
+    const sentence = document.getElementById('sentence');
+    sentence.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const { people, work } = sentence.elements;
+      chat.ask(`We’re a team of ${people.value} and we mostly plan ${work.value}.`);
+    });
+
+    // The conversation points at the page: plans a reply names light up.
+    // The first one it names is the suggestion (the prompt asks for that).
+    const plans = document.querySelectorAll('.plan[data-plan]');
+
+    function highlight(text) {
+      const named = [...new Set(text.match(/\b(Starter|Team|Business)\b/g) ?? [])];
+      for (const plan of plans) {
+        const rank = named.indexOf(plan.dataset.plan);
+        plan.classList.toggle('suggested', rank === 0); // badge and ring
+        plan.classList.toggle('mentioned', rank > 0); // a quieter ring
+      }
+    }
+
+    // Events and el.state describe a message the same way: { from, text, type }.
+    const isReply = (message) => message.from !== 'visitor' && message.type === 'text';
+
+    chat.addEventListener('stand-inline-message', (event) => {
+      if (isReply(event.detail)) highlight(event.detail.text);
+    });
+
+    // A restored or replaced conversation (after a reload, a sample, a new chat)
+    // doesn't replay its events: start over from el.state instead.
+    const fromState = () => highlight(chat.state?.messages.findLast(isReply)?.text ?? '');
+    chat.addEventListener('stand-inline-reset', fromState);
+    fromState();
+  </script>
+
+  <section id="how-it-works" class="sx-explainer">
+    <div class="sx-wrap">
+      <p class="sx-eyebrow">How it works · <a href="../">Stand Inline</a></p>
+      <h2>Your own starter, and a conversation that points at the page</h2>
+      <p class="sx-lead">Every pricing page raises the same question: which plan is right for us? The answer depends on the team, so this page asks back, with a sentence the visitor completes. The reply unfolds right above the plans, and the plans it names light up.</p>
+
+      <h3>Try it</h3>
+      <ol class="sx-steps">
+        <li>In the plan finder, set your team size and what you mostly plan, then click <strong>Find my plan</strong>. Your sentence becomes the first message, and the answer unfolds right there.</li>
+        <li>Look at the plans below it. The plan the reply suggests gets a <strong>Suggested in your chat</strong> badge, and any other plan it names gets a quieter ring.</li>
+        <li>Ask a follow-up on the line under the sentence, like <em>"What happens when the trial ends?"</em> The line works on its own too, for any question about plans and billing.</li>
+        <li>Or <button type="button" class="sx-inline-button" data-sample="pricing">watch a sample conversation</button>: scripted, nothing is sent. <button type="button" class="sx-inline-button" data-live hidden>Back to the live chat</button></li>
+      </ol>
+
+      <div class="sx-note">Chats here use <code>site="demo"</code>, Stand Chat's shared demo site. Its demo Stand-in reads the page's private prompt, but it may still decline to speak for a made-up planning tool. With your own Site ID, your own Stand-ins answer, trained on your website.</div>
+
+      <h3>The element</h3>
+      <pre class="sx-code" data-file="index.html" data-wrap><code class="language-html">&lt;script type="module" src="stand-inline.js"&gt;&lt;/script&gt;
+
+&lt;stand-inline
+  id="ask-plan"
+  site="YOUR-SITE-ID"
+  look="line"
+  grow="unfold"
+  placeholder="Or ask about plans and billing"
+  prompt="The visitor is on Loomwork's pricing page. Starter €0 for up to 3 people; Team €12 per person a month, or €9.60 billed annually… Recommend one plan, and name it first. Use the plan names Starter, Team and Business exactly."
+  analytics-id="pricing-plan-finder"&gt;
+&lt;/stand-inline&gt;</code></pre>
+      <ul>
+        <li><code>look="line"</code> is a sentence-sized input on a rule. Under the page's own sentence, it's the quieter second way in, for any other question.</li>
+        <li><code>grow="unfold"</code> opens the conversation in place, inside the plan finder, right above the plans it talks about.</li>
+        <li>There are no <code>suggestions</code>: the sentence is the starter.</li>
+        <li><code>prompt</code> holds the plans, prices and billing rules as private context. It also asks for the plan names exactly as the page writes them, with the recommended plan first, because the page's highlight reads those names.</li>
+        <li><code>id</code> lets the page's script find the element. <code>analytics-id</code> labels the placement in Stand's analytics.</li>
+      </ul>
+
+      <h3>Start it from your own UI</h3>
+      <p>The sentence is an ordinary form, styled like the rest of the page. On submit, the page puts the sentence together and calls <code>ask()</code>, which sends it as the visitor and starts the conversation if there isn't one yet.</p>
+      <pre class="sx-code" data-file="index.html"><code class="language-html">&lt;form id="sentence"&gt;
+  We’re a team of &lt;input name="people" type="number" value="12"&gt;
+  people and we mostly plan &lt;select name="work"&gt;…&lt;/select&gt;.
+  &lt;button&gt;Find my plan&lt;/button&gt;
+&lt;/form&gt;
+
+&lt;script type="module"&gt;
+  const chat = document.getElementById('ask-plan');
+  const sentence = document.getElementById('sentence');
+
+  sentence.addEventListener('submit', (event) =&gt; {
+    event.preventDefault();
+    const { people, work } = sentence.elements;
+    chat.ask(`We’re a team of ${people.value} and we mostly plan ${work.value}.`);
+  });
+&lt;/script&gt;</code></pre>
+
+      <h3>React to the conversation</h3>
+      <p>Every new message fires a <code>stand-inline-message</code> event with <code>{ from, text, type }</code>. For each reply, the page looks for plan names and marks those cards. A conversation restored after a reload, or replaced by a new one, doesn't replay its events: <code>stand-inline-reset</code> fires instead, and the page reads the last reply from <code>el.state</code>, where messages have the same shape.</p>
+      <pre class="sx-code" data-file="index.html"><code class="language-js">const plans = document.querySelectorAll('.plan[data-plan]');
+
+function highlight(text) {
+  const named = [...new Set(text.match(/\b(Starter|Team|Business)\b/g) ?? [])];
+  for (const plan of plans) {
+    const rank = named.indexOf(plan.dataset.plan);
+    plan.classList.toggle('suggested', rank === 0); // badge and ring
+    plan.classList.toggle('mentioned', rank &gt; 0); // a quieter ring
+  }
+}
+
+const isReply = (message) =&gt; message.from !== 'visitor' &amp;&amp; message.type === 'text';
+
+chat.addEventListener('stand-inline-message', (event) =&gt; {
+  if (isReply(event.detail)) highlight(event.detail.text);
+});
+
+const fromState = () =&gt; highlight(chat.state?.messages.findLast(isReply)?.text ?? '');
+chat.addEventListener('stand-inline-reset', fromState);
+fromState();</code></pre>
+
+      <h3>Make it yours</h3>
+      <p>It takes its font and text color from the page. Loomwork sets four tokens, styles two parts, and uses the element's <code>data-state</code> to style the page around it:</p>
+      <pre class="sx-code" data-file="style.css"><code class="language-css">stand-inline {
+  --si-accent: #E4572E;
+  --si-visitor-bg: #FFE3D3;
+  --si-line: #E6D9C8;
+  --si-max-height: min(56vh, 460px);
+}
+
+/* Replies keep a readable line length in the wide band. */
+stand-inline::part(host) { max-width: 46em; }
+
+/* A hairline between the page's sentence and the conversation. */
+stand-inline[data-state="conversation"]::part(conversation) {
+  padding-top: 22px;
+  border-top: 1px solid #EDE4D8;
+}
+
+/* Nobody can answer: the plan finder steps aside, the plans stay. */
+.finder:has(stand-inline[data-state="offline"]) { display: none; }</code></pre>
+
+      <h3>Good to know</h3>
+      <ul>
+        <li><strong>It works with any responder.</strong> The page only reads the text of each message, so the cards light up the same way for an AI Stand-in and for a person on your team.</li>
+        <li><strong>The highlight is presentation only.</strong> The answer itself is in the conversation, where screen readers announce it. Each reply starts over, so a reply that names no plan clears the cards.</li>
+        <li><strong><code>ask()</code> waits for Stand</strong> to find someone who can answer, then starts a conversation or adds to the open one. The prompt only applies when a conversation starts.</li>
+      </ul>
+
+      <h3>Copy this example</h3>
+      <pre class="sx-code"><code class="language-sh">npx degit standchat/examples/stand-inline my-stand-inline</code></pre>
+
+      <ul class="sx-links">
+        <li><a href="../">Stand Inline studio and reference</a></li>
+        <li><a href="../#how-this-was-made">How this was made</a></li>
+        <li><a href="https://stand.chat/guide/custom-chat-ui">Guide: custom chat UI ↗</a></li>
+        <li><a href="https://github.com/standchat/examples/tree/main/stand-inline/">Source on GitHub ↗</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <script type="module" src="../demo.js"></script>
+</body>
+</html>

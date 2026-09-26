@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Stand Inline instead of a contact form</title>
+  <meta name="description" content="An architecture studio's Start a project page, where a conversation takes the contact form's place: it asks the follow-up questions a form can't, and an architect joins when there's something real to talk about.">
+  <meta name="author" content="Stand Chat">
+  <link rel="author" href="https://stand.chat/">
+  <meta name="keywords" content="stand-inline, look=card, grow=unfold, greeting, suggestions, handoff">
+  <meta property="og:title" content="Stand Inline instead of a contact form">
+  <meta property="og:description" content="An architecture studio's Start a project page, where a conversation takes the contact form's place: it asks the follow-up questions a form can't, and an architect joins when there's something real to talk about.">
+  <meta property="og:image" content="https://examples.stand.chat/stand-inline/contact/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="stylesheet" href="/_shared/example.css">
+  <script type="module" src="/_shared/example.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Work+Sans:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Stand Inline: the whole conversation, in the page. No stand.js needed. -->
+  <script type="module" src="../stand-inline.js"></script>
+</head>
+<body>
+  <sx-example-bar></sx-example-bar>
+
+  <div class="halden">
+    <header class="top">
+      <a class="wordmark" href="#">Studio Halden</a>
+      <nav aria-label="Studio Halden">
+        <a href="#work">Work</a>
+        <a href="#">Studio</a>
+        <a href="#">Journal</a>
+        <a href="#start" aria-current="page">Start a project</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="intro">
+        <div class="intro-title">
+          <p class="label">Architects · Bergen, Norway</p>
+          <h1>Houses that belong where they stand.</h1>
+        </div>
+        <div class="intro-text">
+          <p>We're a studio of seven in Bergen, designing new houses, cabins and renovations along the west coast of Norway. Calm, light-filled rooms, often on sites other people call difficult: steep plots, slopes and fjord views are our favourite kind of problem.</p>
+          <a class="arrow" href="#start">Start a project</a>
+        </div>
+        <figure class="drawing">
+          <img src="hero.svg" width="1200" height="456" alt="A line drawing of a house on a steep slope above a fjord. It is built as two offset levels that step down the hillside, the lower one reaching out over the slope with a warmly lit window. Birches stand uphill, steps lead down to a jetty, a sailboat is out on the water, and mountains rise across the fjord.">
+          <figcaption><span class="label">Hus Bratt, Osterøy · in design</span> Two levels that step down with the ground, and open to the evening light over the fjord.</figcaption>
+        </figure>
+      </section>
+
+      <section class="work" id="work" aria-labelledby="work-title">
+        <div class="section-head">
+          <h2 id="work-title">Selected work</h2>
+          <a class="arrow" href="#">All projects</a>
+        </div>
+        <ul class="projects">
+          <li>
+            <img src="cabin.svg" width="400" height="280" alt="Drawing of a small gabled cabin on slender posts over a steep slope.">
+            <h3><a href="#">Hytte Lia</a></h3>
+            <p class="label">Hardanger · 2023</p>
+            <p>A cabin on steel legs, so the hillside under it stays exactly as it was.</p>
+          </li>
+          <li>
+            <img src="apartment.svg" width="400" height="280" alt="Section drawing of a 1930s apartment, with a dashed outline where a wall was taken out.">
+            <h3><a href="#">Leilighet Nordnes</a></h3>
+            <p class="label">Bergen · 2024</p>
+            <p>A 1930s apartment with one wall less: two dark rooms became one, with light from both sides.</p>
+          </li>
+          <li>
+            <img src="naust.svg" width="400" height="280" alt="Drawing of a boathouse with dry-stone walls and a timber gable, a small rowing boat in front.">
+            <h3><a href="#">Naust Vika</a></h3>
+            <p class="label">Sunnfjord · 2022</p>
+            <p>An old boathouse, rebuilt on its own stones, with a room for guests under the roof.</p>
+          </li>
+        </ul>
+      </section>
+
+      <section class="start" id="start" aria-labelledby="start-title" data-og-focus>
+        <div class="start-text">
+          <p class="label">Start a project</p>
+          <h2 id="start-title">Tell us about your project</h2>
+          <p class="lede">No forms. Describe it in your own words; we'll ask what we need to know, and an architect picks it up from there.</p>
+          <h3 class="label">What helps</h3>
+          <ol class="helps" role="list">
+            <li>Where the site is, and which way it faces</li>
+            <li>Roughly how big</li>
+            <li>When you'd like to build</li>
+            <li>A budget range, if you have one</li>
+          </ol>
+          <p class="direct">Rather write or call? <a href="#">post@studiohalden.example</a> · <a href="#">+47 55 00 00 00</a></p>
+        </div>
+
+        <!-- Stand Inline, where the contact form used to be. The card makes the
+             first move with its greeting; an architect can join the same conversation. -->
+        <div class="start-card">
+          <stand-inline
+            id="ask-project"
+            site="demo"
+            scope="studio-halden"
+            look="card"
+            grow="unfold"
+            greeting="Tell us a little about your project: where it is, roughly how big, and what you're hoping for."
+            placeholder="Describe your project"
+            suggestions="A new house on a sloped plot | Renovating a 1930s apartment | A small cabin by the sea"
+            prompt="The visitor is on the Start a project page of Studio Halden, a fictional architecture studio of seven people at Bryggen 14 in Bergen, Norway. The studio designs new houses, cabins and renovations along the west coast of Norway, and is known for calm, light-filled houses on difficult sites. They like steep sites, slopes and fjord views. The first 30-minute call with an architect is free. A typical project takes 6–9 months of design, then building. Ingrid Vold, architect and partner, led the studio's last three projects on the west coast. Help the visitor describe their project in their own words. Ask one question at a time about what's still missing: where the site is and which way it faces, roughly how big, a budget range, and the timeline. Keep replies short and warm, like an architect talking, never like a form. Once you know the basics, suggest the free 30-minute call with an architect, and bring in Ingrid Vold for houses on the west coast. If nobody from the team is available, ask for an email address so an architect can follow up. Don't quote fees or promise planning permission: an architect discusses both on the call."
+            analytics-id="start-a-project">
+            <div slot="offline" class="offline">
+              <p class="offline-name">Studio Halden</p>
+              <p>Nobody's at the drawing board right now. Write to <a href="#">post@studiohalden.example</a> or call <a href="#">+47 55 00 00 00</a>, and an architect gets back to you.</p>
+            </div>
+          </stand-inline>
+          <dl class="facts">
+            <div><dt>First call</dt><dd>30 minutes with an architect, free</dd></div>
+            <div><dt>Design</dt><dd>6–9 months, then building</dd></div>
+            <div><dt>Where</dt><dd>Norway's west coast</dd></div>
+          </dl>
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <span class="wordmark">Studio Halden</span>
+      <address>Bryggen 14, 5003 Bergen, Norway</address>
+      <span class="note">A fictional architecture studio, made up for this example.</span>
+    </footer>
+  </div>
+
+  <section id="how-it-works" class="sx-explainer">
+    <div class="sx-wrap">
+      <p class="sx-eyebrow">How it works · <a href="../">Stand Inline</a></p>
+      <h2>A conversation instead of a contact form</h2>
+      <p class="sx-lead">"Tell us about your project" forms get half-filled and abandoned. Few people know what to put in a budget field, and a form can't ask the question that matters next. Here the form's place holds a conversation instead. It asks the follow-up questions one at a time, and an architect joins the same conversation when there's something real to talk about.</p>
+
+      <h3>Try it</h3>
+      <ol class="sx-steps">
+        <li>Under <strong>Tell us about your project</strong>, click <em>A new house on a sloped plot</em>, or describe your own project. The greeting is already the card's first message, so the reply lands right under it.</li>
+        <li>Answer in your own words. The card asks one thing at a time, grows with the conversation, and scrolls inside once it's tall, so the page around it stays put.</li>
+        <li>Use <strong>Open full view</strong> in the card's header to read a long conversation with the whole screen.</li>
+        <li>Or <button type="button" class="sx-inline-button" data-sample="contact">watch a sample conversation</button>: scripted, nothing is sent. <button type="button" class="sx-inline-button" data-live hidden>Back to the live chat</button></li>
+      </ol>
+
+      <div class="sx-note">Chats here use <code>site="demo"</code>, Stand Chat's shared demo site. Its demo Stand-in reads the page's private prompt, but it may still decline to speak for a made-up architecture studio. With your own Site ID, your own Stand-ins answer, trained on your website.</div>
+
+      <h3>The element</h3>
+      <pre class="sx-code" data-file="index.html" data-wrap><code class="language-html">&lt;script type="module" src="stand-inline.js"&gt;&lt;/script&gt;
+
+&lt;stand-inline
+  site="YOUR-SITE-ID"
+  look="card"
+  grow="unfold"
+  greeting="Tell us a little about your project: where it is, roughly how big, and what you're hoping for."
+  placeholder="Describe your project"
+  suggestions="A new house on a sloped plot | Renovating a 1930s apartment | A small cabin by the sea"
+  prompt="Studio Halden designs houses, cabins and renovations on Norway's west coast. The first 30-minute call is free… Ask about the site, size, budget and timeline, one question at a time. Bring in Ingrid Vold for west-coast houses…"
+  analytics-id="start-a-project"&gt;
+  &lt;div slot="offline"&gt;Write to post@studiohalden.example or call +47 55 00 00 00.&lt;/div&gt;
+&lt;/stand-inline&gt;</code></pre>
+      <ul>
+        <li><code>look="card"</code> is a contained panel with a header that says who answers. It's clearly visible, and it sits where the form would.</li>
+        <li><code>greeting</code> is the card's first message, from whoever answers. The card makes the first move, so nobody stares at an empty box.</li>
+        <li><code>suggestions</code> are starting points for people who don't know how to begin. Clicking one sends it, and they fold away once the conversation starts.</li>
+        <li><code>prompt</code> tells whoever answers what to ask and when to hand over: here the site, size, budget and timeline, one question at a time, and Ingrid for houses on the west coast. Visitors don't see it, but it's in your HTML, so keep it to public facts.</li>
+        <li><code>grow="unfold"</code>, the default, grows the card in place. Past <code>--si-max-height</code>, it scrolls inside.</li>
+        <li><code>slot="offline"</code> shows instead of the card when nobody can answer. Without it the element hides, and a contact page should always leave a way in.</li>
+        <li><code>analytics-id</code> labels the placement, so Stand's analytics show how many projects start here.</li>
+      </ul>
+
+      <h3>Make it yours</h3>
+      <p>It takes its font and text color from the page. Studio Halden sets a few tokens for a flat card on white, squares the corners with <code>::part()</code>, and sets the name of whoever answers in the studio's display serif:</p>
+      <pre class="sx-code" data-file="style.css"><code class="language-css">stand-inline {
+  --si-accent: #B5532E;
+  --si-radius: 2px;
+  --si-surface: #FFFFFF;
+  --si-tint: #F6F4F0;
+  --si-visitor-bg: #F1ECE4;
+  --si-shadow: none;
+  --si-max-height: min(56vh, 480px);
+}
+
+stand-inline::part(conversation),
+stand-inline::part(suggestion),
+stand-inline::part(send) { border-radius: 2px; }
+
+stand-inline::part(name) {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.4em;
+}
+
+/* Fade in who answers once Stand knows. */
+stand-inline[data-state="loading"]::part(name) { opacity: 0; }</code></pre>
+      <p><code>--si-tint</code> colors the message box, here the page's own paper color. <code>--si-max-height</code> caps the transcript: pick a height where the whole card, box included, still fits on a laptop screen.</p>
+
+      <h3>Good to know</h3>
+      <ul>
+        <li><strong>A person joins the same conversation.</strong> When Ingrid takes over, the header switches to her name and title, and she reads everything the visitor already wrote. Nobody repeats themselves.</li>
+        <li><strong>If a person can't answer right away,</strong> Stand can offer to follow up by email, and the card shows the email field by itself. You don't build that form.</li>
+        <li><strong>A reload keeps the conversation.</strong> It comes back in the same tab, even a half-written reply, where a form would start over empty.</li>
+      </ul>
+
+      <h3>Copy this example</h3>
+      <pre class="sx-code"><code class="language-sh">npx degit standchat/examples/stand-inline my-stand-inline</code></pre>
+
+      <ul class="sx-links">
+        <li><a href="../">Stand Inline studio and reference</a></li>
+        <li><a href="../#how-this-was-made">How this was made</a></li>
+        <li><a href="https://stand.chat/guide/custom-chat-ui">Guide: custom chat UI ↗</a></li>
+        <li><a href="https://github.com/standchat/examples/tree/main/stand-inline/">Source on GitHub ↗</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <script type="module" src="../demo.js"></script>
+</body>
+</html>
