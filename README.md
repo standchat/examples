@@ -1,8 +1,21 @@
-# Stand Chat examples
+# Custom chat UI examples
 
-Small, working examples of integrating [Stand Chat](https://stand.chat/). Browse them at **https://examples.stand.chat/**.
+Working chat front ends in plain HTML, CSS and JavaScript: animated characters, a CRT terminal, inline components, and a particle renderer.
 
-Each example is one folder of plain HTML, CSS and JavaScript, with no build step and no framework. The folder name is the URL: `stand-card/` is served at `https://examples.stand.chat/stand-card/`.
+**[Live demos](https://examples.stand.chat/)** · Run the same examples locally: **`npm start`**.
+
+<p>
+  <a href="https://examples.stand.chat/chat-mascot/"><img src="chat-mascot/og.png" width="49%" alt="Animated 3D chat character"></a>
+  <a href="https://examples.stand.chat/adventure-game-chat/"><img src="adventure-game-chat/og.png" width="49%" alt="Pixel-art character and dialogue box"></a>
+</p>
+<p>
+  <a href="https://examples.stand.chat/vintage-terminal/"><img src="vintage-terminal/og.png" width="49%" alt="3D CRT terminal with green phosphor text"></a>
+  <a href="https://examples.stand.chat/demoscene-chat/"><img src="demoscene-chat/og.png" width="49%" alt="Particle-rendered chat interface"></a>
+</p>
+
+Each directory contains a runnable example and an implementation walkthrough. No framework or build step. These were built with AI coding agents; several include the original prompts and build notes.
+
+The UI code is public domain. Conversations use [Stand Chat's hosted API](https://stand.chat/guide/custom-chat-ui), with a shared demo configuration included.
 
 ## Run locally
 
