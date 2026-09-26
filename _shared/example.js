@@ -5,7 +5,6 @@
 // Third-party marks load from a CDN: this repository is public domain.
 const GITHUB_MARK = 'https://cdn.jsdelivr.net/npm/simple-icons@15/icons/github.svg';
 const REPO = 'https://github.com/standchat/examples';
-const OWNER = 'Stand Chat';
 const previewing = new URLSearchParams(location.search).has('preview');
 
 function renderBar() {
@@ -30,9 +29,9 @@ function renderBar() {
     </header>`;
 
   root.querySelector('.title').textContent = document.title;
-  // Credit community authors; Stand's own examples already carry the logo.
+  // Use the same author metadata that build.mjs includes in the gallery.
   const name = document.querySelector('meta[name="author"]')?.content?.trim();
-  if (name && name !== OWNER) {
+  if (name) {
     const author = root.querySelector('.author a');
     author.textContent = name;
     const url = document.querySelector('link[rel~="author"]')?.href;
@@ -210,8 +209,10 @@ const BAR_CSS = `
   .home { color: #fff; font: 700 13.5px/1 'PT Sans Caption', 'PT Sans', ui-sans-serif, system-ui, sans-serif; white-space: nowrap; }
   .slash { color: #444; }
   .title { min-width: 0; overflow: hidden; color: #E6E6E6; text-overflow: ellipsis; white-space: nowrap; }
-  .author { white-space: nowrap; }
+  .author { min-width: 0; max-width: 25%; flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; font-size: 12px; white-space: nowrap; }
+  .author a[href] { text-decoration: underline; text-decoration-color: #555; text-underline-offset: 2px; }
   .author a[href]:hover { color: #fff; }
+  .author a:focus-visible { outline-offset: -1px; }
   .grow { flex: 1; }
   .status {
     display: inline-flex; align-items: center; gap: 7px;
@@ -229,10 +230,15 @@ const BAR_CSS = `
     -webkit-mask: url(${GITHUB_MARK}) center / contain no-repeat;
     mask: url(${GITHUB_MARK}) center / contain no-repeat;
   }
-  @media (max-width: 900px) { .author { display: none; } }
   @media (max-width: 680px) {
-    header { gap: 8px; }
-    .slash, .title { display: none; }
+    header { display: grid; grid-template-columns: minmax(0, 1fr) auto auto auto; gap: 2px 8px; padding-block: 4px; }
+    .home { grid-column: 1; grid-row: 1; }
+    .author { grid-column: 1; grid-row: 2; max-width: none; }
+    .slash, .title, .grow { display: none; }
+    .status { grid-column: 2; grid-row: 1 / 3; padding: 0; background: none; }
+    .status .label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+    .how { grid-column: 3; grid-row: 1 / 3; }
+    .github { grid-column: 4; grid-row: 1 / 3; }
   }
 `;
 
