@@ -29,7 +29,7 @@ New examples are welcome: a realistic page that shows one Stand Chat integration
 
    This takes a 1200×630 screenshot of your live page with Chrome and saves it as `my-example/og.png`. Two optional attributes shape the picture: `data-og-focus` scrolls an element into the middle of the frame, and `data-og-hide` leaves one out.
 
-5. Open a pull request that changes only your folder. Vercel adds a preview link to it.
+5. Open a pull request that changes only your folder. Vercel adds a preview link to it. New examples join the end of the front page, and a maintainer gives them their place in `build.mjs`.
 
 ## Rules
 

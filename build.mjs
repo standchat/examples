@@ -7,6 +7,16 @@
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 
 const SITE = 'https://examples.stand.chat';
+// The front page lists these first, most interesting first. Examples not listed
+// here follow alphabetically, until someone gives them a place.
+const ORDER = [
+  'stand-inline',
+  'vintage-terminal',
+  'stand-card',
+  'stand-button',
+  'in-app-support',
+  'one-line-install',
+];
 const REQUIRED = {
   'title': '<title>',
   'description': '<meta name="description">',
@@ -61,12 +71,17 @@ for (const entry of readdirSync('.', { withFileTypes: true })) {
   });
 }
 
+for (const slug of ORDER) {
+  if (!examples.some((example) => example.slug === slug)) problems.push(`build.mjs: ORDER lists ${slug}/, which isn't an example.`);
+}
+
 if (problems.length) {
   console.error(`\nCan't build the example list:\n${problems.map((p) => `  ✗ ${p}`).join('\n')}\n`);
   process.exit(1);
 }
 
-examples.sort((a, b) => a.title.localeCompare(b.title, 'en', { sensitivity: 'base' }));
+const place = (slug) => (ORDER.includes(slug) ? ORDER.indexOf(slug) : ORDER.length);
+examples.sort((a, b) => place(a.slug) - place(b.slug) || a.title.localeCompare(b.title, 'en', { sensitivity: 'base' }));
 writeFileSync('examples.json', `${JSON.stringify(examples, null, 2)}\n`);
 console.log(`examples.json: ${examples.length} examples (${examples.map((e) => e.slug).join(', ')})`);
 
