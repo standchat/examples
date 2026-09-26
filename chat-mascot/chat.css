@@ -57,7 +57,8 @@
   opacity: 1;
   transition: opacity 0.6s;
 }
-.gc-root[data-mode="webgl"] .gc-poster { opacity: 0; }
+.gc-root[data-mode="webgl"] .gc-poster,
+.gc-root[data-mode="spatial"] .gc-poster { opacity: 0; }
 
 .gc-hit {
   position: fixed;
