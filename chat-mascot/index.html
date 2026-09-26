@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Animated AR chat mascot</title>
+  <meta name="description" content="A 3D mascot as your whole chat UI: Gilly the axolotl idles in the corner, speaks replies aloud with synced speech bubbles, listens, and steps out of the page in AR on Vision Pro and iPhone.">
+  <meta name="author" content="Stand Chat">
+  <link rel="author" href="https://stand.chat/">
+  <meta name="keywords" content="custom chat UI, visitor API, three.js, speech synthesis, model element, AR Quick Look">
+  <meta property="og:title" content="Animated AR chat mascot">
+  <meta property="og:description" content="A 3D mascot as your whole chat UI: Gilly the axolotl idles in the corner, speaks replies aloud with synced speech bubbles, listens, and steps out of the page in AR on Vision Pro and iPhone.">
+  <meta property="og:image" content="https://examples.stand.chat/chat-mascot/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Gilly and the chat. -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="chat.css">
+  <script type="module" src="chat.js"></script>
+
+  <!-- Site chrome: the top bar and "How it works" styles. The import map above comes first: it must precede every module script. -->
+  <link rel="stylesheet" href="/_shared/example.css">
+  <script type="module" src="/_shared/example.js"></script>
+
+  <!-- Tidelight Aquarium, the made-up website Gilly lives on. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,400..700;1,400..700&family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..700,100;1,9..144,400..700,100&display=swap">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="site.js"></script>
+</head>
+<body>
+  <sx-example-bar></sx-example-bar>
+
+  <div class="tl-page">
+    <section class="tl-hero" id="top">
+      <div class="tl-hero-art">
+        <img class="tl-sea" src="art/sea.svg" fetchpriority="high" alt="Sunlight streams down through blue water onto a coral reef, where jellyfish drift and garden eels peek out of the sand.">
+        <img class="tl-jelly tl-jelly-moon" src="art/jelly-moon.svg" alt="">
+        <img class="tl-jelly tl-jelly-coral" src="art/jelly-coral.svg" alt="">
+      </div>
+
+      <header class="tl-nav">
+        <a class="tl-logo" href="#top">
+          <svg class="tl-logo-mark" viewBox="0 0 40 40" aria-hidden="true">
+            <circle cx="20" cy="20" r="19" class="tl-logo-ring"/>
+            <path class="tl-logo-bell" d="M8.5 20.5C8.5 13.6 13.6 9 20 9s11.5 4.6 11.5 11.5c-1.9 1.2-3.9 1.2-5.8 0-1.9 1.2-3.8 1.2-5.7 0-1.9 1.2-3.8 1.2-5.7 0-1.9 1.2-3.9 1.2-5.8 0Z"/>
+            <path class="tl-logo-arms" d="M14 24.5c-1.3 2.4 1.2 3.8 0 6.3M20 24.5c-1.3 2.6 1.2 4.4 0 7.4M26 24.5c-1.3 2.4 1.2 3.8 0 6.3"/>
+            <circle cx="15.2" cy="14.8" r="1.9" class="tl-logo-shine"/>
+          </svg>
+          <span class="tl-logo-word">Tidelight <small>Aquarium</small></span>
+        </a>
+        <nav class="tl-links" aria-label="Tidelight">
+          <a href="#exhibits">Exhibits</a>
+          <a href="#today">Today</a>
+          <a href="#gilly">Meet Gilly</a>
+          <a href="#visit">Visit</a>
+        </nav>
+        <a class="tl-btn tl-btn-coral tl-nav-cta" href="#tickets">Buy tickets</a>
+        <details class="tl-menu">
+          <summary aria-label="Menu">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+          </summary>
+          <nav aria-label="Tidelight, menu">
+            <a href="#exhibits">Exhibits</a>
+            <a href="#today">Today</a>
+            <a href="#gilly">Meet Gilly</a>
+            <a href="#tickets">Tickets &amp; hours</a>
+            <a href="#visit">Plan your visit</a>
+          </nav>
+        </details>
+      </header>
+
+      <div class="tl-hero-copy">
+        <p class="tl-status" data-open-status><i aria-hidden="true"></i><span data-open-text>Open daily, 9:30–17:30</span></p>
+        <h1>The ocean, <em>lit from within.</em></h1>
+        <p class="tl-lede">Drift past glowing jellies, a three-story kelp forest and one very clever octopus. Six living worlds on Harborview’s waterfront, and an axolotl called Gilly to show you around.</p>
+        <div class="tl-ctas">
+          <a class="tl-btn tl-btn-coral tl-btn-lg" href="#tickets">Buy tickets</a>
+          <a class="tl-btn tl-btn-ghost tl-btn-lg" href="#today">What’s on today</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="tl-today" id="today" aria-labelledby="today-title">
+      <div class="tl-wrap tl-today-grid">
+        <div class="tl-today-intro">
+          <p class="tl-eyebrow">Today at Tidelight <span class="tl-today-date" data-today-date></span></p>
+          <h2 id="today-title">Feedings, talks and a penguin parade</h2>
+          <p>Every talk is free with your ticket. Come a few minutes early for a spot by the glass.</p>
+
+          <div class="tl-next" data-next>
+            <img class="tl-next-jelly" src="art/jelly-moon.svg" alt="" width="240" height="424" loading="lazy">
+            <p class="tl-next-label"><i aria-hidden="true"></i><span data-next-label>First up</span></p>
+            <p class="tl-next-when" data-next-when>10:30</p>
+            <p class="tl-next-title" data-next-title>Otter breakfast</p>
+            <p class="tl-next-where" data-next-where>Otter Cove · 15 min</p>
+          </div>
+        </div>
+
+        <ol class="tl-schedule">
+          <li class="tl-event" data-event data-time="10:30" data-duration="15">
+            <time datetime="10:30">10:30</time>
+            <div class="tl-event-body">
+              <h3>Otter breakfast</h3>
+              <p>Pip and Marlo crack their clams while floating on their backs, and a keeper explains how otters stay warm without any blubber.</p>
+              <p class="tl-event-where">Otter Cove · 15 min</p>
+            </div>
+            <span class="tl-event-state" data-state></span>
+          </li>
+          <li class="tl-event" data-event data-time="11:15" data-duration="20">
+            <time datetime="11:15">11:15</time>
+            <div class="tl-event-body">
+              <h3>Jelly glow talk</h3>
+              <p>The lights go down in the jelly gallery: how moon jellies pulse, glow and get by without a brain.</p>
+              <p class="tl-event-where">Jellyfish Lanterns · 20 min</p>
+            </div>
+            <span class="tl-event-state" data-state></span>
+          </li>
+          <li class="tl-event" data-event data-time="12:00" data-duration="20">
+            <time datetime="12:00">12:00</time>
+            <div class="tl-event-body">
+              <h3>Octopus enrichment</h3>
+              <p>Juniper gets a brand-new puzzle box. Last week she had it open in four minutes flat.</p>
+              <p class="tl-event-where">Octopus Den · 20 min</p>
+            </div>
+            <span class="tl-event-state" data-state></span>
+          </li>
+          <li class="tl-event" data-event data-time="13:30" data-duration="15">
+            <time datetime="13:30">13:30</time>
+            <div class="tl-event-body">
+              <h3>Penguin parade</h3>
+              <p>Twenty-two little penguins waddle a lap of the Main Hall. Wave; they love an audience.</p>
+              <p class="tl-event-where">Penguin Point to the Main Hall · 15 min</p>
+            </div>
+            <span class="tl-event-state" data-state></span>
+          </li>
+          <li class="tl-event" data-event data-time="14:15" data-duration="20">
+            <time datetime="14:15">14:15</time>
+            <div class="tl-event-body">
+              <h3>Kelp forest dive</h3>
+              <p>A diver feeds the garibaldi and answers your questions through the glass.</p>
+              <p class="tl-event-where">Kelp Cathedral · 20 min</p>
+            </div>
+            <span class="tl-event-state" data-state></span>
+          </li>
+          <li class="tl-event" data-event data-time="15:00" data-duration="20">
+            <time datetime="15:00">15:00</time>
+            <div class="tl-event-body">
+              <h3>Axolotl Lagoon meet-up</h3>
+              <p>Meet Gilly’s real-life cousins and find out how an axolotl grows back a lost leg.</p>
+              <p class="tl-event-where">Axolotl Lagoon · 20 min</p>
+            </div>
+            <span class="tl-event-state" data-state></span>
+          </li>
+          <li class="tl-event" data-event data-time="16:30" data-duration="10">
+            <time datetime="16:30">16:30</time>
+            <div class="tl-event-body">
+              <h3>Quiet glow</h3>
+              <p>Ten calm minutes before closing: lights low, music off, just the jellies.</p>
+              <p class="tl-event-where">Jellyfish Lanterns · 10 min</p>
+            </div>
+            <span class="tl-event-state" data-state></span>
+          </li>
+          <li class="tl-event" data-event data-time="17:30" data-duration="210" data-weekday="4" hidden>
+            <time datetime="17:30">17:30</time>
+            <div class="tl-event-body">
+              <h3>Tidelight After Dark</h3>
+              <p>Music, the Driftwood bar and the jellies at their brightest. Ages 18 and up after 18:00.</p>
+              <p class="tl-event-where">Every gallery · until 21:00</p>
+            </div>
+            <span class="tl-event-state" data-state></span>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="tl-exhibits" id="exhibits" aria-labelledby="exhibits-title">
+      <div class="tl-wrap">
+        <div class="tl-head">
+          <p class="tl-eyebrow">Exhibits</p>
+          <h2 id="exhibits-title">Six worlds under one roof</h2>
+          <p>From sunlit kelp to the quiet glow of the deep, every gallery is built around the animals who live in it. Most visits take about two and a half hours. The otters make it hard to leave.</p>
+        </div>
+        <ul class="tl-cards">
+          <li class="tl-card">
+            <img src="art/exhibit-jellies.svg" alt="" width="480" height="300" loading="lazy">
+            <div class="tl-card-body">
+              <p class="tl-card-meta">Level 1 · Blue Hall</p>
+              <h3>Jellyfish Lanterns</h3>
+              <p>A dark, hushed gallery of pulsing moon jellies, sea nettles and tiny comb jellies that shimmer like rainbows.</p>
+              <p class="tl-card-foot">Glow talk <time datetime="11:15">11:15</time></p>
+            </div>
+          </li>
+          <li class="tl-card">
+            <img src="art/exhibit-kelp.svg" alt="" width="480" height="300" loading="lazy">
+            <div class="tl-card-body">
+              <p class="tl-card-meta">Levels 1–3 · Atrium</p>
+              <h3>Kelp Cathedral</h3>
+              <p>A three-story kelp forest that sways in real surf. Look up through the canopy, or watch the garibaldi guard their patch.</p>
+              <p class="tl-card-foot">Forest dive <time datetime="14:15">14:15</time></p>
+            </div>
+          </li>
+          <li class="tl-card">
+            <img src="art/exhibit-octopus.svg" alt="" width="480" height="300" loading="lazy">
+            <div class="tl-card-body">
+              <p class="tl-card-meta">Level 2 · Rock Pools</p>
+              <h3>Octopus Den</h3>
+              <p>Juniper, our giant Pacific octopus, opens jars, changes color when she’s curious and knows exactly which keeper brings the crab.</p>
+              <p class="tl-card-foot">Enrichment <time datetime="12:00">12:00</time></p>
+            </div>
+          </li>
+          <li class="tl-card">
+            <img src="art/exhibit-otters.svg" alt="" width="480" height="300" loading="lazy">
+            <div class="tl-card-body">
+              <p class="tl-card-meta">Level 1 · Harbor Deck</p>
+              <h3>Otter Cove</h3>
+              <p>Pip and Marlo, two rescued sea otters, with a rocky pool built for rolling, cracking shells and napping paw in paw.</p>
+              <p class="tl-card-foot">Breakfast <time datetime="10:30">10:30</time></p>
+            </div>
+          </li>
+          <li class="tl-card">
+            <img src="art/exhibit-penguins.svg" alt="" width="480" height="300" loading="lazy">
+            <div class="tl-card-body">
+              <p class="tl-card-meta">Level 2 · Penguin Point</p>
+              <h3>Penguin Point</h3>
+              <p>A pebble beach and a deep, clear pool for a colony of twenty-two little penguins, the smallest penguins in the world.</p>
+              <p class="tl-card-foot">Parade <time datetime="13:30">13:30</time></p>
+            </div>
+          </li>
+          <li class="tl-card">
+            <img src="art/exhibit-axolotls.svg" alt="" width="480" height="300" loading="lazy">
+            <div class="tl-card-body">
+              <p class="tl-card-meta">Level 3 · Freshwater</p>
+              <h3>Axolotl Lagoon</h3>
+              <p>Smiling salamanders from the lakes of Mexico, with frilly gills and a talent for regrowing just about anything.</p>
+              <p class="tl-card-foot">Meet-up <time datetime="15:00">15:00</time></p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="tl-gilly" id="gilly" aria-labelledby="gilly-title">
+      <div class="tl-wrap tl-gilly-grid">
+        <figure class="tl-gilly-portrait">
+          <img src="gilly.png" alt="Gilly, a pink cartoon axolotl" width="800" height="900" loading="lazy">
+        </figure>
+        <div class="tl-gilly-copy">
+          <p class="tl-eyebrow">Meet Gilly</p>
+          <h2 id="gilly-title">Questions? Ask the axolotl.</h2>
+          <p class="tl-gilly-lede">Gilly is Tidelight’s resident axolotl. Well, the cartoon one: the real ones are napping in Axolotl Lagoon. Gilly knows every feeding time, the step-free routes and the quietest hour for the jellies, and loves to talk about all of it.</p>
+          <ul class="tl-ways">
+            <li>
+              <span class="tl-way-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5.5h14a1.5 1.5 0 0 1 1.5 1.5v8a1.5 1.5 0 0 1-1.5 1.5h-8l-4.5 3.5v-3.5H5A1.5 1.5 0 0 1 3.5 15V7A1.5 1.5 0 0 1 5 5.5Z"/><path d="M8 10h8M8 13h5"/></svg></span>
+              <div>
+                <h3>Tap to chat</h3>
+                <p>Gilly lives in the corner of every page. Tap and ask anything about your visit.</p>
+              </div>
+            </li>
+            <li>
+              <span class="tl-way-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg></span>
+              <div>
+                <h3>Talk out loud</h3>
+                <p>Ask with your voice. Gilly answers aloud, with speech bubbles so you can read along.</p>
+              </div>
+            </li>
+            <li>
+              <span class="tl-way-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 20 7.5v9L12 21l-8-4.5v-9Z"/><path d="m4 7.5 8 4.5 8-4.5M12 12v9"/></svg></span>
+              <div>
+                <h3>Meet Gilly in your room</h3>
+                <p>On Apple Vision Pro or iPhone, Gilly swims off the page and into your space.</p>
+              </div>
+            </li>
+          </ul>
+          <div class="tl-ar-slot" data-ar-slot></div>
+        </div>
+      </div>
+      <p class="tl-gilly-hint" aria-hidden="true">That’s me, down in the corner!
+        <svg viewBox="0 0 120 80"><path d="M6 10c38-2 76 10 98 52"/><path d="m88 56 16 7 2-18"/></svg>
+      </p>
+    </section>
+
+    <section class="tl-tickets" id="tickets" aria-labelledby="tickets-title">
+      <div class="tl-wrap">
+        <div class="tl-head">
+          <p class="tl-eyebrow">Tickets &amp; hours</p>
+          <h2 id="tickets-title">Come for the jellies. Stay all day.</h2>
+          <p>Pick an entry time, then stay as long as you like. Book online and skip the ticket line.</p>
+        </div>
+
+        <div class="tl-tickets-grid">
+          <div class="tl-prices">
+            <dl class="tl-price-list">
+              <div>
+                <dt>Adult <small>13 and up</small></dt>
+                <dd>$32</dd>
+              </div>
+              <div>
+                <dt>Child <small>3 to 12</small></dt>
+                <dd>$18</dd>
+              </div>
+              <div>
+                <dt>Under 3 <small>On a grown-up’s ticket</small></dt>
+                <dd>Free</dd>
+              </div>
+              <div class="tl-price-member">
+                <dt>Members <small>Unlimited visits for a year, from $89</small></dt>
+                <dd>Free</dd>
+              </div>
+            </dl>
+            <ul class="tl-includes" aria-label="Every ticket includes">
+              <li>Every talk, feeding and the penguin parade</li>
+              <li>Same-day re-entry, so you can lunch on the Quay</li>
+              <li>Free lockers, stroller parking and wheelchairs</li>
+            </ul>
+            <div class="tl-price-actions">
+              <a class="tl-btn tl-btn-coral tl-btn-lg" href="#tickets">Choose your time</a>
+              <a class="tl-text-link" href="#tickets">Become a member <span aria-hidden="true">→</span></a>
+            </div>
+          </div>
+
+          <div class="tl-hours">
+            <h3>Opening hours</h3>
+            <table>
+              <tbody>
+                <tr data-days="1 2 3"><th scope="row">Monday to Wednesday</th><td>9:30–17:30</td></tr>
+                <tr data-days="4"><th scope="row">Thursday</th><td>9:30–21:00</td></tr>
+                <tr data-days="5 6 0"><th scope="row">Friday to Sunday</th><td>9:30–17:30</td></tr>
+              </tbody>
+            </table>
+            <p>Last entry one hour before closing. Open every day of the year except December 25.</p>
+          </div>
+
+          <aside class="tl-afterdark" aria-labelledby="afterdark-title">
+            <img src="art/jelly-coral.svg" alt="" width="240" height="500" loading="lazy">
+            <p class="tl-eyebrow">Thursdays, 17:30–21:00</p>
+            <h3 id="afterdark-title">Tidelight After Dark</h3>
+            <p>The lights go down, the music comes up and the jellies glow their brightest. The Driftwood bar pours tide-pool spritzes. Ages 18 and up after 18:00.</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="tl-visit" id="visit" aria-labelledby="visit-title">
+      <div class="tl-wrap">
+        <div class="tl-head">
+          <p class="tl-eyebrow">Plan your visit</p>
+          <h2 id="visit-title">On the waterfront, a tram ride from anywhere</h2>
+          <p>Tidelight Aquarium, 2 Lantern Quay, Harborview. Everything below is step-free, and every question you have, Gilly has probably heard before.</p>
+        </div>
+
+        <div class="tl-visit-grid">
+          <figure class="tl-map">
+            <img src="art/map.svg" alt="Map of Harborview’s waterfront: Tidelight Aquarium stands at the end of Lantern Quay, next to the tram stop, with Quayside Garage across Harbor Street and Harborview Central station a short walk along the boardwalk." width="640" height="520" loading="lazy">
+            <figcaption>
+              <ul class="tl-map-key">
+                <li><span class="tl-key tl-key-aquarium" aria-hidden="true"></span>Tidelight Aquarium</li>
+                <li><span class="tl-key tl-key-tram" aria-hidden="true">T</span>Lantern Quay, tram 3</li>
+                <li><span class="tl-key tl-key-park" aria-hidden="true">P</span>Quayside Garage</li>
+                <li><span class="tl-key tl-key-train" aria-hidden="true"></span>Harborview Central</li>
+              </ul>
+            </figcaption>
+          </figure>
+
+          <div class="tl-visit-cards">
+            <article class="tl-visit-card">
+              <span class="tl-visit-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.5-5.8-6.5-11.2a6.5 6.5 0 0 1 13 0C18.5 15.2 12 21 12 21Z"/><circle cx="12" cy="9.8" r="2.4"/></svg></span>
+              <h3>Getting here</h3>
+              <p>Tram 3 stops right outside at Lantern Quay. From Harborview Central it’s a ten-minute walk along the boardwalk. Quayside Garage is $9 for three hours with your ticket, and there are bike racks by the main doors.</p>
+            </article>
+            <article class="tl-visit-card">
+              <span class="tl-visit-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="4.6" r="1.9"/><path d="M5 8.6 12 10l7-1.4M12 10v5l-3.4 5.8M12 15l3.4 5.8"/></svg></span>
+              <h3>Accessibility</h3>
+              <p>Step-free throughout, with lifts to all three levels. Borrow a wheelchair or a sensory backpack at the front desk. Every talk is captioned, and Calm Mornings on the first Sunday of the month open at 8:30 with low lights and no music.</p>
+            </article>
+            <article class="tl-visit-card">
+              <span class="tl-visit-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 3.5a7.5 7.5 0 0 1 7.5 7.5H13Z"/><path d="M2.5 5.5h2.7L7 11h13.5c0 3-2.9 5.3-6.4 5.3h-2.6C8.6 16.3 7 14 7 11"/><circle cx="9" cy="19.6" r="1.7"/><circle cx="17" cy="19.6" r="1.7"/></svg></span>
+              <h3>With little ones</h3>
+              <p>Strollers are welcome everywhere, with stroller parking outside Otter Cove and Penguin Point. Baby changing on every level, and a quiet feeding room beside the jellies.</p>
+            </article>
+            <article class="tl-visit-card">
+              <span class="tl-visit-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h13v4.2A5.3 5.3 0 0 1 11.7 19H9.3A5.3 5.3 0 0 1 4 13.7Z"/><path d="M17 11h1.3a2.6 2.6 0 0 1 0 5.2H17M8.5 3.5c-1 1 1 2 0 3M12.5 3.5c-1 1 1 2 0 3"/></svg></span>
+              <h3>Food &amp; drink</h3>
+              <p>The Driftwood Café on Level 2 looks out over the harbor: chowder, grilled cheese, big salads and good coffee, 9:30–17:00. Picnics are welcome on the Quay deck.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="tl-footer">
+      <div class="tl-wrap">
+        <div class="tl-footer-grid">
+          <div class="tl-footer-brand">
+            <a class="tl-logo" href="#top">
+              <svg class="tl-logo-mark" viewBox="0 0 40 40" aria-hidden="true">
+                <circle cx="20" cy="20" r="19" class="tl-logo-ring"/>
+                <path class="tl-logo-bell" d="M8.5 20.5C8.5 13.6 13.6 9 20 9s11.5 4.6 11.5 11.5c-1.9 1.2-3.9 1.2-5.8 0-1.9 1.2-3.8 1.2-5.7 0-1.9 1.2-3.8 1.2-5.7 0-1.9 1.2-3.9 1.2-5.8 0Z"/>
+                <path class="tl-logo-arms" d="M14 24.5c-1.3 2.4 1.2 3.8 0 6.3M20 24.5c-1.3 2.6 1.2 4.4 0 7.4M26 24.5c-1.3 2.4 1.2 3.8 0 6.3"/>
+                <circle cx="15.2" cy="14.8" r="1.9" class="tl-logo-shine"/>
+              </svg>
+              <span class="tl-logo-word">Tidelight <small>Aquarium</small></span>
+            </a>
+            <p>A non-profit aquarium on Harborview’s waterfront, caring for seven thousand animals and the waters they come from.</p>
+            <p class="tl-footer-address">2 Lantern Quay, Harborview<br>Open daily 9:30–17:30, Thursdays until 21:00</p>
+          </div>
+          <nav class="tl-footer-col" aria-labelledby="footer-visit">
+            <h2 id="footer-visit">Visit</h2>
+            <ul>
+              <li><a href="#tickets">Tickets &amp; hours</a></li>
+              <li><a href="#visit">Getting here</a></li>
+              <li><a href="#visit">Accessibility</a></li>
+              <li><a href="#visit">Food &amp; drink</a></li>
+            </ul>
+          </nav>
+          <nav class="tl-footer-col" aria-labelledby="footer-explore">
+            <h2 id="footer-explore">Explore</h2>
+            <ul>
+              <li><a href="#exhibits">Exhibits</a></li>
+              <li><a href="#today">Today’s schedule</a></li>
+              <li><a href="#tickets">After Dark</a></li>
+              <li><a href="#gilly">Meet Gilly</a></li>
+            </ul>
+          </nav>
+          <nav class="tl-footer-col" aria-labelledby="footer-about">
+            <h2 id="footer-about">Tidelight</h2>
+            <ul>
+              <li><a href="#tickets">Membership</a></li>
+              <li><a href="#top">Conservation</a></li>
+              <li><a href="#top">School visits</a></li>
+              <li><a href="#top">Careers</a></li>
+            </ul>
+          </nav>
+        </div>
+        <p class="tl-footer-base">
+          <span>© 2026 Tidelight Aquarium</span>
+          <span>A made-up aquarium for a Stand Chat example. Gilly is real, though.</span>
+        </p>
+      </div>
+    </footer>
+  </div>
+
+  <section id="how-it-works" class="sx-explainer">
+    <div class="sx-wrap">
+      <p class="sx-eyebrow">How it works</p>
+      <h2>A 3D character as the whole chat UI</h2>
+      <p class="sx-lead">There is no chat button and no chat window. Gilly is the interface: an animated axolotl who idles in the corner, answers out loud with a speech bubble that keeps pace with the voice, and listens when you talk back. The conversation behind the character is real: it runs on Stand's custom chat UI API, so an AI Stand-in answers, a person on the team can take over, and the history stays in Stand.</p>
+
+      <h3>Try it</h3>
+      <ol class="sx-steps">
+        <li>Leave Gilly alone for a minute. Gilly gets bored: glances around, sighs, checks the time, blows bubbles, does a flip, sits down to wait, and finally dozes off.</li>
+        <li>Move your pointer close and Gilly perks up and watches it. Click Gilly, or tab to Gilly and press Enter.</li>
+        <li>Gilly startles awake, waves and says hello, lighting up each word as it's spoken. Ask something like <em>When do the otters eat?</em> Gilly leans in while you type, thinks while the answer is being written, then answers out loud.</li>
+        <li>Tap the microphone to ask out loud (Chrome, Edge and Safari). The speaker button turns the voice off; everything still works as text.</li>
+        <li>Close the bubble, or reload the page: the conversation picks up where it left off.</li>
+        <li>On iPhone or iPad, choose <strong>See Gilly in your room</strong> in the chat's ⋯ menu or the <em>Meet Gilly</em> section. On Apple Vision Pro, Gilly is a real 3D model in a porthole: pinch and drag Gilly out of the page into your room.</li>
+      </ol>
+
+      <div class="sx-note">This page uses <code>siteId: 'demo'</code>, Stand Chat's shared demo site, which works on any domain. Its demo Stand-in follows the page's private context but won't pretend to be a real aquarium. With your own Site ID, your own Stand-ins and team answer.</div>
+
+      <h3>The pieces</h3>
+      <ul>
+        <li><strong><code>stand-client.js</code></strong> talks to Stand: discovery, one-time session creation, sending over HTTP, replies over a WebSocket, reconnects and reload recovery. It follows the <a href="https://stand.chat/guide/custom-chat-ui">custom chat UI guide</a>'s reference client and adds typing and streamed-reply events, so Gilly can think while an answer is being written.</li>
+        <li><strong><code>chat.js</code></strong> is the interface: speech bubbles, the reply bubble, and what Gilly does in each state of the chat.</li>
+        <li><strong><code>voice.js</code></strong> speaks with <code>speechSynthesis</code> and listens with <code>SpeechRecognition</code>.</li>
+        <li><strong><code>mascot.js</code></strong> renders and animates Gilly with three.js; <strong><code>behaviors.js</code></strong> is what Gilly does and when.</li>
+        <li><strong><code>ar.js</code></strong> opens AR Quick Look and runs Gilly in the <code>&lt;model&gt;</code> element on Vision Pro.</li>
+        <li><strong><code>blender/</code></strong> generates <code>gilly.glb</code> (560 KB, for the page) and <code>gilly.usdz</code> (3 MB, loaded only for AR).</li>
+      </ul>
+
+      <h3>1. Discover now, start on the first message</h3>
+      <p>Discovery asks Stand who can answer; it's free and creates nothing. The conversation starts when the visitor sends a first message, together with the greeting Gilly already spoke and private context for whoever answers.</p>
+      <pre class="sx-code" data-file="stand-client.js, simplified"><code class="language-js">const api = 'https://api.stand.chat';
+const query = new URLSearchParams({ siteId: 'demo', page: location.href, greetingsEnabled: 'false' });
+const offer = await (await fetch(`${api}/v1/reps/find?${query}`, { credentials: 'omit' })).json();
+// offer.available, offer.responderType ('standin' or 'rep'), offer.poweredByUrl…
+
+// Later, on the visitor's first message:
+const session = await (await fetch(`${api}/v1/sessions`, {
+  method: 'POST',
+  credentials: 'omit',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    siteId: 'demo',
+    page: location.href,
+    standinProfileId: offer.standinProfileId, // or repId for a person
+    initialMessage: 'When do the otters eat?',
+    includeOpeningGreeting: true,
+    openingMessage: "Oh! Hi there! I'm Gilly…", // what Gilly already said
+    prompt: 'Your replies are spoken aloud by Gilly, a cartoon axolotl… Today: …', // privateContext()
+  }),
+})).json();
+// Keep session.sessionId and session.visitorToken for this conversation.</code></pre>
+
+      <h3>2. Replies arrive over a WebSocket</h3>
+      <p>Messages go out over HTTP and come back over a socket. Canonical messages merge by <code>messageId</code>; live events let Gilly look thoughtful while an AI reply is being written.</p>
+      <pre class="sx-code" data-file="stand-client.js, simplified"><code class="language-js">const url = new URL(`wss://api.stand.chat/ws/sessions/${session.sessionId}`);
+url.searchParams.set('token', session.visitorToken);
+const socket = new WebSocket(url);
+socket.onmessage = (event) => {
+  const data = JSON.parse(event.data);
+  if (data.type === 'standin.status' || data.type === 'typing') gilly.setState('thinking');
+  else if (data.type === 'session.closed') showEnded();
+  else if (data.event === 'message') mergeByMessageId(data); // then Gilly says it
+};</code></pre>
+      <p>Reconnects, reload recovery, retries that never send twice, and closing versus ending a chat are all in <code>stand-client.js</code>. They're the unglamorous half of a custom UI: read the guide's recovery chapter before shipping your own.</p>
+
+      <h3>3. Speak, and keep the bubble in step</h3>
+      <pre class="sx-code" data-file="voice.js, simplified"><code class="language-js">for (const sentence of splitSentences(text)) {  // Chrome cuts off long utterances
+  const u = new SpeechSynthesisUtterance(sentence.text);
+  u.pitch = 1.18; // a little higher: Gilly is small
+  u.onboundary = (e) => onProgress(sentence.start + e.charIndex); // exact, where voices report words
+  speechSynthesis.speak(u);
+}
+// Voices without word events: progress is estimated from the speaking rate.
+// The same character index lights up the bubble and shapes Gilly's mouth.</code></pre>
+      <p>Each letter maps to a mouth shape (open, wide or round) that blends into Gilly's face, so the lips move with the words, even with the voice muted. The first utterance has to start inside a tap on iOS, which is why Gilly greets you when you click.</p>
+
+      <h3>4. Listen</h3>
+      <pre class="sx-code" data-file="voice.js, simplified"><code class="language-js">const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const rec = new Recognition();
+rec.interimResults = true; // words appear in the bubble as you speak
+rec.onresult = (e) => (input.value = [...e.results].map((r) => r[0].transcript).join(''));
+rec.onend = () => input.value && send(input.value);
+rec.start();</code></pre>
+      <p>Chrome sends the audio to Google to transcribe it, Safari to Apple, and Safari on Mac needs Siri turned on. Firefox has no speech recognition, so there the microphone button isn't shown.</p>
+
+      <h3>5. Step out of the page</h3>
+      <p>On iPhone and iPad, AR Quick Look puts <code>gilly.usdz</code> on your table. On Vision Pro, Safari's <code>&lt;model&gt;</code> element shows the same file with real depth, right in the page, and you can pinch and drag it into your room.</p>
+      <pre class="sx-code" data-file="What ar.js adds to the page"><code class="language-html">&lt;a rel="ar" href="gilly.usdz"&gt;&lt;img src="gilly.png" alt="See Gilly in your room"&gt;&lt;/a&gt;
+
+&lt;model src="gilly.usdz"&gt;&lt;img src="gilly.png" alt="Gilly"&gt;&lt;/model&gt;</code></pre>
+      <p>A USDZ holds a single animation timeline, so every mood Gilly has in the page (idle, waving, talking, listening, thinking, sighing…) was recorded from the web engine into one 46-second reel, with each clip starting and ending on the same pose. In the page, <code>ar.js</code> plays one clip at a time by seeking <code>model.currentTime</code>; Quick Look plays the whole reel as a loop. Serve USDZ as <code>model/vnd.usdz+zip</code>.</p>
+
+      <h3>6. Make a character feel alive</h3>
+      <ul>
+        <li><strong>Nothing is ever still.</strong> Gilly breathes, bobs, shifts weight and blinks every few seconds, sometimes twice.</li>
+        <li><strong>Overlap.</strong> Every joint eases toward its target on its own spring, so the body settles in waves; gills and tail are simulated, so they trail and overshoot.</li>
+        <li><strong>Eyes lead.</strong> The eyes jump to a new target first, the head follows more slowly, and a blink often covers the switch.</li>
+        <li><strong>Anticipation.</strong> Before a hop or a flip Gilly crouches; landings squash and stretch.</li>
+        <li><strong>Boredom has a story.</strong> What Gilly does depends on how long nobody has paid attention, from glances to sighs to dozing off.</li>
+      </ul>
+
+      <h3>Good to know</h3>
+      <ul>
+        <li><strong>Say who's answering.</strong> Gilly is a character, not the responder: the bubble says <em>Answers by AI Stand-in</em>, and switches to the person's name if someone from the team takes over.</li>
+        <li><strong>Keep Stand's notice and attribution.</strong> When discovery returns <code>sensitiveNoticeText</code> or <code>poweredByUrl</code>, show them.</li>
+        <li><strong>Closing isn't ending.</strong> The × only puts the bubble away; <em>End chat</em> in the ⋯ menu ends the conversation.</li>
+        <li><strong>Private context isn't secret.</strong> The <code>prompt</code> is hidden from the chat but readable in the page, so pass facts that help, never credentials.</li>
+        <li><strong>Light on the device.</strong> Gilly renders at 60 fps while you interact, 30 while idling, and not at all in a background tab. <code>gilly.glb</code> is meshopt-compressed.</li>
+        <li><strong>Graceful everywhere.</strong> With <em>reduce motion</em> on, Gilly stays calm; without WebGL, Gilly is a picture that still opens the chat; without speech, it's a text chat.</li>
+      </ul>
+
+      <details class="made">
+        <summary>How this was made</summary>
+        <div class="made-body">
+          <p>This example is nearly a one-shot. <strong>Claude Opus 5.5, with max effort, in Claude Code</strong>, built it in one session from the prompt below, plus one follow-up asking for this box. It modeled and rigged Gilly with headless Blender scripts, wrote the animation engine and the chat, held real conversations with Stand's demo site in headless Chrome, judged the animation from filmstrips, and tested on the iOS and visionOS simulators. A sub-agent designed and illustrated the aquarium website in parallel, from a written brief.</p>
+          <p>A chat doesn't have to be a box in the corner. With AI writing the front end, it can be a character who lives on your site, while Stand's custom chat UI API keeps the conversation, the AI Stand-in and your team behind it.</p>
+
+          <p class="made-label">The prompt, lightly edited</p>
+          <blockquote class="made-prompt">Let's add a super fancy example: an animated AR chat mascot, inspired by Meta's Muse avatars. [Two example images]
+
+Develop a unique, cute, animated avatar in Blender (its MCP server is available on this Mac). Create a custom chat UI: https://stand.chat/guide/custom-chat-ui
+
+- It's available through a 3D avatar sitting in the bottom-right corner of the page, replacing the chat button.
+- The avatar feels alive, but bored when not active: moving around, sitting, looking around… Draw inspiration from this meme. [The "waiting" meme]
+- When the avatar is tapped or clicked, it smiles and speaks out using the browser's built-in speech synthesis.
+- There is a speech bubble synced with this.
+- Another bubble lets you type your responses. If the platform easily exposes built-in speech recognition, make that available.
+
+All in all, this should feel playful. Be creative and add a suitable website for it to live in. Find a fun use case where such an avatar would feel at home.
+
+Now the hard part. We want to support AR-capable browsers, notably Apple Vision Pro, making the avatar actually 3D, and if web standards allow, letting you place it outside the page in the real environment. But it should also be usable on iPhone, Mac and Windows. On computers, we should support Safari and Chrome.
+
+Iterate this to top quality: character animations should feel natural, almost like watching a Pixar character. The UX should be polished, reliable and usable.
+
+Blender is probably in use by another chat, "Vintage Terminal chat UI". Coordinate with it to avoid conflicts.</blockquote>
+
+          <p class="made-label">The follow-up</p>
+          <blockquote class="made-prompt">This seems mostly a one-shot. Include the original prompt (clean it up as you choose) and the model used on the page, as a subtle expandable "How this was made" box. The intent is to help people create high-fidelity experiences like this on top of Stand Chat, now that AI is able to generate the front end.</blockquote>
+
+          <p class="made-label">If you try this yourself</p>
+          <ul>
+            <li>Point the agent at the <a href="https://stand.chat/guide/custom-chat-ui">custom chat UI guide</a>. It's written for coding agents.</li>
+            <li>Build on the <code>demo</code> Site ID, so every test is a real conversation, then switch to yours.</li>
+            <li>Have the character built by a script instead of by hand, so the agent can change a number and rebuild. Here, <code>blender/</code> rebuilds Gilly in about 20 seconds.</li>
+            <li>Ask the agent to judge motion from filmstrips and to test in simulators, then try the AR yourself on a real device: simulators can't pinch, or place anything in a room.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h3>Copy this example</h3>
+      <pre class="sx-code"><code class="language-sh">npx degit standchat/examples/chat-mascot my-mascot</code></pre>
+      <p>Set <code>SITE_ID</code> in <code>chat.js</code> to your Site ID and rewrite <code>privateContext()</code> with facts about your business. To make a character of your own, start from <code>blender/gilly.py</code>: every shape is a few numbers in <code>blender/anatomy.py</code>.</p>
+
+      <ul class="sx-links">
+        <li><a href="https://stand.chat/guide/custom-chat-ui">Custom chat UI guide ↗</a></li>
+        <li><a href="https://stand.chat/features/custom-chat-ui">Custom chat UI feature ↗</a></li>
+        <li><a href="https://developer.mozilla.org/docs/Web/API/Web_Speech_API">Web Speech API ↗</a></li>
+        <li><a href="https://webkit.org/blog/17118/a-step-into-the-spatial-web-the-html-model-element-in-apple-vision-pro/">The model element ↗</a></li>
+        <li><a href="https://github.com/standchat/examples/tree/main/chat-mascot/">Source on GitHub ↗</a></li>
+      </ul>
+    </div>
+  </section>
+</body>
+</html>

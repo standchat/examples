@@ -1,0 +1,569 @@
+/* Gilly's corner and speech bubbles. Everything is scoped to .gc-* and sized in
+   px/rem so the host page's styles don't leak in (and ours don't leak out). */
+
+.gc-root {
+  --gc-ink: #0f2d44;
+  --gc-muted: #5b7486;
+  --gc-line: #d6e7ee;
+  --gc-paper: #ffffff;
+  --gc-mine: #e2f5f8;
+  --gc-mine-ink: #0d3a4c;
+  --gc-pink: #e2567d;
+  --gc-pink-deep: #c23a61;
+  --gc-aqua: #1b9fb6;
+  --gc-shadow: 0 18px 44px rgba(9, 38, 58, 0.22), 0 3px 10px rgba(9, 38, 58, 0.12);
+  --gc-font: ui-rounded, "SF Pro Rounded", "Nunito", "Quicksand", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --gc-stage-w: 340px;
+  --gc-stage-h: 400px;
+  --gc-keyboard: 0px; /* Keyboard over the bottom of the layout viewport (set by chat.js). */
+  --gc-view-h: 100dvh; /* The part of the page actually visible (set by chat.js). */
+  position: fixed;
+  right: 0;
+  bottom: var(--gc-keyboard);
+  z-index: 2147483000;
+  width: 0;
+  height: 0;
+  color: var(--gc-ink);
+  font: 400 16px/1.45 var(--gc-font);
+  letter-spacing: 0;
+  text-align: left;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.gc-root *,
+.gc-root *::before,
+.gc-root *::after { box-sizing: border-box; }
+.gc-root [hidden] { display: none !important; }
+
+/* --- Gilly's stage: the canvas never takes clicks; the hit button does. --- */
+
+.gc-stage {
+  position: fixed;
+  right: 0;
+  bottom: var(--gc-keyboard);
+  width: var(--gc-stage-w);
+  height: var(--gc-stage-h);
+  pointer-events: none;
+  transition: bottom 0.45s cubic-bezier(0.3, 1.3, 0.5, 1), opacity 0.4s;
+}
+.gc-stage canvas { display: block; }
+.gc-stage .gc-poster {
+  position: absolute;
+  right: 18%;
+  bottom: 6%;
+  width: 62%;
+  height: auto;
+  opacity: 1;
+  transition: opacity 0.6s;
+}
+.gc-root[data-mode="webgl"] .gc-poster { opacity: 0; }
+
+.gc-hit {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 45%;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.gc-hit:focus-visible {
+  outline: 3px solid var(--gc-aqua);
+  outline-offset: 4px;
+}
+
+/* --- The hint that invites a first tap. --- */
+
+.gc-hint {
+  position: fixed;
+  max-width: 230px;
+  padding: 11px 15px;
+  border-radius: 20px;
+  background: var(--gc-paper);
+  box-shadow: var(--gc-shadow);
+  font-weight: 650;
+  font-size: 15px;
+  line-height: 1.3;
+  pointer-events: auto;
+  cursor: pointer;
+  transform-origin: 100% 100%;
+  animation: gc-pop 0.45s cubic-bezier(0.3, 1.5, 0.5, 1);
+}
+.gc-hint::after {
+  content: "";
+  position: absolute;
+  right: -7px;
+  bottom: 14px;
+  width: 18px;
+  height: 18px;
+  background: var(--gc-paper);
+  border-radius: 0 0 5px 0;
+  transform: rotate(-45deg) skew(12deg, 12deg);
+}
+.gc-hint small { display: block; color: var(--gc-muted); font-weight: 500; font-size: 13px; }
+
+@keyframes gc-pop {
+  from { opacity: 0; transform: scale(0.6) translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* --- The conversation bubble. --- */
+
+.gc-panel {
+  position: fixed;
+  right: calc(var(--gc-stage-w) - 72px);
+  bottom: calc(22px + var(--gc-keyboard));
+  display: flex;
+  flex-direction: column;
+  width: min(390px, calc(100vw - var(--gc-stage-w) + 72px - 16px));
+  max-height: min(620px, calc(var(--gc-view-h) - 90px));
+  pointer-events: auto;
+  transform-origin: 100% 85%;
+  animation: gc-pop 0.42s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+.gc-panel[data-closing] { animation: gc-out 0.22s ease-in forwards; }
+@keyframes gc-out { to { opacity: 0; transform: scale(0.7) translateY(12px); } }
+
+.gc-bubble {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-radius: 26px;
+  background: var(--gc-paper);
+  box-shadow: var(--gc-shadow);
+}
+
+/* The tail points at Gilly's mouth; chat.js keeps it there as Gilly moves. */
+.gc-tail {
+  position: absolute;
+  right: -17px;
+  top: var(--gc-tail-y, 70%);
+  width: 26px;
+  height: 30px;
+  margin-top: -15px;
+  pointer-events: none;
+  filter: drop-shadow(5px 3px 4px rgba(9, 38, 58, 0.1));
+  transition: top 0.15s linear;
+}
+
+.gc-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 10px 6px 18px;
+}
+.gc-name { display: flex; flex-direction: column; min-width: 0; margin-right: auto; }
+.gc-name strong { font-size: 16px; font-weight: 800; line-height: 1.15; }
+.gc-who {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--gc-muted);
+  font-size: 12.5px;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.gc-who i { width: 7px; height: 7px; flex: none; border-radius: 50%; background: #9aa9b3; }
+.gc-root[data-phase="active"] .gc-who i,
+.gc-root[data-phase="available"] .gc-who i { background: #2fb57a; }
+.gc-root[data-connection="connecting"] .gc-who i { background: #f0b429; }
+
+.gc-icon {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--gc-muted);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, transform 0.15s;
+}
+.gc-icon:hover { background: #eef6f9; color: var(--gc-ink); }
+.gc-icon:active { transform: scale(0.92); }
+.gc-icon:focus-visible { outline: 2px solid var(--gc-aqua); outline-offset: 1px; }
+.gc-icon svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.gc-menu {
+  position: absolute;
+  top: 48px;
+  right: 12px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  min-width: 210px;
+  padding: 6px;
+  border-radius: 16px;
+  background: var(--gc-paper);
+  box-shadow: var(--gc-shadow);
+  animation: gc-pop 0.25s ease-out;
+}
+.gc-menu button,
+.gc-menu a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin: 0;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 10px;
+  background: none;
+  color: var(--gc-ink);
+  font: 600 14.5px/1.2 var(--gc-font);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+.gc-menu button:hover,
+.gc-menu a:hover { background: #eef6f9; }
+.gc-menu svg { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.gc-menu .gc-danger { color: var(--gc-pink-deep); }
+
+.gc-log {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+  padding: 4px 18px 16px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 14px);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 14px);
+}
+
+.gc-msg { max-width: 100%; overflow-wrap: anywhere; white-space: pre-wrap; }
+.gc-msg[data-from="gilly"] { font-size: 17px; line-height: 1.45; }
+.gc-msg[data-from="gilly"] + .gc-msg[data-from="gilly"] { margin-top: -2px; }
+.gc-msg[data-from="visitor"] {
+  align-self: flex-end;
+  max-width: 85%;
+  padding: 8px 13px;
+  border-radius: 18px 18px 6px 18px;
+  background: var(--gc-mine);
+  color: var(--gc-mine-ink);
+  font-size: 15px;
+}
+.gc-msg[data-state="sending"] { opacity: 0.6; }
+.gc-msg[data-state="failed"] { box-shadow: inset 0 0 0 1.5px var(--gc-pink); }
+.gc-msg .gc-from {
+  display: block;
+  margin-bottom: 1px;
+  color: var(--gc-muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.gc-msg .gc-ahead { opacity: 0.32; transition: opacity 0.2s; }
+.gc-msg[data-old] { color: #3d5668; font-size: 15px; }
+
+.gc-note {
+  align-self: center;
+  max-width: 92%;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: #f1f6f8;
+  color: var(--gc-muted);
+  font-size: 12.5px;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.gc-link {
+  display: block;
+  padding: 10px 13px;
+  border: 1.5px solid var(--gc-line);
+  border-radius: 14px;
+  color: var(--gc-ink);
+  text-decoration: none;
+  transition: border-color 0.15s, background 0.15s;
+}
+.gc-link:hover { border-color: var(--gc-aqua); background: #f5fbfd; }
+.gc-link strong { display: block; color: var(--gc-aqua); font-size: 15px; }
+.gc-link span { display: block; color: var(--gc-muted); font-size: 13.5px; }
+
+.gc-dots { display: inline-flex; gap: 5px; padding: 6px 2px; }
+.gc-dots i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gc-pink);
+  animation: gc-dot 1.1s ease-in-out infinite;
+}
+.gc-dots i:nth-child(2) { animation-delay: 0.15s; }
+.gc-dots i:nth-child(3) { animation-delay: 0.3s; }
+@keyframes gc-dot {
+  0%, 70%, 100% { transform: translateY(0); opacity: 0.45; }
+  35% { transform: translateY(-5px); opacity: 1; }
+}
+
+.gc-status {
+  margin: 0 14px 10px;
+  padding: 9px 12px;
+  border-radius: 12px;
+  background: #fff4e5;
+  color: #6b4400;
+  font-size: 13.5px;
+  line-height: 1.4;
+}
+.gc-status button { margin-left: 4px; }
+
+.gc-actions { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 16px 14px; }
+
+.gc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  margin: 0;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--gc-pink);
+  color: #fff;
+  font: 750 15px/1 var(--gc-font);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+}
+.gc-btn:hover { background: var(--gc-pink-deep); }
+.gc-btn:active { transform: scale(0.97); }
+.gc-btn:focus-visible { outline: 2px solid var(--gc-aqua); outline-offset: 2px; }
+.gc-btn[disabled] { opacity: 0.5; cursor: default; }
+.gc-btn.gc-quiet { background: #eef6f9; color: var(--gc-ink); }
+.gc-btn.gc-quiet:hover { background: #dff0f5; }
+.gc-link-btn {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--gc-aqua);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.gc-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 12px;
+  padding: 0 18px 14px;
+  color: var(--gc-muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+.gc-foot a { color: var(--gc-muted); font-weight: 700; text-decoration: none; }
+.gc-foot a:hover { color: var(--gc-ink); text-decoration: underline; }
+
+/* The visitor's own bubble: type or talk. */
+.gc-compose {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 7px 7px 7px 18px;
+  border-radius: 26px;
+  background: var(--gc-paper);
+  box-shadow: var(--gc-shadow);
+  transition: box-shadow 0.2s;
+}
+.gc-compose:focus-within { box-shadow: var(--gc-shadow), 0 0 0 3px rgba(27, 159, 182, 0.35); }
+.gc-compose[data-listening] { box-shadow: var(--gc-shadow), 0 0 0 3px rgba(226, 86, 125, 0.45); }
+.gc-compose textarea {
+  flex: 1;
+  min-width: 0;
+  max-height: 120px;
+  margin: 0;
+  padding: 9px 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--gc-ink);
+  font: 500 16px/1.4 var(--gc-font);
+  resize: none;
+}
+.gc-compose textarea::placeholder { color: #8aa0ae; }
+.gc-compose .gc-icon { width: 40px; height: 40px; }
+.gc-send {
+  background: var(--gc-pink) !important;
+  color: #fff !important;
+}
+.gc-send[disabled] { background: #e9eef1 !important; color: #9fb1bc !important; cursor: default; }
+.gc-mic[aria-pressed="true"] {
+  background: var(--gc-pink) !important;
+  color: #fff !important;
+  animation: gc-listen 1.2s ease-in-out infinite;
+}
+@keyframes gc-listen {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(226, 86, 125, 0.45); }
+  50% { box-shadow: 0 0 0 7px rgba(226, 86, 125, 0); }
+}
+
+.gc-email { display: flex; flex-direction: column; gap: 8px; margin: 0 16px 12px; padding: 12px; border-radius: 16px; background: #f1f6f8; }
+.gc-email label { font-size: 14px; font-weight: 700; }
+.gc-email p { margin: 0; color: var(--gc-muted); font-size: 13px; }
+.gc-email input {
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1.5px solid var(--gc-line);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--gc-ink);
+  font: 500 15px var(--gc-font);
+}
+
+.gc-sr {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  white-space: nowrap !important;
+}
+
+/* The unread badge when a reply arrives while the bubble is closed. */
+.gc-badge {
+  position: fixed;
+  display: grid;
+  place-items: center;
+  min-width: 26px;
+  height: 26px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: var(--gc-pink);
+  color: #fff;
+  font: 800 13px/1 var(--gc-font);
+  box-shadow: 0 4px 12px rgba(194, 58, 97, 0.4);
+  pointer-events: none;
+  animation: gc-pop 0.4s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+/* --- Phones: Gilly perches on top of a bottom sheet. --- */
+@media (max-width: 640px) {
+  /* Headroom: space kept above the sheet for Gilly, who stands on it. While the
+     keyboard is up, Gilly sinks behind the sheet and peeks over it instead. */
+  .gc-root { --gc-stage-w: 210px; --gc-stage-h: 250px; --gc-headroom: 160px; --gc-sink: 0px; }
+  .gc-root[data-keyboard] { --gc-headroom: 84px; --gc-sink: 72px; }
+  .gc-panel {
+    right: 10px;
+    left: 10px;
+    bottom: calc(10px + var(--gc-keyboard));
+    width: auto;
+    max-height: min(560px, calc(var(--gc-view-h) - var(--gc-headroom) - 30px));
+    transform-origin: 80% 100%;
+  }
+  .gc-tail {
+    top: auto !important;
+    right: var(--gc-tail-x, 56px);
+    bottom: -1px;
+    margin: 0 0 0 0;
+    transform: translateY(100%) rotate(0deg);
+    display: none;
+  }
+  .gc-root[data-open] .gc-stage { bottom: calc(var(--gc-perch, 0px) + var(--gc-keyboard) - var(--gc-sink)); }
+  .gc-msg[data-from="gilly"] { font-size: 16.5px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gc-panel,
+  .gc-hint,
+  .gc-menu,
+  .gc-badge { animation: none; }
+  .gc-dots i,
+  .gc-mic[aria-pressed="true"] { animation: none; }
+  .gc-stage { transition: none; }
+}
+
+/* --- Vision Pro: Gilly in a porthole, with real depth. --- */
+.gc-root[data-mode="spatial"] .gc-hit { pointer-events: none; }
+.gc-porthole {
+  position: absolute;
+  right: 14%;
+  bottom: 15%;
+  width: 66%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 0 0 7px #d7b877, 0 0 0 10px #a9884a, 0 14px 30px rgba(9, 38, 58, 0.35);
+  pointer-events: auto;
+  cursor: pointer;
+}
+.gc-porthole model {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: #0d5877;
+}
+.gc-porthole img { width: 100%; height: 100%; object-fit: contain; }
+
+/* --- Effects around Gilly. --- */
+.gc-fx { position: fixed; inset: 0; overflow: hidden; pointer-events: none; }
+.gc-fx-bubble {
+  position: fixed;
+  width: var(--s);
+  height: var(--s);
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 30%, rgba(255, 255, 255, 0.95) 0 14%, rgba(255, 255, 255, 0.15) 34%, rgba(150, 215, 235, 0.22) 70%, rgba(255, 255, 255, 0.55) 100%);
+  box-shadow: inset 0 0 0 1.2px rgba(255, 255, 255, 0.85), 0 1px 3px rgba(9, 38, 58, 0.12);
+  animation: gc-rise 3.2s cubic-bezier(0.35, 0.1, 0.6, 1) forwards;
+}
+@keyframes gc-rise {
+  0% { transform: translate(0, 0) scale(0.25); opacity: 0; }
+  10% { transform: translate(0, -8px) scale(1); opacity: 1; }
+  40% { transform: translate(var(--dx), -80px) scale(1.02, 0.97); }
+  70% { transform: translate(calc(var(--dx) * -0.6), -150px) scale(0.97, 1.03); opacity: 1; }
+  100% { transform: translate(calc(var(--dx) * 0.4), -230px) scale(1.15); opacity: 0; }
+}
+.gc-fx-z {
+  position: fixed;
+  color: #5d7f96;
+  font: 800 16px/1 var(--gc-font);
+  font-style: normal;
+  animation: gc-z 2.8s ease-out forwards;
+}
+@keyframes gc-z {
+  0% { transform: translate(0, 0) rotate(-8deg) scale(0.6); opacity: 0; }
+  20% { opacity: 0.9; }
+  100% { transform: translate(34px, -70px) rotate(14deg) scale(1.3); opacity: 0; }
+}
+.gc-plaque {
+  position: absolute;
+  right: 26%;
+  bottom: 3%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 42%;
+  margin: 0;
+  padding: 7px 10px 8px;
+  border: 0;
+  border-radius: 10px;
+  background: linear-gradient(#e9d19a, #c9a55d);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 6px 16px rgba(9, 38, 58, 0.3);
+  color: #4a3510;
+  font: 800 15px/1.1 var(--gc-font);
+  pointer-events: auto;
+  cursor: pointer;
+}
+.gc-plaque span { font-weight: 600; font-size: 11.5px; opacity: 0.8; }
+.gc-plaque:focus-visible { outline: 3px solid var(--gc-aqua); outline-offset: 3px; }
