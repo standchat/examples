@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dayfolio — Which tool could you stop paying for?</title>
+  <meta name="description" content="Build your tool shelf, explore an honest workspace comparison, and talk through your dependencies with Stand Chat, right beside the work.">
+  <meta name="author" content="Stand Chat Examples">
+  <meta name="keywords" content="custom-chat-ui, stand-inline, tool-comparison, contextual-chat">
+  <meta property="og:title" content="Dayfolio — A little less scattered.">
+  <meta property="og:description" content="Which tool could you stop paying for? Explore a fictional workspace with an honest, contextual Stand conversation.">
+  <meta property="og:image" content="https://examples.stand.chat/tool-replacement/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="./mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/_shared/example.css">
+  <script type="module" src="/_shared/example.js"></script>
+  <script defer src="https://cdn.stand.chat/widget/stand.js" data-stand-id="demo"></script>
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <sx-example-bar></sx-example-bar>
+  <a class="skip" href="#workbench">Skip to the tool comparison</a>
+  <header class="site-header wrap">
+    <a class="brand" href="#" aria-label="Dayfolio home"><img src="./mark.svg" alt="" width="30" height="34">dayfolio<span class="brand-dot">.</span></a>
+    <nav aria-label="Main navigation"><a href="#possibilities">A place for your work</a><a href="#capabilities">The honest details</a></nav>
+    <a class="button small" href="#workbench">Find your fit <span aria-hidden="true">↗</span></a>
+  </header>
+  <main>
+    <section class="hero wrap">
+      <p class="eyebrow"><span class="tiny-flower" aria-hidden="true">✳</span> A little less scattered.</p>
+      <h1>Which tool could you<br><em>stop paying for?</em></h1>
+      <p class="intro">Your docs, knowledge, and projects could share a home.<br class="desktop"> Let’s see what belongs together. And what doesn’t.</p>
+      <p class="hero-note">A hands-on exploration of a fictional workspace <span aria-hidden="true">↓</span></p>
+      <svg class="hero-sketch" viewBox="0 0 150 135" aria-hidden="true"><path d="M23 87 14 64l28-11 10 26M40 79 45 24l40 5-3 47M56 38l18 2m-19 8 18 2M79 78l26-40 27 17-26 39M36 91l6 28 70-3 10-31-86 6Z"/><path d="M56 104h37M103 18l2-10m10 17 9-4m-9 13 9 3"/></svg>
+    </section>
+    <section id="workbench" class="workbench wrap" aria-labelledby="workbench-title">
+      <div class="shelf-head"><div><p class="eyebrow">01 / YOUR EVERYDAY TOOL SHELF</p><h2 id="workbench-title">What’s open in your tabs?</h2></div><button id="reset" class="text-button">Reset planner <span aria-hidden="true">↺</span></button></div>
+      <p class="shelf-help">Add the tools you use. Then drag one onto the desk, or choose <strong>Compare</strong>.</p>
+      <div id="shelf" class="shelf" aria-label="Your tool shelf"></div>
+      <p id="announcement" class="sr-only" role="status" aria-live="polite"></p>
+      <div id="desk" class="desk">
+        <div class="desk-heading"><div><p class="eyebrow">02 / MAKE A LITTLE ROOM</p><h2>Could Dayfolio replace <span id="tool-name">Documents</span>?</h2></div><span class="local-badge">Local illustration · no AI</span></div>
+        <div class="desk-grid">
+          <div class="workspace" aria-label="Illustrative Dayfolio workspace">
+            <div class="workspace-top"><span><img src="./mark.svg" alt="" width="17" height="20"> Our little studio</span><span class="workspace-dots" aria-hidden="true">•••</span></div>
+            <div class="workspace-body"><aside class="workspace-nav" aria-hidden="true"><span>⌕ &nbsp; Search</span><span>⌂ &nbsp; Home</span><small>WORKSPACE</small><b id="workspace-current">Launch brief</b><span>↳ &nbsp; Team notes</span><span>↳ &nbsp; Resources</span><div class="nav-bottom">A place for good work.</div></aside><article id="sample" class="sample"></article></div>
+            <div class="workspace-foot"><span class="avatar">L</span><span class="avatar second">J</span><span>Made for working together.</span><span class="sample-label">Sample content</span></div>
+          </div>
+          <aside class="dependency-panel" aria-labelledby="dependency-title"><p class="eyebrow">THE THINGS YOU RELY ON</p><h3 id="dependency-title">The details make the difference.</h3><p class="muted">Keep every must-have in the comparison.</p><fieldset id="dependencies"><legend class="sr-only">Required features</legend></fieldset><label for="missing">What would you miss most?</label><textarea id="missing" maxlength="240" rows="2" placeholder="The little thing your team can’t do without…"></textarea><p id="lock-note" class="fineprint">Your choices stay in this tab until you send a message.</p></aside>
+        </div>
+        <div class="comparison"><div class="comparison-title"><p class="eyebrow">YOUR FIT NOTE</p><h3 id="verdict"></h3><p class="fineprint">Based on the needs you selected. No cost or migration estimate.</p></div><div id="results" class="results" aria-live="polite"></div></div>
+        <section class="conversation" aria-labelledby="chat-title"><div class="conversation-intro"><span class="chat-symbol" aria-hidden="true">↳</span><div><p class="eyebrow">03 / TALK THROUGH THE TRADEOFFS</p><h3 id="chat-title">What would make this work for you?</h3><p id="chat-context" class="muted"></p></div></div><div id="chat-mount"></div><p class="privacy">Sending your first message shares this tool, your shelf, selected needs, and feature note with <a href="https://stand.chat" target="_blank" rel="noopener noreferrer">Stand Chat</a>. This shared demo uses a real AI Stand-in. Replies don’t change the comparison.</p></section>
+      </div>
+    </section>
+    <section id="possibilities" class="possibilities wrap"><div><p class="eyebrow">LESS SHUFFLING. MORE DOING.</p><h2>A home for the work<br>between the work.</h2></div><div class="possibility"><span class="drawing" aria-hidden="true">▤</span><h3>Give ideas a place to land.</h3><p>Start with a page. Add a checklist, a useful link, or the decision everyone keeps asking about.</p></div><div class="possibility"><span class="drawing" aria-hidden="true">↗</span><h3>Keep the next step close.</h3><p>A plan shouldn’t live three tabs away from its tasks. Bring the context along with the work.</p></div></section>
+    <section id="capabilities" class="capabilities wrap"><div><p class="eyebrow">THE HONEST DETAILS</p><h2>A workspace, with edges.</h2><p>Dayfolio is an invented business, and this is its defined capability set. The comparison is a conversation starter, not a recommendation to cancel a subscription.</p></div><div><h3>In this fictional product</h3><p>Shared pages and comments, linked knowledge and search, tasks with owners and dates, simple boards, and tables with basic filters.</p><h3>Outside its scope</h3><p>Offline editing, formulas, advanced permissions, automatic migrations, recording, live integrations, and dependency scheduling.</p><p class="fineprint">Assumes a small team, online use, workspace-wide access, and manual copying and setup. Check real requirements before moving work.</p></div></section>
+  </main>
+  <footer class="wrap site-footer"><a class="brand" href="#"><img src="./mark.svg" alt="" width="24" height="28">dayfolio.</a><span>An imaginary workspace. A real conversation.</span><a href="#how-it-works">About this example ↗</a></footer>
+  <section id="how-it-works" class="sx-explainer explainer"><div class="sx-wrap">
+    <p class="eyebrow">HOW IT WORKS</p><h2>The question stays beside the work.</h2><p class="sx-lead">This plain HTML, CSS, and JavaScript example combines a deterministic local comparison with a real Stand conversation. The desk never pretends to be an AI answer.</p>
+    <h3>Try it</h3><ol><li>Add tools to your shelf and drag one to the desk. The Compare buttons provide the same action with a keyboard or touch.</li><li>Select the features you rely on and describe the one you would miss. The fit note uses fixed rules in <code>model.js</code>.</li><li>Send a question in the attached chat. Only this action creates a conversation and sends your comparison context.</li><li>Switch tools and return: each has its own conversation. Active comparisons are locked to their original assumptions. End the chat to edit them. Reset planner clears local choices when no conversation is active.</li></ol>
+    <h3>The integration</h3><p>Local copies of <code>stand-inline.js</code> and <code>stand-visitor.js</code> implement the <a href="https://stand.chat/guide/custom-chat-ui">Stand Visitor API beta contract</a>: availability, HTTP sends, WebSocket replies, session recovery, delivery retries, responder identities, notices, and handoff/follow-up cards. The demo Site ID connects only to Stand’s shared AI; testing your own team’s handoffs requires your own configured site.</p>
+    <pre class="sx-code" data-file="app.js"><code>// One conversation per tool. Context is read at the first send.
+chat.setAttribute('site', SITE_ID);
+chat.setAttribute('scope', `dayfolio-${toolId}`);
+chat.setAttribute('prompt', contextFor(state));
+chat.setAttribute('look', 'field');
+chat.setAttribute('grow', 'unfold');</code></pre>
+    <p>Context is capped below the API’s 2,000-character prompt limit. It includes the fictional boundaries, tool, use case, shelf, dependencies, assumptions, and feature note. The visitor’s question is the actual message. Arbitrary text is rendered with text nodes. No model output is interpreted as page commands.</p>
+    <h3>Copy this example</h3><pre class="sx-code"><code>npx degit standchat/examples/tool-replacement my-dayfolio</code></pre><p>Serve that folder with any static server; consumers need no install or build step. Set <code>SITE_ID</code> in <code>model.js</code> and replace the Stand script’s Site ID in <code>index.html</code> with yours from Sites in Stand. Keep the returned notices and attribution. Remove the two <code>/_shared/</code> includes and <code>&lt;sx-example-bar&gt;</code> when copying; they provide gallery chrome only. Every functional asset is in this folder.</p><p>Selections and visitor session credentials use separate <code>sessionStorage</code> entries. If storage is blocked, the page continues in memory. Don’t include secrets in feature notes. Local comparison state is never sent before a visitor chooses Send.</p>
+  </div></section>
+  <noscript><p class="noscript">Enable JavaScript to assemble your tool shelf and use the Stand conversation. The capability details above remain readable.</p></noscript>
+</body>
+</html>
