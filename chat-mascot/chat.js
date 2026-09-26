@@ -1,9 +1,10 @@
 // Gilly as the whole chat UI: a 3D character in the corner instead of a chat
-// button, speech bubbles synced to speech synthesis, a bubble to type or talk
+// button, speech bubbles synced to Gilly's voice, a bubble to type or talk
 // back in, and AR where the platform allows it.
 //
 //   stand-client.js  Stand's visitor API: discovery, session, messages, recovery
-//   voice.js         Web Speech: speaking with progress, listening
+//   voice.js         speaking with progress (a neural voice, or Web Speech), listening
+//   voice-worker.js  the neural voice, Kokoro, on the GPU    (loaded on demand)
 //   mascot.js        three.js stage, rig and motion        (loaded on demand)
 //   behaviors.js     what Gilly does, and when             (loaded on demand)
 //   ar.js            AR Quick Look and Vision Pro's <model> (loaded on demand)
@@ -23,6 +24,7 @@ const GREETINGS = [
   "Hi hi! Gilly here, Tidelight's axolotl on duty. Want to know what's on today, or how to get tickets?",
 ];
 const WELCOME_BACK = 'Welcome back! What else can I help you with?';
+const PLACEHOLDER = 'Ask Gilly anything…';
 const TICKLES = ['Hee hee, that tickles!', 'Boop! Hi again!', "Careful, I'm ticklish!"];
 
 // Private context for whoever answers: the AI Stand-in, or a person on the team.
@@ -131,32 +133,77 @@ class GillyChat {
     this.hovering = false;
     this.pointer = null;
     this.greeting = remember('gilly-greeting') || '';
+    this.nextGreeting = GREETINGS[Math.floor(Math.random() * GREETINGS.length)];
     this.state = this.client.state;
     this.firstState = true;
+    this.here = false; // Gilly is on screen.
+    this.talkMode = false; // Hands-free: listen again after every answer.
 
     this.build();
     this.layout();
     this.client.subscribe((s) => this.onState(s));
     this.client.mount();
-    this.loadGilly();
+    // Gilly's voice and body load side by side; Gilly shows up once both are
+    // ready, with the hello already made.
+    this.voiceReady = this.voice.load({ first: this.greeting || this.nextGreeting, onProgress: (share) => this.renderArrival(share) });
+    this.gillyReady = this.loadGilly();
     this.bindPage();
+    this.arrive();
+  }
 
+  // Gilly only shows up with a voice: the neural one downloads once (326 MB),
+  // then comes from the browser's cache in about a second. A note in the
+  // corner shows how far along it is when it takes a while.
+  async arrive() {
+    const note = setTimeout(() => {
+      if (!this.here) this.arrival.hidden = false;
+    }, 1500);
+    await Promise.all([this.voiceReady, this.gillyReady]);
+    clearTimeout(note);
+    this.here = true;
+    this.arrival.hidden = true;
+    this.root.dataset.arrival = 'here';
+    this.stage.inert = false;
+    this.hit.hidden = false;
+    this.renderMute();
+    this.renderMenu();
+    this.layout();
+    if (!reducedMotion.matches) {
+      for (let i = 0; i < 4; i++) setTimeout(() => this.spawnBubble({ size: 0.5 + Math.random() * 0.6 }), 250 + i * 220);
+    }
     if (remember('gilly-open') === '1') this.setOpen(true, { quiet: true });
-    else this.scheduleHint();
+    else if (this.unread.length) this.showUnread();
+    else {
+      this.gilly?.perform('wave');
+      this.scheduleHint();
+    }
+    this.updateGilly();
+  }
+
+  renderArrival(share) {
+    this.arrivalText.textContent = share < 1 ? 'Gilly is swimming over' : 'Gilly is almost here';
+    this.arrivalShare.textContent = share < 1 ? `${Math.floor(share * 100)}%` : '';
   }
 
   // --- DOM ---------------------------------------------------------------------------
 
   build() {
-    const root = $('div', 'gc-root', { 'data-mode': 'loading', 'data-phase': 'loading' });
+    const root = $('div', 'gc-root', { 'data-mode': 'loading', 'data-phase': 'loading', 'data-arrival': 'waiting' });
     this.root = root;
 
     this.stage = $('div', 'gc-stage');
+    this.stage.inert = true; // Until Gilly arrives.
     this.poster = $('img', 'gc-poster', { src: asset('gilly.png'), alt: '', 'aria-hidden': 'true', draggable: 'false' });
     this.poster.addEventListener('error', () => this.poster.remove());
     this.stage.append(this.poster);
 
-    this.hit = $('button', 'gc-hit', { type: 'button', 'aria-haspopup': 'dialog', 'aria-expanded': 'false', 'aria-controls': 'gc-panel' });
+    // Until Gilly arrives: how far along the voice is.
+    this.arrival = $('div', 'gc-arrival', { hidden: '', role: 'status' });
+    this.arrivalText = $('span', '', { text: 'Gilly is swimming over' });
+    this.arrivalShare = $('span', 'gc-arrival-share', { 'aria-hidden': 'true' });
+    this.arrival.append($('span', 'gc-arrival-bubbles', { 'aria-hidden': 'true', html: '<i></i><i></i><i></i>' }), this.arrivalText, this.arrivalShare);
+
+    this.hit = $('button', 'gc-hit', { type: 'button', hidden: '', 'aria-haspopup': 'dialog', 'aria-expanded': 'false', 'aria-controls': 'gc-panel' });
     this.hit.append($('span', 'gc-sr', { text: 'Chat with Gilly, Tidelight’s axolotl' }));
     this.hit.addEventListener('click', () => this.onTapGilly());
     this.hit.addEventListener('pointerenter', () => this.setHover(true));
@@ -225,7 +272,7 @@ class GillyChat {
     // The visitor's own bubble.
     const compose = $('form', 'gc-compose', { 'aria-label': 'Your message' });
     this.compose = compose;
-    this.input = $('textarea', '', { rows: '1', placeholder: 'Ask Gilly anything…', 'aria-label': 'Message Gilly', enterkeyhint: 'send', autocomplete: 'off' });
+    this.input = $('textarea', '', { rows: '1', placeholder: PLACEHOLDER, 'aria-label': 'Message Gilly', enterkeyhint: 'send', autocomplete: 'off' });
     this.mic = $('button', 'gc-icon gc-mic', { type: 'button', 'aria-label': 'Talk to Gilly', 'aria-pressed': 'false', html: ICONS.mic });
     if (!this.voice.canListen) this.mic.hidden = true;
     this.send = $('button', 'gc-icon gc-send', { type: 'submit', 'aria-label': 'Send', html: ICONS.send });
@@ -241,6 +288,8 @@ class GillyChat {
       }
     });
     this.input.addEventListener('input', () => {
+      if (this.talkMode || this.listening) this.stopTalking({ discard: true }); // Typing instead.
+      this.input.placeholder = PLACEHOLDER;
       this.client.setDraft(this.input.value);
       this.lastTyping = performance.now();
       this.autosize();
@@ -252,7 +301,7 @@ class GillyChat {
 
     panel.append(bubble, compose);
     this.fx = $('div', 'gc-fx', { 'aria-hidden': 'true' });
-    root.append(this.stage, this.fx, this.hint, this.panel, this.hit, this.badge);
+    root.append(this.stage, this.fx, this.arrival, this.hint, this.panel, this.hit, this.badge);
     document.body.append(root);
 
     panel.addEventListener('keydown', (e) => {
@@ -356,8 +405,9 @@ class GillyChat {
     const g = this.gilly;
     if (!g) return;
     const s = this.state;
-    if (this.mascot) this.mascot.maxFps = this.open || this.hovering || this.speaking ? 60 : 30;
-    if (this.speaking) return g.setState('talking', { lookAt: this.open && !phone.matches ? this.bubble : null });
+    if (this.mascot) this.mascot.maxFps = !this.here ? 4 : this.open || this.hovering || this.speaking ? 60 : 30;
+    // Until the first sound (the voice is still being made), Gilly thinks.
+    if (this.speaking) return this.speaking.started ? g.setState('talking', { lookAt: this.open && !phone.matches ? this.bubble : null }) : g.setState('thinking');
     if (!this.open) return g.setState(this.hovering ? 'attentive' : 'idle');
     if (this.listening) return g.setState('listening', { voice: true });
     const waiting = s.pending || (s.typing && s.phase === 'active');
@@ -380,6 +430,8 @@ class GillyChat {
       this.setOpen(true);
       return;
     }
+    // Talking hands-free, a tap on Gilly cuts in: Gilly stops and listens.
+    if (this.talkMode && !this.listening) return this.listenNow();
     // Poking Gilly while chatting: a giggle.
     if (!this.speaking && !this.listening) {
       this.gilly?.perform(Math.random() < 0.5 ? 'happy' : 'aww');
@@ -408,7 +460,7 @@ class GillyChat {
         if (fresh && s.phase !== 'unavailable') {
           // Greet: Gilly startles awake, grins and waves, and says hello.
           if (!this.greeting) {
-            this.greeting = GREETINGS[Math.floor(Math.random() * GREETINGS.length)];
+            this.greeting = this.nextGreeting;
             remember('gilly-greeting', this.greeting);
           }
           this.gilly?.perform('greet');
@@ -429,10 +481,10 @@ class GillyChat {
       if (!phone.matches && !quiet) setTimeout(() => this.input.focus({ preventScroll: true }), 380);
       requestAnimationFrame(() => this.scrollToEnd());
     } else {
-      this.voice.cancel();
-      this.stopListening();
       this.speaking = null;
       this.queue = [];
+      this.voice.cancel();
+      this.stopTalking({ discard: true });
       this.toggleMenu(false);
       delete this.root.dataset.open;
       this.panel.setAttribute('data-closing', '');
@@ -486,7 +538,7 @@ class GillyChat {
       if (this.open) this.say(item);
       else {
         this.unread.push(item);
-        this.showUnread();
+        if (this.here) this.showUnread();
       }
     }
     this.saveSpoken();
@@ -527,7 +579,7 @@ class GillyChat {
   say(item) {
     if (this.speaking && item.transient) return;
     this.queue.push(item);
-    if (!this.speaking) this.nextLine();
+    if (!this.speaking && !this.listening) this.nextLine();
   }
 
   nextLine() {
@@ -537,13 +589,19 @@ class GillyChat {
       this.gilly?.mouth([0, 0, 0]);
       this.updateGilly();
       this.render();
+      this.listenAgain();
       return;
     }
-    this.speaking = { ...item, char: 0 };
+    this.speaking = { ...item, char: 0, started: false };
     if (item.local || item.transient) this.localLines = [...(this.localLines ?? []).filter((l) => l.id !== item.id), item];
     this.updateGilly();
     this.render();
     this.voice.speak(item.text, {
+      onStart: () => {
+        if (this.speaking?.id !== item.id) return;
+        this.speaking.started = true;
+        this.updateGilly();
+      },
       onProgress: (char) => {
         if (!this.speaking || this.speaking.id !== item.id) return;
         this.speaking.char = char;
@@ -574,49 +632,99 @@ class GillyChat {
 
   // --- Listening --------------------------------------------------------------------------------
 
+  // One tap on the mic starts talking hands-free: Gilly listens, answers, then
+  // listens again, until the mic is tapped again, the visitor types or closes
+  // the chat, or says nothing for a while.
   toggleListening() {
-    if (this.listening) return this.stopListening();
+    if (this.talkMode || this.listening) return this.stopTalking();
     if (!['available', 'active'].includes(this.state.phase)) return;
-    this.voice.cancel();
-    this.speaking = null;
+    this.talkMode = true;
+    this.listenNow();
+  }
+
+  listenNow({ auto = false } = {}) {
+    clearTimeout(this.listenTimer);
+    this.speaking = null; // First, so the cut-off line doesn't hand over to the next.
     this.queue = [];
+    this.voice.cancel();
     const before = this.input.value;
-    this.listening = this.voice.listen({
+    const session = { discard: false };
+    const handle = this.voice.listen({
       onText: (text) => {
         this.input.value = text;
         this.autosize();
       },
-      onError: (message) => {
+      onError: (message, code) => {
+        if (auto && code === 'no-speech') return; // Silence after an answer just ends it.
         this.flash(message);
         this.gilly?.perform('sorry');
       },
       onEnd: (text) => {
-        this.listening = null;
-        this.mic.setAttribute('aria-pressed', 'false');
-        this.compose.removeAttribute('data-listening');
-        if (text) {
+        if (this.listening?.session === session) this.listening = null;
+        this.input.placeholder = PLACEHOLDER;
+        if (text && !session.discard) {
           this.input.value = text;
           this.client.setDraft(text);
           this.submit();
         } else {
-          this.input.value = before;
+          if (!text) {
+            this.talkMode = false; // Nothing said: wait until asked again.
+            if (auto) this.input.placeholder = 'Still there? Tap the mic to talk.';
+          }
+          if (!session.discard) this.input.value = before;
+          // Anything Gilly got while listening, Gilly says now.
+          if (this.open && this.queue.length && !this.speaking) this.nextLine();
           this.updateGilly();
         }
+        this.renderMic();
       },
     });
-    if (!this.listening) return;
-    this.mic.setAttribute('aria-pressed', 'true');
-    this.compose.setAttribute('data-listening', '');
+    if (!handle) {
+      this.talkMode = false;
+      this.renderMic();
+      return;
+    }
+    this.listening = { ...handle, session };
     this.input.value = '';
     this.input.placeholder = 'Listening…';
     this.gilly?.attention();
+    this.renderMic();
     this.updateGilly();
   }
 
-  stopListening() {
-    if (!this.listening) return;
-    this.listening.stop();
-    this.input.placeholder = 'Ask Gilly anything…';
+  // After an answer, talking hands-free listens again, with a little chirp.
+  listenAgain() {
+    if (!this.talkMode || !this.open || this.listening || this.speaking) return;
+    clearTimeout(this.listenTimer);
+    // A moment's pause, so the end of Gilly's voice doesn't reach the mic.
+    this.listenTimer = setTimeout(() => {
+      const s = this.state;
+      if (!this.talkMode || !this.open || this.listening || this.speaking || s.pending || s.busy) return;
+      if (!['available', 'active'].includes(s.phase)) return;
+      this.voice.chirp();
+      this.listenNow({ auto: true });
+    }, 350);
+  }
+
+  // Ends talking hands-free. What was said so far is sent, unless discarded.
+  stopTalking({ discard = false } = {}) {
+    this.talkMode = false;
+    clearTimeout(this.listenTimer);
+    if (this.listening) {
+      this.listening.session.discard = discard;
+      if (discard) this.listening.abort();
+      else this.listening.stop();
+    }
+    this.input.placeholder = PLACEHOLDER;
+    this.renderMic();
+  }
+
+  renderMic() {
+    const on = this.talkMode || Boolean(this.listening);
+    this.mic.setAttribute('aria-pressed', String(on));
+    this.mic.setAttribute('aria-label', on ? 'Stop talking to Gilly' : 'Talk to Gilly');
+    this.mic.toggleAttribute('data-armed', this.talkMode && !this.listening);
+    this.compose.toggleAttribute('data-listening', Boolean(this.listening));
   }
 
   flash(message) {
@@ -634,7 +742,7 @@ class GillyChat {
   submit() {
     const s = this.state;
     const text = this.input.value.trim();
-    this.input.placeholder = 'Ask Gilly anything…';
+    this.input.placeholder = PLACEHOLDER;
     if (!text || s.busy || s.pending) return;
     if (!['available', 'active'].includes(s.phase)) return;
     this.client.setDraft(text);
@@ -707,7 +815,7 @@ class GillyChat {
       this.autosize();
     }
     this.send.disabled = s.busy || Boolean(s.pending);
-    this.mic.disabled = s.busy || Boolean(s.pending);
+    this.mic.disabled = !this.talkMode && (s.busy || Boolean(s.pending));
     this.renderMenu();
   }
 
@@ -957,7 +1065,7 @@ class GillyChat {
       this.pointer = { x: e.clientX, y: e.clientY };
       this.gilly?.pointer(this.pointer);
       // Gilly notices a pointer coming close, and loses interest when it leaves.
-      const b = this.gilly?.bounds?.();
+      const b = this.here && this.gilly?.bounds?.();
       if (!b) return;
       const dx = e.clientX - (b.x + b.w / 2);
       const dy = e.clientY - (b.y + b.h / 2);
@@ -980,7 +1088,9 @@ class GillyChat {
       requestAnimationFrame(tick);
     }
     document.addEventListener('visibilitychange', () => {
-      if (document.hidden) this.voice.cancel();
+      if (!document.hidden) return;
+      this.voice.cancel();
+      this.stopTalking({ discard: true });
     });
   }
 
