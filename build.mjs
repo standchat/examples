@@ -10,8 +10,9 @@ const SITE = 'https://examples.stand.chat';
 // The front page lists these first, most interesting first. Examples not listed
 // here follow alphabetically, until someone gives them a place.
 const ORDER = [
-  'stand-inline',
+  'chat-mascot',
   'vintage-terminal',
+  'stand-inline',
   'stand-card',
   'stand-button',
   'in-app-support',
