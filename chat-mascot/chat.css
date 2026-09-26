@@ -494,27 +494,53 @@
   .gc-stage { transition: none; }
 }
 
-/* --- Vision Pro: Gilly in a porthole, with real depth. --- */
+/* --- Vision Pro: Gilly in a soft window into the page, with real depth. --- */
+.gc-root[data-mode="spatial"] { --gc-stage-w: 420px; --gc-stage-h: 480px; }
+@media (max-width: 640px) {
+  .gc-root[data-mode="spatial"] { --gc-stage-w: 260px; --gc-stage-h: 300px; }
+}
 .gc-root[data-mode="spatial"] .gc-hit { pointer-events: none; }
-.gc-porthole {
+.gc-pool {
   position: absolute;
-  right: 14%;
-  bottom: 15%;
-  width: 66%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  overflow: hidden;
-  box-shadow: 0 0 0 7px #d7b877, 0 0 0 10px #a9884a, 0 14px 30px rgba(9, 38, 58, 0.35);
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.9s ease;
   pointer-events: auto;
   cursor: pointer;
 }
-.gc-porthole model {
+.gc-pool[data-ready] { opacity: 1; }
+/* A model's box is opaque in visionOS: a pool of light water whose edges fade
+   into the page, like a spatial photo. */
+.gc-pool model {
   display: block;
   width: 100%;
   height: 100%;
-  background-color: #0d5877;
+  background-color: #c4e6ec;
+  -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 52%, #000 55%, transparent 100%);
+  mask-image: radial-gradient(ellipse 50% 50% at 50% 52%, #000 55%, transparent 100%);
 }
-.gc-porthole img { width: 100%; height: 100%; object-fit: contain; }
+.gc-pool img { width: 100%; height: 100%; object-fit: contain; }
+.gc-pool-label {
+  position: absolute;
+  left: 50%;
+  bottom: 7%;
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 6px 18px rgba(9, 38, 58, 0.18);
+  color: var(--gc-ink);
+  font: 700 14px/1.1 var(--gc-font);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(-50%);
+  transition: opacity 0.9s 0.3s ease;
+  pointer-events: auto;
+  cursor: pointer;
+}
+.gc-pool[data-ready] + .gc-pool-label { opacity: 1; }
+.gc-root[data-open] .gc-pool-label { opacity: 0; pointer-events: none; }
+.gc-pool-label:focus-visible { outline: 3px solid var(--gc-aqua); outline-offset: 3px; }
 
 /* --- Effects around Gilly. --- */
 .gc-fx { position: fixed; inset: 0; overflow: hidden; pointer-events: none; }
@@ -546,24 +572,3 @@
   20% { opacity: 0.9; }
   100% { transform: translate(34px, -70px) rotate(14deg) scale(1.3); opacity: 0; }
 }
-.gc-plaque {
-  position: absolute;
-  right: 26%;
-  bottom: 3%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 42%;
-  margin: 0;
-  padding: 7px 10px 8px;
-  border: 0;
-  border-radius: 10px;
-  background: linear-gradient(#e9d19a, #c9a55d);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 6px 16px rgba(9, 38, 58, 0.3);
-  color: #4a3510;
-  font: 800 15px/1.1 var(--gc-font);
-  pointer-events: auto;
-  cursor: pointer;
-}
-.gc-plaque span { font-weight: 600; font-size: 11.5px; opacity: 0.8; }
-.gc-plaque:focus-visible { outline: 3px solid var(--gc-aqua); outline-offset: 3px; }

@@ -288,7 +288,7 @@ class GillyChat {
     this.ar = ar;
     const spatial = await ar?.spatialModelSupported?.().catch(() => false);
     if (spatial) {
-      // Vision Pro: Gilly is a real 3D model in a porthole, and can be pulled out into the room.
+      // Vision Pro: Gilly is a real 3D model in a soft window, and can be pulled out into the room.
       try {
         this.gilly = await ar.createSpatialGilly(this.stage, {
           src: asset('gilly.usdz'), poster: asset('gilly.png'), onTap: () => this.onTapGilly(),

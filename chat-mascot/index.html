@@ -462,7 +462,7 @@
         <li>Gilly startles awake, waves and says hello, lighting up each word as it's spoken. Ask something like <em>When do the otters eat?</em> Gilly leans in while you type, thinks while the answer is being written, then answers out loud.</li>
         <li>Tap the microphone to ask out loud (Chrome, Edge and Safari). The speaker button turns the voice off; everything still works as text.</li>
         <li>Close the bubble, or reload the page: the conversation picks up where it left off.</li>
-        <li>On iPhone or iPad, choose <strong>See Gilly in your room</strong> in the chat's ⋯ menu or the <em>Meet Gilly</em> section. On Apple Vision Pro, Gilly is a real 3D model in a porthole: pinch and drag Gilly out of the page into your room.</li>
+        <li>On iPhone or iPad, choose <strong>See Gilly in your room</strong> in the chat's ⋯ menu or the <em>Meet Gilly</em> section. On Apple Vision Pro, Gilly is a real 3D model with depth, standing in a soft window into the page: pinch and drag Gilly out of the page into your room.</li>
       </ol>
 
       <div class="sx-note">This page uses <code>siteId: 'demo'</code>, Stand Chat's shared demo site, which works on any domain. Its demo Stand-in follows the page's private context but won't pretend to be a real aquarium. With your own Site ID, your own Stand-ins and team answer.</div>
@@ -540,6 +540,7 @@ rec.start();</code></pre>
 
 &lt;model src="gilly.usdz"&gt;&lt;img src="gilly.png" alt="Gilly"&gt;&lt;/model&gt;</code></pre>
       <p>A USDZ holds a single animation timeline, so every mood Gilly has in the page (idle, waving, talking, listening, thinking, sighing…) was recorded from the web engine into one 46-second reel, with each clip starting and ending on the same pose. In the page, <code>ar.js</code> plays one clip at a time by seeking <code>model.currentTime</code>; Quick Look plays the whole reel as a loop. Serve USDZ as <code>model/vnd.usdz+zip</code>.</p>
+      <p>On Vision Pro, a <code>&lt;model&gt;</code> is drawn behind the page surface in an opaque box, and anything that comes in front of the surface is sliced off. So Gilly stands back from the surface by as far as each mood ever reaches, measured when the USDZ is built, and backs up before a flip. A CSS <code>mask-image</code> fades the box's edges into the page, like a spatial photo.</p>
 
       <h3>6. Make a character feel alive</h3>
       <ul>
