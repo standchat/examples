@@ -12,6 +12,7 @@ const SITE = 'https://examples.stand.chat';
 const ORDER = [
   'chat-mascot',
   'adventure-game-chat',
+  'demoscene-chat',
   'vintage-terminal',
   'stand-inline',
   'stand-card',
