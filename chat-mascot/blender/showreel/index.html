@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Gilly showreel recorder</title>
+  <!-- Records Gilly's performances from the web engine for the USDZ (AR) version.
+       Open through a local server, e.g. http://localhost:3000/chat-mascot/blender/showreel/
+       It downloads showreel.json (or POSTs it to ?post=<url>); then run: sh ../build.sh showreel.json -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
+      }
+    }
+  </script>
+  <style>
+    body { margin: 0; font: 15px/1.5 system-ui; background: #e8f3f6; }
+    #stage { width: 480px; height: 560px; }
+    #log { padding: 12px 16px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <div id="stage"></div>
+  <div id="log">Recording…</div>
+  <script type="module" src="showreel.js"></script>
+</body>
+</html>

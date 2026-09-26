@@ -4,5 +4,11 @@
   "installCommand": "",
   "buildCommand": "node build.mjs",
   "outputDirectory": ".",
-  "trailingSlash": true
+  "trailingSlash": true,
+  "headers": [
+    {
+      "source": "/(.*)\\.usdz",
+      "headers": [{ "key": "Content-Type", "value": "model/vnd.usdz+zip" }]
+    }
+  ]
 }
