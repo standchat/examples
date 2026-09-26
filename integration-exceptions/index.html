@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Flowspoke — Make room for the exception</title>
-  <meta name="description" content="Build a sample workflow, test an exception, and open a real Stand Chat conversation attached to the exact step. A fictional automation product demo.">
+  <title>Flowspoke — The conversation is the exception path</title>
+  <meta name="description" content="A blocked workflow branches into a live Stand Chat investigation. Quote the failed field, replay a change, and discuss the before and after inside the run trace.">
   <meta name="author" content="Stand Chat Examples">
   <meta name="keywords" content="custom chat, workflow, inline, simulator, branching">
-  <meta property="og:title" content="Flowspoke — Make room for the exception">
-  <meta property="og:description" content="Connect two apps. Add the exception. Talk through the part that never fits the template with an inline Stand conversation.">
+  <meta property="og:title" content="Flowspoke — The conversation is the exception path">
+  <meta property="og:description" content="A record stops. A conversation starts. Inspect a workflow exception with real Stand replies embedded in its execution trail.">
   <meta property="og:image" content="https://examples.stand.chat/integration-exceptions/og.png">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/svg+xml" href="./mark.svg">
@@ -20,7 +20,7 @@
 </head>
 <body>
   <sx-example-bar></sx-example-bar>
-  <a class="skip" href="#lab">Skip to workflow builder</a>
+  <a class="skip" href="#desk">Skip to the exception desk</a>
   <svg class="svg-library" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
     <symbol id="icon-forms" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></symbol>
     <symbol id="icon-crm" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"/><path d="M5 21v-3a7 7 0 0 1 14 0v3M4 6H2v8h2M20 6h2v8h-2"/></symbol>
@@ -31,127 +31,72 @@
     <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6"/></symbol>
   </svg>
   <header class="nav wrap">
-    <a class="brand" href="#" aria-label="Flowspoke home"><img src="./mark.svg" width="33" height="33" alt="">flowspoke<span class="brand-period">.</span></a>
-    <nav aria-label="Main navigation"><a href="#why">Why Flowspoke</a><a href="#how-it-works">How it works</a></nav>
-    <a class="nav-cta" href="#lab">Take it for a spin <span aria-hidden="true">↗</span></a>
+    <a class="brand" href="#" aria-label="Flowspoke home"><img src="./mark.svg" width="30" height="30" alt="">flowspoke<span>.</span></a>
+    <span class="nav-caption">WORK FLOWS. QUESTIONS SHOULD TOO.</span>
+    <a href="#how-it-works">Inside this example <span aria-hidden="true">↗</span></a>
   </header>
-
   <main>
     <section class="hero wrap">
-      <p class="eyebrow"><span class="tiny-star" aria-hidden="true">✳</span> A little less busywork. A lot more flow.</p>
-      <h1>Connect these two apps.<br><span>Now add the exception.</span></h1>
-      <p>Because real work comes with a “but only if.”<br class="desktop-break"> Build a flow, put it to the test, and talk through the tricky part.</p>
-      <div class="hero-note"><span class="mini-dot"></span> An interactive playground. No accounts to connect.</div>
+      <div><p class="eyebrow"><span class="asterisk" aria-hidden="true">✳</span> MEET THE EXCEPTION DESK</p><h1>When the flow stops, <br>the conversation <em>starts.</em></h1></div>
+      <div class="hero-note"><span class="note-number">IF → ELSE → ASK</span><p>That record didn’t fit the rule. <br>Follow it into a conversation, right where the workflow broke.</p><a href="#question">Take the question branch <span aria-hidden="true">↙</span></a></div>
     </section>
 
-    <section id="lab" class="lab wrap" aria-labelledby="lab-title">
-      <div class="lab-bar">
-        <div><span class="lab-symbol" aria-hidden="true">⌘</span><h2 id="lab-title">Your workflow, with a twist</h2><span class="pill">PLAYGROUND</span></div>
-        <div class="history"><button id="undo" type="button" disabled><span aria-hidden="true">↶</span> Undo</button><button id="reset" type="button"><span aria-hidden="true">↺</span> Reset</button></div>
+    <section id="desk" class="desk" aria-label="Interactive workflow investigation">
+      <div class="desk-toolbar wrap">
+        <div class="file-label"><span aria-hidden="true">⌘</span><strong>new-customer.flow</strong><span>LOCAL PLAYGROUND</span></div>
+        <div class="history"><button id="undo" disabled type="button">↶ Undo edit</button><button id="reset" type="button">↺ Reset setup</button></div>
       </div>
-      <div class="workspace">
-        <div class="canvas-area">
-          <div class="canvas-kicker"><span>01 / CONNECT YOUR TOOLS</span><span class="canvas-badge"><i></i> Local simulation</span></div>
-          <div class="flow" aria-label="Workflow steps" data-og-focus>
-            <article id="source-node" class="node tool-node">
-              <div class="node-top"><span class="tool-icon forms" id="source-icon"><svg aria-hidden="true"><use href="#icon-forms"/></svg></span><span class="step-no">01</span></div>
-              <label for="source" class="sr-only">Source tool</label><select id="source" class="tool-select"><option value="forms">Forms</option><option value="payments">Payments</option><option value="sheets">Spreadsheets</option><option value="crm">CRM</option></select>
-              <label for="trigger">WHEN THIS HAPPENS</label><select id="trigger"></select>
-              <span class="node-foot"><i></i> Sample trigger</span>
-            </article>
-            <span class="connector first" aria-hidden="true"><i></i>→</span>
-            <button id="exception-node" class="node gate" type="button" aria-controls="exception-panel"><span class="step-no">02</span><span class="gate-icon"><svg aria-hidden="true"><use href="#icon-rule"/></svg></span><strong id="gate-name">The exception</strong><span id="gate-note">Add your “but only if”</span><span class="gate-link" id="gate-link">+ Add a rule</span></button>
-            <span class="connector second" aria-hidden="true"><i></i>→</span>
-            <article id="target-node" class="node tool-node">
-              <div class="node-top"><span class="tool-icon crm" id="target-icon"><svg aria-hidden="true"><use href="#icon-crm"/></svg></span><span class="step-no">03</span></div>
-              <label for="target" class="sr-only">Destination tool</label><select id="target" class="tool-select"><option value="crm">CRM</option><option value="chat">Team chat</option><option value="sheets">Spreadsheets</option></select>
-              <label for="action">THEN DO THIS</label><select id="action"></select>
-              <span class="node-foot"><i></i> Sample action</span>
-            </article>
-          </div>
-          <div class="branch-lane" id="branch-lane"><span class="branch-wire" aria-hidden="true"></span><span class="branch-label" id="branch-label">One clear path. Until life happens.</span><span class="branch-destination" id="branch-destination" hidden><svg aria-hidden="true"><use href="#icon-chat"/></svg><strong>Team review queue</strong><span>Simulated fallback</span></span></div>
-
-          <div class="testbench">
-            <div class="testbench-title"><h3>Give it a real-world record.</h3><label for="sample" class="sr-only">Sample record</label><select id="sample"><option value="paid">Paid · new customer</option><option value="trial">Trial · unpaid customer</option><option value="duplicate">Paid · existing customer</option><option value="large">Paid · $1,200 order</option></select></div>
-            <div class="record"><span class="record-avatar" id="record-initials">MC</span><div class="record-person"><strong id="record-name">Mika Chen</strong><span id="record-company">Fieldwork Studio</span></div><span class="record-tag" id="record-plan">PAID</span><span class="record-amount" id="record-amount">$240<span>ORDER VALUE</span></span></div>
-            <div class="run-row"><button type="button" class="primary run-button" id="run"><span aria-hidden="true">▶</span> Run sample</button><span id="run-hint">Nothing leaves this playground.</span></div>
-            <div id="result" class="result" role="status"><span id="result-icon" class="result-icon" aria-hidden="true">↳</span><div><strong id="result-title">Ready when you are.</strong><p id="result-detail">Run the sample, then add a rule to see what changes.</p></div></div>
-            <details class="assumptions"><summary>What this simulation assumes</summary><p>Every trigger supplies the same selected fixture. “Paid” checks its plan. Duplicate detection compares trimmed, case-insensitive email against <code>noor@softcorner.example</code>. Amount rules use USD and include the threshold. Runs never change the directory, connect a service, or execute a real action. Update actions assume a destination record exists. A failed rule skips the main action; review routes to a fictional team queue.</p></details>
-          </div>
-          <p class="canvas-caption"><span aria-hidden="true">↳</span> Change any tool with its menu. No dragging required.</p>
-        </div>
-
-        <aside id="exception-panel" class="inspector" aria-labelledby="exception-title">
-          <p class="eyebrow small">02 / MAKE IT YOURS</p>
-          <h3 id="exception-title">There’s always <br>an exception.</h3>
-          <p class="inspector-intro">What should happen before this record reaches the next app?</p>
-          <div class="rule-options" role="group" aria-label="Exception rule">
-            <button type="button" data-rule="paid" aria-pressed="false"><span aria-hidden="true">$</span><span><strong>Paid customers only</strong><small>Keep trial accounts out of this flow</small></span><b aria-hidden="true">+</b></button>
-            <button type="button" data-rule="dedupe" aria-pressed="false"><span aria-hidden="true">≠</span><span><strong>Skip existing records</strong><small>One email. One customer record.</small></span><b aria-hidden="true">+</b></button>
-            <button type="button" data-rule="amount" aria-pressed="false"><span aria-hidden="true">≥</span><span><strong>Set an amount threshold</strong><small>A little more specific? Make a rule.</small></span><b aria-hidden="true">+</b></button>
-          </div>
-          <div id="rule-config" class="rule-config" hidden>
-            <label id="threshold-label" for="threshold" hidden>Minimum amount (USD)<input id="threshold" type="number" min="0" max="10000" step="1" value="200"></label>
-            <label for="branch">When the rule blocks a record<select id="branch"><option value="stop">Stop here</option><option value="review">Send to team review</option></select></label>
-            <button id="remove-rule" class="text-button" type="button">Remove rule</button>
-          </div>
-          <label class="requirement-label" for="requirement">Have a more particular “but”? <span>Optional</span></label>
-          <textarea id="requirement" rows="2" maxlength="400" placeholder="e.g. What if the payment arrives after the form?"></textarea>
-          <p class="field-help">For the conversation. Free text never executes as a rule.</p>
-          <button id="discuss" class="discuss-button" type="button"><svg aria-hidden="true"><use href="#icon-chat"/></svg><span>Talk through this step</span><span aria-hidden="true">↗</span></button>
-          <p class="inspector-foot">The happy path is easy.<br><strong>Let’s figure out your path.</strong></p>
-        </aside>
+      <div class="setup wrap">
+        <div class="sample-control"><span class="control-caption">SEND A TEST RECORD</span><label for="sample" class="sr-only">Sample record</label><select id="sample"><option value="trial">Jules · trial account</option><option value="paid">Mika · paid customer</option><option value="duplicate">Noor · existing customer</option><option value="large">Ari · $1,200 order</option></select><button class="primary" id="run" type="button"><span aria-hidden="true">▶</span> Replay flow</button></div>
+        <details class="rules" id="rule-settings"><summary>Change the exception <span aria-hidden="true">＋</span></summary><div class="rule-fields"><label for="rule">Rule<select id="rule"><option value="none">No exception</option><option value="paid">Paid customers only</option><option value="dedupe">Skip existing records</option><option value="amount">Minimum order amount</option></select></label><label for="threshold" id="threshold-label" hidden>Minimum USD<input id="threshold" type="number" min="0" max="10000" step="1" value="200"></label><label for="branch">If blocked<select id="branch"><option value="stop">Stop here</option><option value="review">Send to team review</option></select></label><label for="requirement" class="requirement-field">Something else to handle? <span>For discussion only.</span><input id="requirement" maxlength="400" placeholder="e.g. A payment that arrives after the form"></label></div></details>
       </div>
+      <div class="canvas wrap">
+        <div class="run-caption"><span id="run-caption">RUN 001 / SIMULATED</span><span id="edit-status" role="status">No services connected</span></div>
+        <div class="flowmap" aria-label="Workflow steps">
+          <article class="tool-node" id="source-node"><div class="node-head"><span class="tool-icon forms" id="source-icon"><svg aria-hidden="true"><use href="#icon-forms"/></svg></span><span>01 / TRIGGER</span></div><label class="sr-only" for="source">Source tool</label><select id="source" class="tool-select"><option value="forms">Forms</option><option value="payments">Payments</option><option value="sheets">Spreadsheets</option><option value="crm">CRM</option></select><label class="sr-only" for="trigger">Trigger event</label><select id="trigger"></select><div class="node-status" id="source-status">✓ Record received</div></article>
+          <span class="wire" id="first-wire" aria-hidden="true"><i></i>→</span>
+          <button class="gate" id="exception-node" type="button" aria-controls="thread"><span class="gate-caption">02 / EXCEPTION</span><span class="gate-diamond" aria-hidden="true">◇</span><strong id="gate-name">Paid customers only</strong><span class="predicate" id="predicate">plan = paid</span><span class="gate-outcome" id="gate-outcome">Record stopped here ↙</span></button>
+          <span class="wire" id="second-wire" aria-hidden="true"><i></i>→</span>
+          <article class="tool-node" id="target-node"><div class="node-head"><span class="tool-icon crm" id="target-icon"><svg aria-hidden="true"><use href="#icon-crm"/></svg></span><span>03 / ACTION</span></div><label class="sr-only" for="target">Destination tool</label><select id="target" class="tool-select"><option value="crm">CRM</option><option value="chat">Team chat</option><option value="sheets">Spreadsheets</option></select><label class="sr-only" for="action">Destination action</label><select id="action"></select><div class="node-status" id="target-status">— Action skipped</div></article>
+        </div>
+        <div class="branch-label"><span class="branch-hook" aria-hidden="true"></span><span id="branch-label">THE QUESTION BRANCH</span><span class="branch-aside">the interesting work starts here</span></div>
 
-      <section id="thread" class="thread" hidden aria-labelledby="thread-title">
-        <div class="thread-context">
-          <p class="eyebrow small"><span class="mini-dot"></span> LIVE CONVERSATION / STEP 02</p>
-          <h3 id="thread-title">Let’s talk about <br>the exception.</h3>
-          <p>Ask whether the integration can handle your edge case. This is a real Stand conversation about a fictional workflow.</p>
-          <div class="attachment"><span class="attachment-icon" aria-hidden="true">◇</span><div><small>ATTACHED WORKFLOW SNAPSHOT</small><strong id="attachment-title"></strong><span id="attachment-rule"></span></div></div>
-          <p id="attachment-change" class="field-help">Your selected tools, record, rule, and requirement accompany your first message.</p>
-          <button id="attach-current" class="secondary" type="button" hidden>Attach current workflow</button>
-          <details class="context-details"><summary>Review context that will be sent</summary><pre id="context-preview"></pre></details>
-          <p class="thread-disclosure">The shared demo is answered by Stand’s AI Stand-in. It cannot connect services or change this canvas. With your own Site ID, configured humans can take over here.</p>
-        </div>
-        <div class="conversation">
-          <div class="chat-heading"><span class="chat-avatar" aria-hidden="true">✳</span><div><strong id="chat-host">Stand Chat</strong><span id="chat-identity">Checking coverage</span></div><span id="chat-status" role="status">Loading…</span></div>
-          <div id="messages" class="messages" role="log" aria-label="Conversation messages" aria-live="polite" aria-relevant="additions"></div>
-          <p id="activity" class="activity" role="status" hidden></p>
-          <p id="chat-notice" class="chat-notice" hidden></p>
-          <p id="chat-error" class="chat-error" role="alert" hidden></p>
-          <div class="chat-recovery"><button id="retry-chat" type="button" class="text-button" hidden>Check again</button><button id="retry-message" type="button" class="text-button" hidden>Retry same message</button><button id="new-chat" type="button" class="text-button" hidden>Prepare a new conversation</button></div>
-          <form id="chat-form"><label for="question" id="question-label">Your question</label><textarea id="question" rows="2" maxlength="4000" placeholder="Can this handle a payment that arrives late?" aria-describedby="send-disclosure"></textarea><div class="send-row"><p id="send-disclosure">Sending shares your question and the attached context with Stand.</p><button id="send" type="submit" class="primary">Start conversation <span aria-hidden="true">↗</span></button></div></form>
-          <form id="followup" class="followup" hidden><label for="followup-email">The responder offered to follow up by email</label><input type="email" id="followup-email" placeholder="you@example.com" required autocomplete="email"><button type="submit" class="secondary">Request follow-up</button></form>
-          <div class="chat-footer"><button id="end-chat" type="button" class="text-button" hidden>End conversation</button><a id="attribution" href="https://stand.chat" target="_blank" rel="noopener noreferrer">Powered by Stand ↗</a></div>
-        </div>
-      </section>
-      <div class="lab-footer"><span><i class="mini-dot"></i> Simulated tools. Real questions.</span><span>Built for the part after “but…”</span></div>
+        <section id="thread" class="investigation" aria-labelledby="investigation-title">
+          <div class="trace-head" data-og-focus><div><p class="eyebrow" id="anchor-label">INVESTIGATION / RUN 001</p><h2 id="investigation-title">One record. A loose thread.</h2></div><span class="trace-stamp">STEP<br><b>02</b></span></div>
+          <div class="trace">
+            <div class="trace-event local-event"><span class="event-pin" aria-hidden="true">↳</span><div class="event-body"><div class="event-heading"><strong id="record-name">Jules Reed</strong><span class="local-label">SIMULATED INPUT</span></div><p id="record-summary">Forms / New submission</p><div class="record-fields" id="record-fields" role="group" aria-label="Quote a field from the anchor record"></div><p class="field-hint">Tap a field to bring that exact value into your question.</p></div></div>
+            <div class="trace-event gate-event"><span class="event-pin" aria-hidden="true">!</span><div class="event-body"><div class="event-heading"><strong id="trace-outcome">The rule stopped this record.</strong><span class="local-label">SIMULATED RESULT</span></div><p id="trace-reason">Plan is trial. This rule only accepts paid customers.</p></div></div>
+            <div class="trace-event comparison-event" id="replay-evidence" hidden><span class="event-pin" aria-hidden="true">⇄</span><div class="event-body"><div class="event-heading"><strong id="replay-title">A different path</strong><span class="local-label">LOCAL COMPARISON</span></div><div id="comparison-diff" class="comparison-diff"></div><p id="comparison-outcome"></p><label class="include-replay"><input id="include-replay" type="checkbox">Include this replay with my next message</label><p class="field-hint" id="replay-notice"></p></div></div>
+            <div class="conversation-divider"><span>THE RUN STOPS. THE CONVERSATION CONTINUES.</span></div>
+            <div class="chat-heading"><span class="live-dot" aria-hidden="true"></span><strong id="chat-host">Stand Chat</strong><span id="chat-identity">Checking coverage</span><span id="chat-status" role="status">Loading…</span></div>
+            <div id="messages" class="messages" role="log" aria-label="Live conversation in the exception path" aria-live="polite" aria-relevant="additions"></div>
+            <p id="activity" class="activity" role="status" hidden></p>
+            <p id="chat-notice" class="chat-notice" hidden></p><p id="chat-error" class="chat-error" role="alert" hidden></p>
+            <div class="chat-recovery"><button id="retry-chat" class="text-button" type="button" hidden>Check again</button><button id="retry-message" class="text-button" type="button" hidden>Retry same message</button><button id="new-chat" class="text-button" type="button" hidden>Prepare a new conversation</button></div>
+            <form id="chat-form" class="trace-event composer"><span class="event-pin" aria-hidden="true">?</span><div class="event-body"><label for="question">What should happen here?</label><div id="quoted-fields" class="quoted-fields" aria-label="Fields included with your question"></div><textarea id="question" rows="2" maxlength="4000" placeholder="What if this customer pays a few minutes later?" aria-describedby="send-disclosure"></textarea><div class="send-row"><p id="send-disclosure">Asking shares your question and the evidence above with Stand.</p><button id="send" class="primary" type="submit">Ask at this step <span aria-hidden="true">↗</span></button></div><details class="context-details"><summary>Review the exact evidence to be sent</summary><pre id="context-preview"></pre></details></div></form>
+            <form id="followup" class="followup" hidden><label for="followup-email">The responder offered to follow up by email</label><input type="email" id="followup-email" required placeholder="you@example.com" autocomplete="email"><button type="submit" class="primary">Request follow-up</button></form>
+          </div>
+          <div class="trace-footer"><button id="end-chat" class="text-button" type="button" hidden>End conversation</button><a id="attribution" href="https://stand.chat" target="_blank" rel="noopener noreferrer">Powered by Stand ↗</a><span>Real replies. No automatic flow changes.</span></div>
+        </section>
+        <div class="canvas-foot"><span>THE PLAYGROUND IS LOCAL. THE CONVERSATION IS LIVE.</span><details><summary>Simulation assumptions</summary><p>These are fixed example records. A trigger supplies the selected fixture. Paid checks the plan. Duplicate detection trims and lowercases email against <code>noor@softcorner.example</code>. Amount checks use inclusive whole-dollar USD thresholds. A failed rule skips the main action, with an optional fictional review queue. Runs never change the directory or execute services. Update actions assume an existing destination record.</p></details></div>
+      </div>
       <p id="announcement" class="sr-only" role="status"></p>
     </section>
 
-    <section id="why" class="why wrap">
-      <div class="why-heading"><p class="eyebrow">GOOD FLOWS MAKE ROOM FOR REAL LIFE.</p><h2>The connection is just<br>the beginning.</h2></div>
-      <div class="benefits"><article><span>01 — CONNECT</span><h3>Start with the work.</h3><p>A form comes in. A record gets created. Map what should happen without getting lost in setup.</p></article><article><span>02 — TEST</span><h3>Try the awkward case.</h3><p>The trial account. The duplicate. The order that’s just too small. See exactly where the path changes.</p></article><article><span>03 — TALK IT THROUGH</span><h3>Keep the context.</h3><p>Ask your integration question at the step that raised it. Bring the record and the rule along.</p></article></div>
-    </section>
+    <section class="afterword wrap"><span class="big-asterisk" aria-hidden="true">✳</span><div><p class="eyebrow">LESS LOST IN TRANSLATION.</p><h2>Keep the question <br>next to the thing.</h2></div><p>The field that didn’t match. The action that never ran. The change that might fix it. Keep them together, so the next conversation starts with understanding.</p></section>
+    <section id="how-it-works" class="how wrap"><p class="eyebrow">HOW IT WORKS / COPY THE PATTERN</p><h2>A conversation is a path through the workflow.</h2><div class="how-grid"><div><h3>Follow the stopped record</h3><ol><li>The opening trace is an illustrative trial record stopped by the paid-customer rule. Click <strong>plan = trial</strong> to quote that field.</li><li>Ask your question at step 02. A real Stand AI reply continues the vertical trace. On your own site, a configured human can take over in that same path.</li><li>Change the exception’s failure branch to <strong>Send to team review</strong> and replay. The comparison shows what changed relative to the investigation’s original run.</li><li>Choose to include that replay, then send a follow-up. The before/after evidence travels with your question. Replies never execute a change.</li></ol><h3>Take the whole example</h3><pre><code>npx degit standchat/examples/integration-exceptions my-flowspoke</code></pre><p>Serve the folder over HTTP. No install or build step is needed. The <code>/_shared/</code> references are optional gallery chrome.</p></div><div><h3>Evidence becomes visitor text</h3><pre><code>import { evidenceMessage } from './investigation.js';
 
-    <section id="how-it-works" class="how wrap">
-      <p class="eyebrow">HOW IT WORKS / AN OPEN EXAMPLE</p><h2>A workflow with a conversation <br>built right into it.</h2>
-      <div class="how-grid"><div><h3>Try the exception</h3><ol><li>Choose a source, destination, and trigger/action with the menus. Run the paid sample.</li><li>Add <strong>Paid customers only</strong>, choose the trial record, and run again. It stops at step 02.</li><li>Change the failure branch to <strong>Send to team review</strong>. Run again to follow the other path.</li><li>Attach the current workflow, review its context, and explicitly send your question. A real Stand conversation opens inline.</li></ol><h3>Copy the whole folder</h3><pre><code>npx degit standchat/examples/integration-exceptions my-flowspoke</code></pre><p>Serve the folder over HTTP with any static server. No install or build step is needed. All application code is local; <code>/_shared/</code> only supplies the gallery bar and can be removed.</p></div><div><h3>Context, with consent</h3><pre><code>import { StandVisitorClient } from './stand-visitor.js';
-
-const client = new StandVisitorClient({
-  site: 'demo', scope: 'flowspoke-exception'
-});
-client.mount(); // discovery, not a new conversation
-
-// Only inside the visitor's submit handler:
-await client.send(question, {
+// On an explicit form submission only:
+await client.send(evidenceMessage({
+  anchor: originalRun,
+  comparison: includedReplay,
+  fields: highlightedFields
+}, question), {
   owner: 'exception-step',
-  prompt: contextFor(attachedWorkflow)
-});</code></pre><p>The first snapshot uses Stand’s supported session <code>prompt</code> (under 2,000 characters). Updated snapshots are sent as visible visitor text with the next question. Replies are text, never canvas commands.</p><h3>Make it yours</h3><p>Replace the Stand script with your installation snippet from <strong>Sites</strong>. The local client reads that script’s Site ID. Configure your responders and registered domain. The <code>demo</code> site uses Stand’s shared AI and does not put conversations in your account.</p><p>The local client preserves notices, attribution, handoffs, offered email follow-ups, pending-message IDs, and same-tab reload recovery. Storage denial falls back to memory. See the <a href="https://stand.chat/guide/custom-chat-ui" target="_blank" rel="noopener noreferrer">custom chat UI contract ↗</a>.</p></div></div>
-    </section>
+  prompt: 'Discuss this fictional workflow; do not execute it.'
+});</code></pre><p>Every submitted question carries its immutable anchor, highlighted fields, and optional comparison. Each confirmed visitor message keeps its own evidence in a disclosure. The transcript and local evidence survive a same-tab reload.</p><h3>Connect your own Stand</h3><p>Replace the Stand script with your installation snippet from <strong>Sites</strong>. The client reads its Site ID. The shared <code>demo</code> uses Stand’s AI, not a Flowspoke team or your account. Human handoff and offered email follow-up need your configured responders.</p><p>The local visitor client follows the <a href="https://stand.chat/guide/custom-chat-ui" target="_blank" rel="noopener noreferrer">Stand custom UI contract ↗</a>, including notices, attribution, uncertain-start recovery, message retry IDs, and safe text and link rendering. Storage denial falls back to memory.</p></div></div></section>
   </main>
-  <footer class="footer wrap"><a class="brand" href="#"><img src="./mark.svg" width="27" height="27" alt="">flowspoke<span class="brand-period">.</span></a><p>A fictional product. A working Stand Chat example.</p><a href="#lab">Back to the playground ↑</a></footer>
-  <noscript><p class="noscript">Enable JavaScript to run the local workflow and use the Stand conversation.</p></noscript>
+  <footer class="footer wrap"><a class="brand" href="#"><img src="./mark.svg" width="26" height="26" alt="">flowspoke<span>.</span></a><span>Fictional tools. A working conversation.</span><a href="#desk">Back to the desk ↑</a></footer>
+  <noscript><p class="noscript">Enable JavaScript to replay the local workflow and use the live Stand conversation.</p></noscript>
 </body>
 </html>

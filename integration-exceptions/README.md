@@ -1,41 +1,47 @@
-# Flowspoke: integration exceptions
+# Flowspoke: the conversation is the exception path
 
-A fictional workflow automation page built with plain HTML, CSS, and JavaScript. The deterministic canvas is local; the inline conversation is a real Stand Chat integration.
+A fictional workflow desk where a blocked record branches directly into a live Stand Chat investigation. Input fields, a deterministic gate result, visitor questions, and real responder messages share one vertical event trail. A replay can add a before/after comparison to the discussion.
 
 ## Run or copy
 
-From the repository, run `npm start` and visit `/integration-exceptions/`. Or copy this folder to any HTTP static host; there is no install or build step. The optional `/_shared/` stylesheet and script provide the examples gallery bar only. The custom chat uses local modules and works without them.
+Run `npm start` from the repository and visit `/integration-exceptions/`. Or copy this folder to any HTTP static host; no install or build is required. The optional `/_shared/` references supply the examples gallery bar only. All application modules are local to this folder.
 
-Replace the Stand script in `index.html` with the installation snippet from **Sites** in Stand. `chat.js` reads `data-stand-id` from that script. `demo` is Stand's shared AI demo, usable on localhost and preview hosts; it does not save conversations to your account. Configure your own registered domain and responders to test human handoff and account-specific skills.
+Replace the Stand script in `index.html` with your installation snippet from **Sites** in Stand. `chat.js` reads its `data-stand-id`. The shared `demo` uses Stand's AI and does not save conversations to your account. Use your registered domain and configured responders for real human handoff and account-specific behavior.
 
-## What to try
+## Follow the question branch
 
-1. Run the default paid record through Forms → CRM.
-2. Add **Paid customers only**, select the trial record, and run again. The destination is skipped.
-3. Select **Send to team review** for the failure branch. The same record now takes the alternate route.
-4. Try **Skip existing records** with the existing customer; its email contains whitespace and uppercase characters. Or test an amount threshold of 240 and 241 with the $240 record.
-5. Review the workflow snapshot in the inline conversation. If the canvas changed, explicitly attach its current state. Send a question to start a real conversation; running samples and attaching snapshots do not send a message.
-6. Reload during the conversation. The local client restores its canonical transcript and reconnects. Undo and Reset affect the canvas, not the conversation or its attachment.
+1. The opening trace illustrates a trial record stopped by the paid-customer rule. Click **plan / trial** to quote that exact field. Inspect the evidence disclosure below the question.
+2. Ask what should happen if payment arrives later. A real Stand reply continues the event trail at step 02. Quoting fields and replaying locally do not create a conversation or send a message.
+3. Open **Change the exception**, select **Send to team review** under **If blocked**, and **Replay flow**. The original investigation stays anchored to Run 001. The comparison shows the failure path changing from stop to review.
+4. Select **Include this replay with my next message**, then ask a follow-up. Every question retains the exact evidence sent with it in its own disclosure. A later replay never rewrites earlier evidence.
+5. Try a paid sample, duplicate detection, or a USD threshold of 240 versus 241. Change source and destination tools; their event/action menus follow the selection. Every replay initially stays local, even if an earlier replay was included.
+6. Reload to recover the transcript, question draft, original run, field quotes, and replay choice. **Undo edit** and **Reset setup** change the editable setup; completed runs and the conversation remain. End the conversation explicitly when finished.
 
-All controls use native buttons, selects, inputs, and forms, with keyboard and touch access. The mobile workflow stacks vertically. Reduced motion skips the traversal delays.
+Controls use native buttons, selects, inputs, and disclosures with keyboard and touch access. The mobile graph folds downward from trigger to exception, then right to the destination; the question branch continues below. Reduced motion removes traversal delays. Edits cancel an in-progress traversal before it can publish stale results.
 
-## Files and boundaries
+## How the evidence and conversation connect
 
-- `scenario.js`: fixed fixtures, input normalization, deterministic rules, and context serialization.
-- `app.js`: canvas rendering, cancellable traversal, undo/reset, and rule controls.
-- `chat.js`: inline presentation, safe rendering, explicit context attachment, live status, retry/end controls, and offered email follow-up.
-- `stand-visitor.js`: copied locally from the repository's Stand Inline client, with a draft flush on teardown to preserve typing immediately before reload. Owns discovery, session creation, HTTP sends, WebSocket replies, identity cards, pending-message IDs, recovery, and session storage. It has no sibling-folder dependency.
-- `scenario.test.mjs`: rule, boundary, normalization, and context-limit tests, including all 384 source/destination/sample/rule/branch combinations.
-- `stand-visitor.test.mjs`: regression coverage for draft recovery when the page closes inside the debounce window.
-- `og.png`: an actual 1200×630 screenshot of this page.
+`investigation.js` freezes each normalized run and its result. Reload recovery recomputes outcomes from stored inputs. The original run stays fixed for the investigation; each replay is compared against that anchor. Only an explicit checkbox includes the replay with a question.
 
-The first explicit send passes the question as `initialMessage` and the reviewed workflow as Stand's supported session `prompt` (at most 2,000 characters). When an attachment changes in an active conversation, the next explicit send includes the updated snapshot as ordinary visitor text. Nothing in an AI or human reply mutates the canvas.
+`evidenceMessage()` encodes the original run, highlighted fields, optional replay, and question as a JSON envelope in ordinary visitor text. This works for both Stand's initial message and subsequent messages. The supported session `prompt` supplies only a short static instruction about the fictional workflow. Each visitor row displays the question and an expandable copy of its own sent evidence. AI and human messages remain plain text and never become workflow commands.
 
-No tool is actually connected. A trigger supplies the selected fixed record; destination actions only illustrate a route. Paid means `plan === 'paid'`; deduplication checks trimmed, lowercased email against a fixed one-record directory; amount rules are inclusive whole-dollar USD comparisons. Runs never change the fixture or directory. Failed rules skip the main action, with an optional simulated review branch. Free-text requirements are conversation context, not executable rules.
+`stand-visitor.js` owns discovery, session creation, HTTP sends, WebSocket updates, identity, canonical messages, pending-message IDs, recovery, and session storage. It is copied locally from the repository's Stand Inline client, with a draft flush on teardown to preserve typing immediately before reload. An uncertain start requires an explicit choice before creating another conversation. Retries reuse the original message ID. Denied/full storage falls back to memory.
 
-The client preserves configured notices, safe attribution links, truthful AI/human identity, link cards, handoffs, and follow-up forms when offered by Stand. An uncertain session creation requires an explicit choice before another start. Message retries reuse the original ID. API/site-scoped session storage supports same-tab reload recovery; denied or full storage falls back to in-memory operation. The retained standard Stand script provides the gallery's availability indicator; its floating UI is hidden because this page owns the conversation UI.
+The presentation preserves Stand notices, safe attribution and link cards, AI/human identity, handoffs, and offered email follow-up. The standard Stand script supplies the gallery availability indicator; its floating interface is hidden because the page presents the conversation. See the beta [Stand custom chat UI contract](https://stand.chat/guide/custom-chat-ui).
 
-See the current [Stand custom chat UI contract](https://stand.chat/guide/custom-chat-ui), which is in beta.
+## Simulation boundaries
+
+No service is connected. A trigger supplies a fixed fixture; destination actions only illustrate a route. Paid means `plan === 'paid'`. Deduplication compares trimmed, lowercased email against a fixed one-record directory. Amount thresholds are inclusive, whole-dollar USD values. Runs never update the fixture or directory. Failed rules skip the destination, optionally taking a simulated team review path. Free-text requirements are discussion context, not executable rules. Update actions assume an existing destination record.
+
+## Files
+
+- `scenario.js`: fixtures, normalization, and deterministic rules.
+- `investigation.js`: immutable runs, comparisons, field references, and message evidence.
+- `app.js`: editable workflow, cancellable replay, undo, and reset.
+- `chat.js`: event-trail presentation, explicit evidence selection, live status, recovery, and follow-up.
+- `stand-visitor.js`: self-contained Stand visitor transport and lifecycle.
+- `*.test.mjs`: rule boundaries, all 384 supported combinations, immutable evidence, opt-in comparison, encoding, and immediate-reload draft recovery.
+- `og.png`: a real 1200×630 screenshot of this page.
 
 ## Validation
 
@@ -45,6 +51,13 @@ npm run build
 npm run og -- integration-exceptions
 ```
 
-For manual verification, run passing, blocked, and review routes; change tools; test keyboard menus and buttons; check Undo/Reset and a narrow mobile viewport; review the context before sending; send a real demo question; reload and reconnect; and end the conversation. A registered site is needed to exercise a real human handoff and follow-up offer.
+Manual checks:
 
-Public domain under the repository's Unlicense. Original illustrations are inline SVG and `mark.svg`; fonts load from a CDN with system fallbacks.
+- [ ] Quote and remove a field using keyboard and touch; inspect evidence before submitting.
+- [ ] Replay stop, review, and passing routes; verify the original trace is unchanged.
+- [ ] Include a comparison with a follow-up; confirm earlier messages keep their original evidence.
+- [ ] Exercise tool/event menus, Undo edit, Reset setup, reduced motion, and a narrow viewport.
+- [ ] Send a real demo question, receive a reply, reload, and end the same conversation.
+- [ ] On a configured site, verify real human handoff, follow-up offers, notices, and unavailable/recovery states.
+
+Public domain under the repository's Unlicense. Original diagrams use HTML/CSS and inline SVG; `mark.svg` is original. CDN fonts have system fallbacks.

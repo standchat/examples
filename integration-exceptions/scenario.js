@@ -50,17 +50,3 @@ export function normalize(value = {}) {
   c.requirement = typeof c.requirement === 'string' ? c.requirement.slice(0, 400) : '';
   return Object.fromEntries(Object.keys(DEFAULT).map(key => [key, c[key]]));
 }
-
-export function contextFor(config) {
-  const c = normalize(config);
-  const result = simulate(c);
-  return [
-    'Flowspoke fictional workflow demo. Attached step: 02 / exception gate.',
-    `Source: ${TOOLS[c.source].name}. Trigger: ${c.trigger}. Destination: ${TOOLS[c.target].name}. Action: ${c.action}.`,
-    `Rule: ${RULES[c.rule]}${c.rule === 'amount' ? ` (amount >= ${c.threshold} USD)` : ''}. Failure branch: ${c.branch === 'review' ? 'simulated team review queue; skip destination action' : 'stop; skip destination action'}.`,
-    `Sample record: ${JSON.stringify(result.record)}.`,
-    `Local predicted outcome: ${result.title}. ${result.reason}`,
-    `Visitor requirement (discussion only, not executable): ${c.requirement || 'Check whether this exception can be handled reliably.'}`,
-    'Assumptions: fixed sample data, paid means plan=paid, duplicate means trimmed case-insensitive email match in a one-record directory; amount is USD. Runs do not write or add records. Tool events and actions are illustrative; no service is connected. Replies cannot edit this canvas. Discuss required fields, limitations, and missing details; do not claim real connector support or execution.',
-  ].join('\n');
-}

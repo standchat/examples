@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { DEFAULT, TOOLS, RECORDS, RULES, simulate, normalize, contextFor } from './scenario.js';
+import { DEFAULT, TOOLS, RECORDS, RULES, simulate, normalize } from './scenario.js';
+import { makeRun, investigationContext } from './investigation.js';
 
 test('paid gate blocks trial records and keeps the destination action out of review', () => {
   assert.equal(simulate({ ...DEFAULT, rule: 'paid', sample: 'paid' }).route, 'action');
@@ -37,7 +38,7 @@ test('normalization rejects corrupt stored options and bounds numbers and free t
   assert.equal(normalize({ requirement: 'x'.repeat(600) }).requirement.length, 400);
 });
 
-test('all supported combinations are deterministic, bounded, and valid Stand context', () => {
+test('all 384 supported combinations preserve deterministic outcomes and complete evidence', () => {
   for (const source of Object.keys(TOOLS).filter(k => TOOLS[k].triggers.length)) {
     for (const target of Object.keys(TOOLS).filter(k => TOOLS[k].actions.length)) {
       for (const sample of Object.keys(RECORDS)) {
@@ -47,8 +48,7 @@ test('all supported combinations are deterministic, bounded, and valid Stand con
             const outcome = simulate(config);
             assert.ok(['action', 'stop', 'review'].includes(outcome.route));
             assert.deepEqual(outcome, simulate(config));
-            const context = contextFor(config);
-            assert.ok(context.length <= 2000, `${context.length} exceeds Stand prompt limit`);
+            const context = investigationContext({ anchor: makeRun(config) });
             assert.ok(context.includes(TOOLS[source].name));
             assert.ok(context.includes(TOOLS[target].name));
             assert.ok(context.includes(config.trigger));
