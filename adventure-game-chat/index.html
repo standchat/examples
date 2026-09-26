@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Adventure-game character</title>
+  <meta name="description" content="A fully custom chat UI on Stand's Visitor API: a pixel character who lives on the page, peeks from behind cards, leans on headings, and walks up to the screen to talk in an adventure-game text box.">
+  <meta name="author" content="Stand Chat">
+  <link rel="author" href="https://stand.chat/">
+  <meta name="keywords" content="Visitor API, custom chat UI, WebSocket, pixel art">
+  <meta property="og:title" content="Adventure-game character">
+  <meta property="og:description" content="A fully custom chat UI on Stand's Visitor API: a pixel character who lives on the page, peeks from behind cards, leans on headings, and walks up to the screen to talk in an adventure-game text box.">
+  <meta property="og:image" content="https://examples.stand.chat/adventure-game-chat/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="stylesheet" href="/_shared/example.css">
+  <script type="module" src="/_shared/example.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,400;0,500;0,700;1,400&family=Pixelify+Sans:wght@400..700&display=swap">
+  <link rel="stylesheet" href="style.css">
+
+  <!-- The chat UI: a character who talks to Stand's Visitor API. No stand.js. -->
+  <script type="module" src="adventure-chat.js"></script>
+</head>
+<body>
+  <sx-example-bar></sx-example-bar>
+
+  <div class="rh">
+    <section class="rh-hero" id="top">
+      <!-- The scene the character walks in: how it shrinks toward the horizon, the door, and places to go, in picture pixels. -->
+      <div class="rh-scene" data-scene>
+        <img src="art/harbour.png" width="320" height="180" alt="Red Herring's red wooden warehouse on a cobbled quay at dusk. Lamplight spills from the windows and the double door, a black cat sits on the crates, and a lighthouse stands out at sea.">
+        <i class="rh-glint" style="--x: 146; --y: 61" aria-hidden="true"></i>
+        <i class="rh-beam" style="--x: 146; --y: 61" aria-hidden="true"></i>
+        <i class="rh-flicker" style="--x: 240; --y: 92" aria-hidden="true"></i>
+        <i class="rh-flicker rh-flicker-lamp" style="--x: 184; --y: 72" aria-hidden="true"></i>
+        <i class="rh-twinkle" style="--x: 34; --y: 12" aria-hidden="true"></i>
+        <i class="rh-twinkle" style="--x: 214; --y: 18; --delay: 1.3s" aria-hidden="true"></i>
+        <i class="rh-twinkle" style="--x: 120; --y: 52; --delay: 2.1s" aria-hidden="true"></i>
+        <i class="rh-cat-eyes" style="--x: 211; --y: 101" aria-hidden="true"></i>
+        <i class="rh-door" style="--x: 247; --y: 96" aria-hidden="true"></i>
+        <script type="application/json">
+          {
+            "size": [320, 180],
+            "depth": { "far": [134, 0.62], "near": [179, 1.0] },
+            "door": { "x": 257, "y": 131, "open": ".rh-door" },
+            "spots": [
+              { "name": "doorstep", "x": 252, "y": 163, "pose": "stand", "greet": true },
+              { "name": "lamp post", "x": 190, "y": 150, "pose": "leanWall", "facing": "right" },
+              { "name": "barrel", "x": 306, "y": 131, "seat": 113, "pose": "sit" },
+              { "name": "crate", "x": 226, "y": 131, "seat": 122, "pose": "sit" },
+              { "name": "window", "x": 227, "y": 134, "pose": "stand.back" },
+              { "name": "quay", "x": 214, "y": 158, "pose": "stand" },
+              { "name": "quay", "x": 282, "y": 166, "pose": "stand" }
+            ]
+          }
+        </script>
+      </div>
+
+      <header class="rh-nav">
+        <a class="rh-logo" href="#top">
+          <svg class="rh-fish" viewBox="0 0 16 6" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M5 0h6v1h-6zM3 1h10v1h-10zM15 1h1v1h-1zM1 2h2v1h-2zM5 2h11v1h-11zM0 3h15v1h-15zM1 4h12v1h-12zM14 4h2v1h-2zM3 5h8v1h-8zM15 5h1v1h-1z"/><path fill="#fff7e8" d="M3 2h1v1h-1z"/><path fill="#1d1a2e" d="M4 2h1v1h-1z"/></svg>
+          Red Herring
+        </a>
+        <nav aria-label="Red Herring">
+          <a href="#rooms">Rooms</a>
+          <a href="#prices">Prices</a>
+          <a href="#hints">Hint book</a>
+          <a href="#visit">Visit</a>
+        </nav>
+        <a class="rh-button rh-button-small" href="#rooms">Book a room</a>
+      </header>
+
+      <div class="rh-hero-copy">
+        <p class="rh-eyebrow">Adventure rooms · Old Harbour</p>
+        <h1>Four rooms. One hour. No walkthrough.</h1>
+        <p class="rh-lead">Hand-built escape rooms in the spirit of the point-and-click adventures you grew up with. Look at everything, pick up whatever isn't nailed down, and use it on whatever is.</p>
+        <div class="rh-cta">
+          <a class="rh-button" href="#rooms">Choose a room</a>
+          <a class="rh-text-link" href="#prices">Prices from €58 per group</a>
+        </div>
+      </div>
+      <p class="rh-status" aria-hidden="true"><span>Old Harbour, 19:42</span><span data-score>Score: 0 of 10</span></p>
+    </section>
+
+    <main>
+      <section class="rh-section rh-rooms" id="rooms" aria-labelledby="rooms-title">
+        <div class="rh-wrap">
+          <div class="rh-section-head">
+            <h2 id="rooms-title">Choose your adventure</h2>
+            <p>Every room is a story with a beginning, a twist and a door that opens. Hints are free, and nothing jumps out at you.</p>
+          </div>
+
+          <div class="rh-room-grid">
+            <article class="rh-room">
+              <img class="rh-poster" src="art/keeper.png" width="96" height="72" alt="A dark lighthouse on a cliff in a storm, lightning over the sea, and a rowing boat on the waves.">
+              <div class="rh-room-body">
+                <h3>The Keeper's Last Log</h3>
+                <p>The lighthouse went dark on the night of the storm. The keeper left a logbook, a locked sea chest and a very nervous parrot.</p>
+                <dl class="rh-meta">
+                  <div><dt>Players</dt><dd>2–5</dd></div>
+                  <div><dt>Time</dt><dd>60 min</dd></div>
+                  <div><dt>Difficulty</dt><dd><span class="rh-keys" style="--keys: 3" role="img" aria-label="3 of 5"></span></dd></div>
+                </dl>
+              </div>
+            </article>
+
+            <article class="rh-room">
+              <img class="rh-poster" src="art/laundry.png" width="96" height="72" alt="A wizard's tower room: a bubbling green cauldron, a pointed hat, a broom, and tiny robes drying on a line under a round starry window.">
+              <div class="rh-room-body">
+                <h3>The Wizard's Laundry</h3>
+                <p>Someone shrank the wizard's best robe. Find the counter-spell before he's back from the tower. Our gentlest room, and the best one for families.</p>
+                <dl class="rh-meta">
+                  <div><dt>Players</dt><dd>2–6</dd></div>
+                  <div><dt>Time</dt><dd>60 min</dd></div>
+                  <div><dt>Difficulty</dt><dd><span class="rh-keys" style="--keys: 1" role="img" aria-label="1 of 5"></span></dd></div>
+                </dl>
+              </div>
+            </article>
+
+            <article class="rh-room">
+              <img class="rh-poster" src="art/deck9.png" width="96" height="72" alt="A starship corridor lit by red alarm lights, a porthole with a ringed planet, and a mop in a yellow bucket.">
+              <div class="rh-room-body">
+                <h3>Deck 9 Janitor</h3>
+                <p>You mop floors on a starship. The crew is asleep, the alarms are not, and the only one with a key card is you.</p>
+                <dl class="rh-meta">
+                  <div><dt>Players</dt><dd>3–6</dd></div>
+                  <div><dt>Time</dt><dd>75 min</dd></div>
+                  <div><dt>Difficulty</dt><dd><span class="rh-keys" style="--keys: 4" role="img" aria-label="4 of 5"></span></dd></div>
+                </dl>
+              </div>
+            </article>
+
+            <article class="rh-room">
+              <img class="rh-poster" src="art/room404.png" width="96" height="72" alt="A hotel hallway under a pink neon sign with one dead letter, a door marked 404 with light under it, and a key on the carpet.">
+              <div class="rh-room-body">
+                <h3>Room 404</h3>
+                <p>The Grand Neon Hotel, 1987. A guest checked into a room that isn't on any floor plan, and never checked out.</p>
+                <dl class="rh-meta">
+                  <div><dt>Players</dt><dd>2–4</dd></div>
+                  <div><dt>Time</dt><dd>60 min · 16+</dd></div>
+                  <div><dt>Difficulty</dt><dd><span class="rh-keys" style="--keys: 5" role="img" aria-label="5 of 5"></span></dd></div>
+                </dl>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="rh-section rh-evening" aria-labelledby="evening-title">
+        <div class="rh-wrap">
+          <h2 id="evening-title">An evening at Red Herring</h2>
+          <ol class="rh-steps">
+            <li>
+              <h3>Book a slot</h3>
+              <p>Pick a room and a time. You pay per group, not per head, and you can move the booking up to a day before.</p>
+            </li>
+            <li>
+              <h3>Meet your game master</h3>
+              <p>Ten minutes of story and three house rules. Phones go in the lockers, curiosity comes along.</p>
+            </li>
+            <li>
+              <h3>Sixty minutes</h3>
+              <p>Ask for a hint over the walkie-talkie whenever you like. They're free, and nobody's counting.</p>
+            </li>
+            <li>
+              <h3>The debrief</h3>
+              <p>A photo with the Sign of Glory, or the Sign of Shame. Then tea, and the puzzles you walked past.</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="rh-section rh-prices" id="prices" aria-labelledby="prices-title">
+        <div class="rh-wrap rh-prices-grid">
+          <div>
+            <h2 id="prices-title">Prices per group</h2>
+            <p>One price for the whole room, whoever comes. Weekday afternoons are the quietest, and the cheapest.</p>
+            <ul class="rh-notes">
+              <li>Deck 9 Janitor runs 75 minutes: add €10.</li>
+              <li>Gift cards from €30, good for a year in any room.</li>
+              <li>Birthdays and team evenings: book two rooms side by side and race.</li>
+            </ul>
+          </div>
+          <table class="rh-table">
+            <caption class="rh-visually-hidden">Price per group by number of players</caption>
+            <thead>
+              <tr><th scope="col">Players</th><th scope="col">Mon–Thu</th><th scope="col">Fri–Sun</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">2</th><td>€58</td><td>€68</td></tr>
+              <tr><th scope="row">3</th><td>€78</td><td>€90</td></tr>
+              <tr><th scope="row">4</th><td>€96</td><td>€110</td></tr>
+              <tr><th scope="row">5</th><td>€110</td><td>€125</td></tr>
+              <tr><th scope="row">6</th><td>€120</td><td>€138</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="rh-section rh-reviews" aria-labelledby="reviews-title">
+        <div class="rh-wrap">
+          <h2 id="reviews-title">Overheard at the debrief</h2>
+          <div class="rh-quotes">
+            <figure>
+              <blockquote><p>We got out with forty seconds left, and I still dream about that parrot.</p></blockquote>
+              <figcaption>Mikko, five players · The Keeper's Last Log</figcaption>
+            </figure>
+            <figure>
+              <blockquote><p>Perfect for our kids, nine and eleven. Gentle hints, big laughs, and a very small robe.</p></blockquote>
+              <figcaption>Sanna, family of four · The Wizard's Laundry</figcaption>
+            </figure>
+            <figure>
+              <blockquote><p>Room 404 is properly hard. We failed. We're coming back in March.</p></blockquote>
+              <figcaption>Byte Club, four players · Room 404</figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="rh-section rh-hints" id="hints" aria-labelledby="hints-title">
+        <div class="rh-wrap rh-hints-grid">
+          <div>
+            <h2 id="hints-title">The hint book</h2>
+            <p>The answers are printed in invisible ink. Reveal one at a time, like a proper adventurer.</p>
+            <p class="rh-ask">Not in the book? <button class="rh-ask-button" type="button" data-chat-open>Ask <span data-character-name>the game master</span></button>, who is poking around this page somewhere.</p>
+          </div>
+          <div class="rh-book">
+            <details>
+              <summary>Is it scary?</summary>
+              <p>Only Room 404 is a little spooky, and nothing jumps out at you. Every room has a big green button that opens the door, always.</p>
+            </details>
+            <details>
+              <summary>Can children play?</summary>
+              <p>Yes. The Wizard's Laundry works from about eight with an adult along. The lighthouse and Deck 9 suit twelve and up, and Room 404 is for sixteen and up.</p>
+            </details>
+            <details>
+              <summary>Is it accessible?</summary>
+              <p>The Wizard's Laundry and Deck 9 are step-free, with room for a wheelchair. The lighthouse has one ladder puzzle, and your game master can open it for you.</p>
+            </details>
+            <details>
+              <summary>What if we're late?</summary>
+              <p>Call us and we'll shift you by up to fifteen minutes if the next group allows. After that, your hour gets a little shorter.</p>
+            </details>
+            <details>
+              <summary>Which languages?</summary>
+              <p>Every room plays in English, Finnish or Swedish. Tell us when you book, and the clues will speak your language.</p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="rh-section rh-visit" id="visit" aria-labelledby="visit-title">
+        <div class="rh-wrap rh-visit-grid">
+          <div>
+            <h2 id="visit-title">Find the red door</h2>
+            <p class="rh-address">Herring Quay 3, Old Harbour<br>The red warehouse under the fish.</p>
+            <p>Tram 4 to Fish Market, then two minutes along the quay. Bikes can park by the bollards; boats can tie up if they ask nicely.</p>
+            <a class="rh-button" href="#rooms">Book a room</a>
+          </div>
+          <dl class="rh-hours">
+            <div><dt>Mon–Thu</dt><dd>14–22</dd></div>
+            <div><dt>Friday</dt><dd>12–24</dd></div>
+            <div><dt>Saturday</dt><dd>10–24</dd></div>
+            <div><dt>Sunday</dt><dd>10–20</dd></div>
+          </dl>
+        </div>
+      </section>
+    </main>
+
+    <footer class="rh-footer">
+      <div class="rh-wrap">
+        <span class="rh-logo">
+          <svg class="rh-fish" viewBox="0 0 16 6" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M5 0h6v1h-6zM3 1h10v1h-10zM15 1h1v1h-1zM1 2h2v1h-2zM5 2h11v1h-11zM0 3h15v1h-15zM1 4h12v1h-12zM14 4h2v1h-2zM3 5h8v1h-8zM15 5h1v1h-1z"/><path fill="#fff7e8" d="M3 2h1v1h-1z"/><path fill="#1d1a2e" d="M4 2h1v1h-1z"/></svg>
+          Red Herring
+        </span>
+        <span>A fictional adventure-room venue, made up for this example.</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Site decoration, not part of the chat: like the old games, the status line keeps score. -->
+  <script type="module">
+    const status = document.querySelector('[data-score]');
+    let score = 0;
+    const award = (points) => {
+      score += points;
+      status.textContent = `Score: ${score} of 10`;
+      status.classList.remove('is-scored');
+      void status.offsetWidth; // Restart the flash.
+      status.classList.add('is-scored');
+    };
+    document.addEventListener('adventure-chat:open', () => award(5), { once: true });
+    for (const hint of document.querySelectorAll('.rh-book details')) hint.addEventListener('toggle', () => award(1), { once: true });
+  </script>
+
+  <!--
+    The chat. It walks around inside `world`, talks to Stand's Visitor API with
+    this site ID, and picks one of `characters` at random unless `character`
+    names one. ?character=otto in the URL overrides it too.
+  -->
+  <adventure-chat
+    site-id="demo"
+    world=".rh"
+    characters="vera otto kai"
+    character="random"
+    prompt="The visitor is on the website of Red Herring, an adventure-game themed escape room venue in the Old Harbour, chatting through a pixel-art game master character who walks around the page. Keep replies short: one to three sentences, plain text, friendly.">
+  </adventure-chat>
+
+  <section id="how-it-works" class="sx-explainer">
+    <div class="sx-wrap">
+      <p class="sx-eyebrow">How it works</p>
+      <h2>A chat UI of your own, with a character who lives on the page</h2>
+      <p class="sx-lead">Stand's Visitor API (beta) lets you replace the whole chat interface, while Stand still routes the conversation, runs your AI Stand-in and brings in your team. Here the chat is a pixel character in the style of late-80s adventure games. It pokes around the page, and when you click it, it walks up to the screen and talks in a parser-style message box.</p>
+      <p>There's no <code>stand.js</code> on this page. Everything you see is plain JavaScript in this folder, about 3,000 lines with no dependencies, talking to Stand's HTTP and WebSocket API.</p>
+
+      <h3>Try it</h3>
+      <ol class="sx-steps">
+        <li>Watch the character come out of the red door. Scroll, and it turns up somewhere nearby: peeking out from behind a card, leaning on a heading, sitting on a table. It never stands in front of text.</li>
+        <li>Click it, or just start typing. It walks toward you, growing like in the old games, and opens the message box. Ask it something.</li>
+        <li>Close the box and the character walks back into the page. Replies that arrive meanwhile show up in its speech bubble. Reload: the conversation is still there.</li>
+        <li>Meet the others: <a href="?character=vera">Vera</a>, <a href="?character=otto">Otto</a> and <a href="?character=kai">Kai</a>. Without a choice, each visit picks one at random.</li>
+      </ol>
+
+      <div class="sx-note">Chats here use <code>site-id="demo"</code>, Stand Chat's shared demo site, which works on any domain. Its demo Stand-in follows the page's prompt, but won't speak for the made-up business. With your own Site ID, your own Stand-ins answer, and your team can take over.</div>
+
+      <h3>1. Add the element</h3>
+      <pre class="sx-code" data-file="index.html" data-wrap><code class="language-html">&lt;adventure-chat
+  site-id="YOUR-SITE-ID"
+  world="main"
+  characters="vera otto kai"
+  prompt="The visitor is on Red Herring's website, talking to a pixel game master. Keep replies short."&gt;
+&lt;/adventure-chat&gt;
+&lt;script type="module" src="adventure-chat.js"&gt;&lt;/script&gt;</code></pre>
+      <p><code>world</code> is the part of the page the character explores. <code>characters</code> lists files in <code>characters/</code>; add <code>character="kai"</code> to pick one instead of a random one. The <code>prompt</code> is private context for whoever answers. Any button with <code>data-chat-open</code> calls the character over too, like "Ask <span data-character-name>Vera</span>" in the hint book.</p>
+
+      <h3>2. Talk to Stand in four calls</h3>
+      <p><code>stand-visitor.js</code> is the whole network side: no UI, no dependencies. It follows the <a href="https://stand.chat/guide/custom-chat-ui">custom chat UI guide</a>, including the parts that are easy to skip: recovering after a reload or a dropped socket, merging messages without duplicates, and never starting two conversations from one click.</p>
+      <pre class="sx-code" data-file="stand-visitor.js, condensed"><code class="language-js">// 1. Who can answer on this page? Public: no key, no token.
+const offer = await get(`/v1/reps/find?siteId=${siteId}&amp;page=${page}&amp;greetingsEnabled=false`);
+
+// 2. On the visitor's first message, start the conversation once.
+const session = await post('/v1/sessions', {
+  siteId, page,
+  standinProfileId: offer.standinProfileId, // or repId, when a person answers
+  initialMessage: text,
+  includeOpeningGreeting: true, openingMessage: greeting, // What the character said first.
+  prompt, // Private context for the Stand-in and your team.
+});
+// session.visitorToken authorizes this one conversation. Keep it, with session.sessionId.
+
+// 3. Later messages over HTTP. A retry reuses its clientMessageId, so nothing doubles.
+await post(`/v1/sessions/${id}/messages`, { body: text, type: 'text', clientMessageId }, token);
+
+// 4. Replies, typing and handoffs arrive over a WebSocket.
+const socket = new WebSocket(`wss://api.stand.chat/ws/sessions/${id}?token=${token}`);
+socket.onmessage = (event) =&gt; merge(JSON.parse(event.data)); // By messageId, in seq order.</code></pre>
+      <p>The rest of the page just renders its state:</p>
+      <pre class="sx-code" data-file="adventure-chat.js"><code class="language-js">const client = new StandVisitor({ siteId, prompt, greeting: character.greeting });
+client.subscribe((state) =&gt; chatWindow.render(state)); // Messages, typing, who's answering.
+await client.start(); // Restores a saved conversation, or asks who can answer.</code></pre>
+
+      <h3>3. A cast of pixel characters</h3>
+      <p>Each character is one small file: a palette, and hand-drawn pixel maps of a head and a torso, seen from the front, the side and the back. <code>sprite.js</code> draws the arms and legs from joint positions, so one definition gets every pose: walking in four directions, waving, sitting, leaning, peeking, thinking and talking.</p>
+      <figure class="ax-cast">
+        <canvas data-cast width="320" height="168" role="img" aria-label="Vera, Otto and Kai, each in eight poses: standing, walking sideways, walking toward you, waving, thinking, sitting, a foot up on a ledge, and leaning on an elbow."></canvas>
+        <figcaption>Three files, 24 poses. The same rig draws any character you add.</figcaption>
+      </figure>
+      <pre class="sx-code" data-file="characters/vera.js"><code class="language-js">export default {
+  id: 'vera',
+  name: 'Vera',
+  greeting: 'Psst! Stuck on something? I built these rooms. Ask me anything.',
+  quirk: 'glasses', // A habit for idle moments.
+  palette: { s: '#f1c29f', S: '#d4937a', h: '#c4582d', H: '#8c361b', t: '#2f7a74' /* … */ },
+  head: {
+    front: [
+      '..................',
+      '......h.hh.h......',
+      '....hhhhhhhhhh....',
+      // … 18 rows of 18: hair, face, glasses. The code draws eyes and mouth.
+    ],
+    side: [/* facing right */], back: [/* … */],
+  },
+  face: { front: { eyes: [[6, 10], [11, 10]], mouth: [8, 13] }, side: { eye: [13, 10], mouth: [14, 13] } },
+  torso: { front: [/* … */], side: [/* … */], back: [/* … */] },
+};</code></pre>
+
+      <h3>4. Make one from photos</h3>
+      <p>The format is plain text on purpose: an AI model that can see images can draw a character that looks like you or someone on your team. Attach one to three photos and <code>characters/vera.js</code>, and paste this. The same prompt, with a reference for the format, is in <code>characters/README.md</code> for coding agents working in the folder.</p>
+      <pre class="sx-code ax-prompt" data-wrap><code>Make me a pixel-art character for an adventure-game chat on my website, based on the attached photos. The character walks around the page and talks to visitors, so it should be recognizably this person.
+
+I've also attached vera.js, an existing character. Write a new file in exactly the same format:
+
+- id: lowercase, like "maya". name: the first name shown in the chat.
+- greeting: one short, friendly line the character says when it appears, under 80 characters.
+- quirk: one of glasses, beard, headset, watch, scratch, hips or crossed: a small habit that suits them.
+- palette: one-letter keys and hex colors. s/S skin and its shadow; h/H/j hair, shadow and highlight; t/T/y top, shadow and highlight; u a shirt under a jacket; p/P trousers or skirt; f/F shoes and soles; g glasses and other dark details; a/A an accent like a scarf or jewelry; b/B beard; k cheeks; w white. Take the colors from the photos, and keep skin and hair true to them.
+- head.front, head.side (facing right) and head.back: 18 strings of exactly 18 characters. "." is transparent. Row 17 is the neck. Keep the face about 10 to 12 pixels wide in rows 7 to 15, like vera.js. Draw hair, beard, glasses, earrings and hats into these maps, but leave the eyes and mouth as plain skin: the code draws them at the positions in `face`.
+- face: front.eyes is the top-left pixel of each eye (usually [6, 10] and [11, 10]), front.mouth the mouth's left pixel ([8, 13]), side.eye and side.mouth the same in profile ([13, 10] and [14, 13]). If you move a feature, move its position too.
+- torso.front, torso.side and torso.back: 18 strings of exactly 18 characters. Row 0 is the shoulders and row 13 the belt line, where the legs start. Rows 14 to 17 can hang over the legs: coat tails, a skirt. Keep the torso inside columns 3 to 14 from the front and 4 to 13 from the side.
+- Arms and legs are drawn by code. Optional: arms.sleeve (a palette key, "t" by default), arms.short: true for short sleeves, legs.color and legs.shade ("p" and "P"), legs.skin: "s" for bare legs under a skirt or shorts, build.legs 13 to 15 for height, build.shoulders 6 to 8 for width.
+
+Style: a late-80s VGA adventure game. Chunky and readable at 3× zoom, two or three shades per material, no outlines (the code adds them), a strong silhouette. Exaggerate what makes this person recognizable: hairstyle and color, facial hair, glasses, a signature piece of clothing.
+
+Before you answer, check that every map has exactly 18 rows of exactly 18 characters, and that every letter you used has a palette color. Reply with only the file.</code></pre>
+      <p>Save the answer as <code>characters/maya.js</code>, add <code>maya</code> to the element's <code>characters</code>, and open the page with <code>?character=maya</code>. She walks the page, and joins the cast sheet above in every pose. If something looks off, tell the model what to fix: "the hair is too flat on top", "the glasses are rounder than that". The browser console names any letter without a color. And before you publish anyone's likeness, ask them.</p>
+
+      <h3>5. Teach it your page</h3>
+      <p><code>world.js</code> reads the page on its own. It finds the ends of headings, cards, pictures and tables it can hide behind, and the edges where one section's background meets the next. It checks every spot against the words, pictures and buttons around it, and prefers the margins over the middle of what you're reading.</p>
+      <ul>
+        <li><code>data-world-ignore</code> keeps the character away from an element, such as a checkout form.</li>
+        <li><code>data-perch</code> offers an extra box to sit on or hide behind.</li>
+        <li><code>data-scene</code> turns a picture into a place to walk in, with depth. The harbour at the top is one:</li>
+      </ul>
+      <pre class="sx-code" data-file="index.html"><code class="language-html">&lt;div class="rh-scene" data-scene&gt;
+  &lt;img src="art/harbour.png" width="320" height="180" alt="…"&gt;
+  &lt;script type="application/json"&gt;
+    {
+      "size": [320, 180],
+      "depth": { "far": [134, 0.62], "near": [179, 1.0] },
+      "door": { "x": 257, "y": 131, "open": ".rh-door" },
+      "spots": [{ "name": "barrel", "x": 306, "y": 131, "seat": 113, "pose": "sit" }]
+    }
+  &lt;/script&gt;
+&lt;/div&gt;</code></pre>
+      <p>Coordinates are the picture's own pixels. <code>depth</code> says how big the character is at a given height: smaller toward the horizon, full size up front, the way the old games did it. The character comes out of the <code>door</code>, says hello at a spot marked <code>"greet": true</code>, and wanders between the others. When you click it, the same trick walks it out of the page toward you.</p>
+
+      <h3>Good to know</h3>
+      <ul>
+        <li><strong>Honest about AI.</strong> When an AI Stand-in answers, the title bar says <em>AI</em> and names who is answering. A character drawn after a real person must never pretend to be them. If someone from your team takes over, the badge changes to <em>Live</em>.</li>
+        <li><strong>Closing isn't ending.</strong> The × and Esc close the box, and the conversation carries on. Only <em>End chat</em> closes it in Stand. The guide asks for exactly that.</li>
+        <li><strong>A reload keeps everything.</strong> The conversation and the chosen character are saved in <code>sessionStorage</code>, per tab. Without storage, the chat still works; it just forgets on reload.</li>
+        <li><strong>Nobody around, no character.</strong> If discovery finds no one to answer, the character stays home. <code>?preview</code> shows it anyway, for layout work.</li>
+        <li><strong>Keyboard and screen readers.</strong> The character is a button called "Talk to Vera", Esc closes the box and hands focus back, and the transcript is a live region that gets whole replies rather than letters. With reduced motion, the character appears instead of walking and stays put until you scroll, and replies appear at once.</li>
+        <li><strong>Type to talk.</strong> A letter typed anywhere outside a form field opens the chat, like the text parsers of old. <code>type-to-talk="off"</code> turns that off.</li>
+        <li><strong>It's a beta.</strong> The Visitor API can grow new fields and events. The client ignores what it doesn't know, and you can always go back to the standard widget.</li>
+      </ul>
+
+      <details class="made">
+        <summary>How this was made</summary>
+        <div class="made-body">
+          <p>This example is nearly a one-shot. <strong>Claude Opus 5.5, with max effort, in Claude Code</strong>, built it in one session from the prompt below and one follow-up, which asked for this box. It read the custom chat UI guide, held real conversations with Stand's demo site to see the actual messages, and checked its own screenshots at desktop and phone sizes. All the pixel art is drawn by code: the characters as text maps, the harbour and the posters with a small painting script.</p>
+          <p>Now that AI writes the front end, your chat can live in your site's world instead of a bubble in the corner. Stand's Visitor API keeps the conversation, the AI Stand-in and your team behind it.</p>
+
+          <p class="made-label">The prompt, lightly edited</p>
+          <blockquote class="made-prompt">Think of old Sierra games like Leisure Suit Larry, or Monkey Island. Let's make a Stand Chat custom UI inspired by them: the chat is a character that walks on the screen, just like in those games.
+
+Generate and include a couple of characters, and also instructions (a prompt) for generating a custom character from photos, to match a real person. Make the character configurable; by default, pick one of the included characters at random.
+
+When it isn't activated, the character should peek in and poke around subtly. Make it easy to notice that it's there, but don't let it take over the page. You can also use the old effect where a character walks toward the screen, starting small and growing. That might work well for opening the chat.
+
+Use a Sierra-style text box where the visitor types messages.
+
+The character should recognize the major elements on the page and interact with them subtly: peek from behind a larger div, lean on an H1, something like that. Make it feel like the web page is the world where it lives.
+
+Generate a realistic one-page site where you could imagine such a playful chat being used, and add all of it to the examples collection. Make it amazing, with great attention to detail.</blockquote>
+
+          <p class="made-label">The follow-up</p>
+          <blockquote class="made-prompt">Include the original prompt (clean it up as you choose) and the model used on the page, as a subtle expandable "how this was made" box. The intent is to help people create high-fidelity experiences like this on top of Stand Chat, now that AI can generate the front end.</blockquote>
+
+          <p class="made-label">If you try this yourself</p>
+          <ul>
+            <li>Link the <a href="https://stand.chat/guide/custom-chat-ui">custom chat UI guide</a>. It is written as a contract for coding agents, with a brief to paste.</li>
+            <li>Start on the <code>demo</code> Site ID, so the agent can hold real conversations while it builds, then switch to yours.</li>
+            <li>Ask it to keep the network client separate from the presentation, as the guide suggests. <code>stand-visitor.js</code> here would run a terminal or a plain chat panel just as well.</li>
+            <li>Let it see its own work: screenshots at a few screen sizes, and art it can read and edit. Pixel characters written as text are easy for a model to draw, check and fix.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h3>Copy this example</h3>
+      <pre class="sx-code"><code class="language-sh">npx degit standchat/examples/adventure-game-chat my-adventure-chat</code></pre>
+
+      <ul class="sx-links">
+        <li><a href="https://stand.chat/guide/custom-chat-ui">Custom chat UI guide ↗</a></li>
+        <li><a href="https://stand.chat/features/custom-chat-ui">Custom chat UI reference ↗</a></li>
+        <li><a href="https://github.com/standchat/examples/tree/main/adventure-game-chat/">Source on GitHub ↗</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- The cast sheet in "How it works": every pose, drawn by the same rig. -->
+  <script type="module">
+    import { createRig, ANIMATIONS, POSES, footUp, leanElbow, FRAME_W } from './sprite.js';
+
+    const canvas = document.querySelector('[data-cast]');
+    const ctx = canvas.getContext('2d');
+    const extra = new URLSearchParams(location.search).get('character');
+    const ids = ['vera', 'otto', 'kai', ...(extra && !['vera', 'otto', 'kai'].includes(extra) && /^[a-z0-9-]+$/.test(extra) ? [extra] : [])];
+    const poses = [
+      POSES.stand,
+      { ...ANIMATIONS['walk.side'].frames[0], mirror: false },
+      ANIMATIONS['walk.front'].frames[1],
+      { ...POSES.wave2, eyes: 'happy' },
+      POSES.think,
+      { ...POSES.sit, mouth: 'smile' },
+      { ...footUp(9), mirror: true },
+      leanElbow(4),
+    ];
+    const ROW = 56; // Frame rows 8 to 64.
+    canvas.height = ROW * ids.length;
+    const INK = '#1d1a2e';
+    const sprite = Object.assign(document.createElement('canvas'), { width: FRAME_W, height: 64 });
+    for (const [row, id] of ids.entries()) {
+      let definition;
+      try { definition = (await import(`./characters/${id}.js`)).default; } catch { continue; }
+      const rig = createRig(definition);
+      poses.forEach((pose, col) => {
+        const frame = rig.frame(pose);
+        const x = col * FRAME_W, ground = row * ROW + ROW - 2;
+        const top = ground - frame.anchorY;
+        // A little something to sit on, step on, or lean on.
+        ctx.fillStyle = '#d6c8ae';
+        if (pose === poses[5]) ctx.fillRect(x + 11, ground - 14 + 1, 18, 13);
+        else if (pose === poses[6]) ctx.fillRect(x + 3, ground - 9, 11, 9);
+        else if (pose === poses[7]) ctx.fillRect(x, ground - 22, 11, 22);
+        ctx.fillStyle = INK;
+        ctx.fillRect(x + 2, ground, FRAME_W - 4, 1);
+        sprite.getContext('2d').putImageData(new ImageData(frame.data, FRAME_W, 64), 0, 0);
+        const lift = pose === poses[5] ? 14 : 0; // Up onto the crate.
+        ctx.drawImage(sprite, 0, 8, FRAME_W, 56, x, top + 8 - lift, FRAME_W, 56);
+      });
+    }
+  </script>
+</body>
+</html>
