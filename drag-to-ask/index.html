@@ -1,0 +1,667 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title>Drag anything onto the chat</title>
+  <meta name="description" content="A custom chat UI on Stand's Visitor API for a website that works like a desktop: drag a chart, a pricing row or a changelog line onto the chat window to ask about it, and replies open the windows they mention.">
+  <meta name="author" content="Stand Chat">
+  <link rel="author" href="https://stand.chat/">
+  <meta name="keywords" content="custom chat UI, Visitor API, drag and drop, attachments, page references, desktop UI">
+  <meta property="og:title" content="Drag anything onto the chat">
+  <meta property="og:description" content="A custom chat UI on Stand's Visitor API for a website that works like a desktop: drag a chart, a pricing row or a changelog line onto the chat window to ask about it, and replies open the windows they mention.">
+  <meta property="og:image" content="https://examples.stand.chat/drag-to-ask/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Site chrome: the top bar and "How it works" styles. This example works without them. -->
+  <link rel="stylesheet" href="/_shared/example.css">
+  <script type="module" src="/_shared/example.js"></script>
+
+  <!-- Molehill, the made-up company whose website is a desktop. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Gochi+Hand&display=swap">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="chat.css">
+  <!-- Without JavaScript the windows are simply the page, one after another. -->
+  <noscript><style>
+    .mh { display: block; height: auto; overflow: visible; }
+    .mh-desktop { overflow: visible; padding: 12px; }
+    .mh .win { position: static; visibility: visible !important; width: auto; height: auto; max-width: 760px; margin: 0 auto 16px; transform: none; }
+    .mh-icons, .mh-molehill, .mh-taskbar, .sticky, .mh-menus, .mh-theme, .mh-cta, .mh-talk { display: none; }
+  </style></noscript>
+
+  <!-- The desktop and Chat, which talks to Stand's Visitor API directly. No stand.js. -->
+  <script type="module" src="main.js"></script>
+</head>
+<body>
+  <sx-example-bar></sx-example-bar>
+
+  <div class="mh" id="mh" data-og-focus>
+    <header class="mh-menubar">
+      <a class="mh-logo" href="#mh" aria-label="Molehill home">
+        <svg class="mh-mark" viewBox="0 0 32 20" aria-hidden="true">
+          <path class="m-hill" d="M2 18.6C4.4 9.6 9.6 3.4 16 3.4S27.6 9.6 30 18.6Z"/>
+          <path class="m-line" d="M7.6 18.6C9.4 12.6 12.4 9.2 16 9.2s6.6 3.4 8.4 9.4"/>
+          <path class="m-line" d="M12.9 18.6c.9-3 1.9-4.3 3.1-4.3s2.2 1.3 3.1 4.3"/>
+          <path class="m-base" d="M.5 18.6h31"/>
+        </svg>
+        <span>Molehill</span>
+      </a>
+      <nav class="mh-menus" aria-label="Molehill">
+        <div class="mh-menu">
+          <button type="button" class="mh-menubtn" aria-haspopup="menu" aria-expanded="false" aria-controls="menu-products">Products</button>
+          <ul class="mh-dropdown" id="menu-products" role="menu" aria-label="Products" hidden>
+            <li role="none"><button type="button" role="menuitem" data-open="analytics"><i class="px" data-icon="analytics" aria-hidden="true"></i>Product analytics</button></li>
+            <li role="none"><button type="button" role="menuitem" data-open="replay"><i class="px" data-icon="replay" aria-hidden="true"></i>Session replay</button></li>
+            <li role="none"><button type="button" role="menuitem" data-open="flags"><i class="px" data-icon="flags" aria-hidden="true"></i>Feature flags</button></li>
+            <li role="none"><button type="button" role="menuitem" data-open="experiments"><i class="px" data-icon="experiments" aria-hidden="true"></i>Experiments</button></li>
+            <li role="none"><button type="button" role="menuitem" data-open="surveys"><i class="px" data-icon="surveys" aria-hidden="true"></i>Surveys</button></li>
+            <li role="none"><button type="button" role="menuitem" data-open="warehouse"><i class="px" data-icon="warehouse" aria-hidden="true"></i>Data warehouse</button></li>
+          </ul>
+        </div>
+        <button type="button" class="mh-menubtn" data-open="pricing">Pricing</button>
+        <button type="button" class="mh-menubtn" data-open="docs">Docs</button>
+        <div class="mh-menu">
+          <button type="button" class="mh-menubtn" aria-haspopup="menu" aria-expanded="false" aria-controls="menu-company">Company</button>
+          <ul class="mh-dropdown" id="menu-company" role="menu" aria-label="Company" hidden>
+            <li role="none"><button type="button" role="menuitem" data-open="why"><i class="px" data-icon="doc" aria-hidden="true"></i>Why Molehill.doc</button></li>
+            <li role="none"><button type="button" role="menuitem" data-open="changelog"><i class="px" data-icon="txt" aria-hidden="true"></i>Changelog.txt</button></li>
+            <li role="none"><button type="button" role="menuitem" data-open="trash"><i class="px" data-icon="trash" aria-hidden="true"></i>Our mistakes</button></li>
+          </ul>
+        </div>
+      </nav>
+      <span class="mh-grow"></span>
+      <button type="button" class="mh-menubtn mh-talk" data-open="chat">Talk to us</button>
+      <button type="button" class="mh-theme" aria-pressed="false" aria-label="Dark desktop" title="Dark desktop">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M14.5 12.8A6 6 0 0 1 7.2 5.5a6 6 0 1 0 7.3 7.3Z"/></svg>
+      </button>
+      <time class="mh-clock" aria-label="Local time"></time>
+      <button type="button" class="chunky mh-cta" data-open="setup">Get started <span class="mh-cta-free">– free</span></button>
+    </header>
+
+    <main class="mh-desktop" id="desktop">
+      <!-- On phones, the home screen: it scrolls under the apps and the mole. -->
+      <div class="mh-home">
+        <!-- What this is: a card above the icons on phones, for screen readers everywhere. -->
+        <section class="mh-welcome" aria-labelledby="welcome-title">
+          <p class="mh-welcome-kicker">Molehill · product analytics that digs</p>
+          <h1 id="welcome-title">Small answers, before lunch.</h1>
+          <p>Analytics, replays, flags, experiments, surveys and a warehouse in one hill. Pick anything in an app, then <strong>Ask about this</strong>: we see exactly what you were looking at.</p>
+          <div class="mh-welcome-demo" aria-hidden="true">
+            <span class="mh-welcome-tag">For example</span>
+            <span class="chip"><i class="px" data-icon="sheet"></i><span class="chip-text"><b>Pricing.sheet › Session replay</b><small>5,000 recordings free/mo, then $0.005 each</small></span></span>
+            <span class="mh-welcome-q">Does it count if nobody watches it?</span>
+          </div>
+        </section>
+
+        <nav class="mh-icons" aria-label="Desktop">
+          <ul class="mh-icons-apps">
+            <li><button type="button" class="dicon" data-open="analytics" data-ask-app="analytics"><i class="px" data-icon="analytics" aria-hidden="true"></i><span>Product analytics</span></button></li>
+            <li><button type="button" class="dicon" data-open="replay" data-ask-app="replay"><i class="px" data-icon="replay" aria-hidden="true"></i><span>Session replay</span></button></li>
+            <li><button type="button" class="dicon" data-open="flags" data-ask-app="flags"><i class="px" data-icon="flags" aria-hidden="true"></i><span>Feature flags</span></button></li>
+            <li><button type="button" class="dicon" data-open="experiments" data-ask-app="experiments"><i class="px" data-icon="experiments" aria-hidden="true"></i><span>Experiments</span></button></li>
+            <li><button type="button" class="dicon" data-open="surveys" data-ask-app="surveys"><i class="px" data-icon="surveys" aria-hidden="true"></i><span>Surveys</span></button></li>
+            <li><button type="button" class="dicon" data-open="warehouse" data-ask-app="warehouse"><i class="px" data-icon="warehouse" aria-hidden="true"></i><span>Data warehouse</span></button></li>
+          </ul>
+          <ul class="mh-icons-files">
+            <li><button type="button" class="dicon" data-open="pricing" data-ask-app="pricing"><i class="px" data-icon="sheet" aria-hidden="true"></i><span>Pricing.sheet</span></button></li>
+            <li><button type="button" class="dicon" data-open="changelog" data-ask-app="changelog"><i class="px" data-icon="txt" aria-hidden="true"></i><span>Changelog.txt</span></button></li>
+            <li><button type="button" class="dicon" data-open="why" data-ask-app="why"><i class="px" data-icon="doc" aria-hidden="true"></i><span>Why Molehill.doc</span></button></li>
+            <li class="dicon-extra"><button type="button" class="dicon" data-open="docs" data-ask-app="docs"><i class="px" data-icon="md" aria-hidden="true"></i><span>Quickstart.md</span></button></li>
+            <li><button type="button" class="dicon dicon--chat" data-open="chat" data-drop="chat"><i class="px" data-icon="chat" aria-hidden="true"></i><span>Chat</span><b class="badge" hidden></b></button></li>
+            <li><button type="button" class="dicon" data-open="trash" data-ask-app="trash"><i class="px" data-icon="trash" aria-hidden="true"></i><span>Trash</span></button></li>
+          </ul>
+        </nav>
+      </div>
+
+      <aside class="sticky" aria-label="Note from the Molehill team" data-ask="Sticky note" data-try="How does this work?" data-ask-source="Desktop" data-val="drag anything onto Chat to ask about it">
+        <p>This desktop <em>is</em> our website.</p>
+        <p>Drag anything onto <b>Chat</b> to ask about it: a chart, a price, a line of the changelog.</p>
+        <p class="sticky-sign">— the moles</p>
+      </aside>
+
+      <!-- ───────────── Product analytics ───────────── -->
+      <section class="win" id="win-analytics" data-win="analytics" data-try="What can I track with this?" data-names="Product analytics|Analytics|Trends|Insights" data-icon="analytics" data-kind="app" aria-labelledby="win-analytics-title">
+        <h2 class="win-title" id="win-analytics-title">Product analytics</h2>
+        <div class="win-body pa">
+          <div class="win-toolbar">
+            <div class="tabs" role="tablist" aria-label="Views">
+              <button type="button" role="tab" id="pa-tab-trends" aria-selected="true" aria-controls="pa-trends">Trends</button>
+              <button type="button" role="tab" id="pa-tab-funnel" aria-selected="false" aria-controls="pa-funnel" tabindex="-1">Funnel</button>
+              <button type="button" role="tab" id="pa-tab-retention" aria-selected="false" aria-controls="pa-retention" tabindex="-1">Retention</button>
+            </div>
+            <span class="sample" title="Charts show a made-up project, not yours">Burrow · sample data</span>
+          </div>
+
+          <div class="pa-view" id="pa-trends" role="tabpanel" aria-labelledby="pa-tab-trends">
+            <div class="pa-head">
+              <span class="grip" role="button" data-ask="Weekly users chart" data-val="signed up, activated and paying users, last 12 weeks" data-alias="Chart|Weekly users|Trends" tabindex="0" aria-label="Weekly users chart: press Enter to ask about it"><i aria-hidden="true"></i></span>
+              <div>
+                <h3>Signed up → activated → paying</h3>
+                <p>Weekly · last 12 weeks · <span class="up">activated +48%</span></p>
+              </div>
+            </div>
+            <div class="pa-chart" data-chart data-try="What happened that week?">
+              <table class="pa-data">
+                <caption>Weekly users in Burrow, a sample project</caption>
+                <thead>
+                  <tr><th scope="col">Week of</th><th scope="col" data-series="blue">Signed up</th><th scope="col" data-series="orange">Activated</th><th scope="col" data-series="green">Paying</th></tr>
+                </thead>
+                <tbody>
+                  <tr><th scope="row">Jul 6</th><td>1420</td><td>612</td><td>88</td></tr>
+                  <tr><th scope="row">Jul 13</th><td>1510</td><td>660</td><td>92</td></tr>
+                  <tr><th scope="row">Jul 20</th><td>1480</td><td>648</td><td>95</td></tr>
+                  <tr><th scope="row">Jul 27</th><td>1630</td><td>731</td><td>101</td></tr>
+                  <tr><th scope="row">Aug 3</th><td>1720</td><td>790</td><td>110</td></tr>
+                  <tr><th scope="row">Aug 10</th><td>1690</td><td>812</td><td>112</td></tr>
+                  <tr><th scope="row">Aug 17</th><td>1860</td><td>905</td><td>121</td></tr>
+                  <tr><th scope="row">Aug 24</th><td>1940</td><td>968</td><td>130</td></tr>
+                  <tr><th scope="row">Aug 31</th><td>2010</td><td>1020</td><td>137</td></tr>
+                  <tr data-note="new-onboarding flag at 100%"><th scope="row">Sep 7</th><td>2140</td><td>1302</td><td>158</td></tr>
+                  <tr><th scope="row">Sep 14</th><td>2230</td><td>1264</td><td>166</td></tr>
+                  <tr data-partial><th scope="row">Sep 21</th><td>1780</td><td>1020</td><td>139</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <ul class="pa-legend" data-ask-group data-try="How is this counted?">
+              <li data-ask="Signed up (series)" data-val="1,420 → 2,230 a week" data-color="blue"><i aria-hidden="true"></i>Signed up <b>2,230</b></li>
+              <li data-ask="Activated (series)" data-val="612 → 1,264 a week, jump after Sep 7" data-color="orange"><i aria-hidden="true"></i>Activated <b>1,264</b></li>
+              <li data-ask="Paying (series)" data-val="88 → 166 a week" data-color="green"><i aria-hidden="true"></i>Paying <b>166</b></li>
+            </ul>
+          </div>
+
+          <div class="pa-view" id="pa-funnel" role="tabpanel" aria-labelledby="pa-tab-funnel" hidden>
+            <div class="pa-head">
+              <span class="grip" role="button" data-ask="Signup funnel" data-val="5 steps, last 30 days, 4.9% end to end" data-alias="Funnel|Funnels" tabindex="0" aria-label="Signup funnel: press Enter to ask about it"><i aria-hidden="true"></i></span>
+              <div>
+                <h3>Signup funnel</h3>
+                <p>Last 30 days · 4.9% make it to the end</p>
+              </div>
+            </div>
+            <ol class="funnel" data-ask-group data-try="Why do people drop off here?">
+              <li data-ask="Funnel step 1: Visited pricing" data-val="12,480 people" style="--w:100%"><span class="f-name">Visited pricing</span><span class="f-bar"><i></i></span><span class="f-num">12,480</span><span class="f-rate">100%</span></li>
+              <li data-ask="Funnel step 2: Started signup" data-val="3,120 people, 25% of visitors" style="--w:25%"><span class="f-name">Started signup</span><span class="f-bar"><i></i></span><span class="f-num">3,120</span><span class="f-rate">25.0%</span></li>
+              <li data-ask="Funnel step 3: Installed snippet" data-val="1,810 people, 58% of signups" style="--w:14.5%"><span class="f-name">Installed snippet</span><span class="f-bar"><i></i></span><span class="f-num">1,810</span><span class="f-rate">58.0%</span></li>
+              <li data-ask="Funnel step 4: Saw first chart" data-val="1,390 people, 77% of installs" style="--w:11.1%"><span class="f-name">Saw first chart</span><span class="f-bar"><i></i></span><span class="f-num">1,390</span><span class="f-rate">76.8%</span></li>
+              <li data-ask="Funnel step 5: Invited a teammate" data-val="610 people, 44% of step 4" style="--w:4.9%"><span class="f-name">Invited a teammate</span><span class="f-bar"><i></i></span><span class="f-num">610</span><span class="f-rate">43.9%</span></li>
+            </ol>
+          </div>
+
+          <div class="pa-view" id="pa-retention" role="tabpanel" aria-labelledby="pa-tab-retention" hidden>
+            <div class="pa-head">
+              <span class="grip" role="button" data-ask="Retention table" data-val="weekly cohorts since Aug 3, week 4 around 31%" data-alias="Retention|Cohorts" tabindex="0" aria-label="Retention table: press Enter to ask about it"><i aria-hidden="true"></i></span>
+              <div>
+                <h3>Weekly retention</h3>
+                <p>Came back and did anything · by signup week</p>
+              </div>
+            </div>
+            <div class="ret-scroll">
+              <table class="ret" data-ask-group data-try="Is this retention any good?">
+                <thead><tr><th scope="col">Cohort</th><th scope="col">Size</th><th scope="col">Wk 1</th><th scope="col">Wk 2</th><th scope="col">Wk 3</th><th scope="col">Wk 4</th><th scope="col">Wk 5</th></tr></thead>
+                <tbody>
+                  <tr><th scope="row">Aug 3</th><td>1,720</td><td data-ask="Retention: Aug 3 cohort, week 1" data-val="46% came back" style="--r:.46">46%</td><td data-ask="Retention: Aug 3 cohort, week 2" data-val="38% came back" style="--r:.38">38%</td><td data-ask="Retention: Aug 3 cohort, week 3" data-val="33% came back" style="--r:.33">33%</td><td data-ask="Retention: Aug 3 cohort, week 4" data-val="31% came back" style="--r:.31">31%</td><td data-ask="Retention: Aug 3 cohort, week 5" data-val="30% came back" style="--r:.30">30%</td></tr>
+                  <tr><th scope="row">Aug 10</th><td>1,690</td><td data-ask="Retention: Aug 10 cohort, week 1" data-val="48% came back" style="--r:.48">48%</td><td data-ask="Retention: Aug 10 cohort, week 2" data-val="39% came back" style="--r:.39">39%</td><td data-ask="Retention: Aug 10 cohort, week 3" data-val="35% came back" style="--r:.35">35%</td><td data-ask="Retention: Aug 10 cohort, week 4" data-val="32% came back" style="--r:.32">32%</td><td></td></tr>
+                  <tr><th scope="row">Aug 17</th><td>1,860</td><td data-ask="Retention: Aug 17 cohort, week 1" data-val="47% came back" style="--r:.47">47%</td><td data-ask="Retention: Aug 17 cohort, week 2" data-val="41% came back" style="--r:.41">41%</td><td data-ask="Retention: Aug 17 cohort, week 3" data-val="36% came back" style="--r:.36">36%</td><td></td><td></td></tr>
+                  <tr><th scope="row">Aug 24</th><td>1,940</td><td data-ask="Retention: Aug 24 cohort, week 1" data-val="51% came back" style="--r:.51">51%</td><td data-ask="Retention: Aug 24 cohort, week 2" data-val="42% came back" style="--r:.42">42%</td><td></td><td></td><td></td></tr>
+                  <tr><th scope="row">Aug 31</th><td>2,010</td><td data-ask="Retention: Aug 31 cohort, week 1" data-val="55% came back, the best so far" style="--r:.55">55%</td><td></td><td></td><td></td><td></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────────── Pricing.sheet ───────────── -->
+      <section class="win" id="win-pricing" data-win="pricing" data-try="How would my bill add up?" data-names="Pricing.sheet|Pricing|Pricing sheet|Prices" data-icon="sheet" data-kind="file" aria-labelledby="win-pricing-title">
+        <h2 class="win-title" id="win-pricing-title">Pricing.sheet</h2>
+        <div class="win-body sheet">
+          <div class="sheet-formula" aria-hidden="true">
+            <span class="sheet-ref">E3</span>
+            <span class="sheet-fx">ƒx</span>
+            <output class="sheet-expr">=MAX(0, D3-B3) * C3</output>
+          </div>
+          <div class="sheet-scroll">
+            <table class="sheet-grid" aria-describedby="sheet-note">
+              <caption class="sr-only">Molehill pricing: a free allowance every month, then per use. Change "Your usage" to estimate a bill.</caption>
+              <thead>
+                <tr class="sheet-cols" aria-hidden="true"><td class="corner"></td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td></tr>
+                <tr class="sheet-head">
+                  <td class="rn" aria-hidden="true">1</td>
+                  <th scope="col">Product</th>
+                  <th scope="col">Free every month</th>
+                  <th scope="col">Then, each</th>
+                  <th scope="col">Your usage</th>
+                  <th scope="col">Your bill</th>
+                </tr>
+              </thead>
+              <tbody data-ask-group>
+                <tr data-ask="Product analytics" data-alias="Analytics|Events" data-try="What counts as an event?" data-free="1000000" data-price="0.00005" data-unit="event">
+                  <td class="rn" aria-hidden="true">2</td><th scope="row">Product analytics</th><td>1,000,000 events</td><td>$0.00005</td><td class="use"><input inputmode="numeric" value="2,400,000" aria-label="Your monthly events"></td><td class="bill">$70.00</td>
+                </tr>
+                <tr data-ask="Session replay" data-alias="Replay|Recordings|Session replays" data-try="Does a recording count if nobody watches it?" data-free="5000" data-price="0.005" data-unit="recording">
+                  <td class="rn" aria-hidden="true">3</td><th scope="row">Session replay</th><td>5,000 recordings</td><td>$0.005</td><td class="use"><input inputmode="numeric" value="8,000" aria-label="Your monthly recordings"></td><td class="bill">$15.00</td>
+                </tr>
+                <tr data-ask="Feature flags" data-alias="Flags|Flag requests" data-try="Do experiments add to this?" data-free="1000000" data-price="0.0001" data-unit="request">
+                  <td class="rn" aria-hidden="true">4</td><th scope="row">Feature flags</th><td>1,000,000 requests</td><td>$0.0001</td><td class="use"><input inputmode="numeric" value="1,500,000" aria-label="Your monthly flag requests"></td><td class="bill">$50.00</td>
+                </tr>
+                <tr data-ask="Experiments" data-alias="Experiment|A/B tests" data-try="So experiments cost nothing extra?" data-val="included, billed as feature flag requests">
+                  <td class="rn" aria-hidden="true">5</td><th scope="row">Experiments</th><td>Included</td><td>billed as flags</td><td class="use na">—</td><td class="bill">$0.00</td>
+                </tr>
+                <tr data-ask="Surveys" data-alias="Survey|Responses" data-try="What happens after 250 responses?" data-free="250" data-price="0.10" data-unit="response">
+                  <td class="rn" aria-hidden="true">6</td><th scope="row">Surveys</th><td>250 responses</td><td>$0.10</td><td class="use"><input inputmode="numeric" value="100" aria-label="Your monthly survey responses"></td><td class="bill">$0.00</td>
+                </tr>
+                <tr data-ask="Data warehouse" data-alias="Warehouse|Rows|Synced rows" data-try="Is the first million rows free every month?" data-free="1000000" data-price="0.000015" data-unit="row">
+                  <td class="rn" aria-hidden="true">7</td><th scope="row">Data warehouse</th><td>1,000,000 rows</td><td>$0.000015</td><td class="use"><input inputmode="numeric" value="0" aria-label="Your monthly synced rows"></td><td class="bill">$0.00</td>
+                </tr>
+                <tr data-ask="Enterprise" data-alias="Enterprise plan|SSO|SLA" data-try="What do we get for $2,000 a month?" data-val="from $2,000/mo with SSO, audit logs and an SLA">
+                  <td class="rn" aria-hidden="true">8</td><th scope="row">Enterprise</th><td>SSO, audit logs, SLA</td><td>from $2,000/mo</td><td class="use na">—</td><td class="bill muted">talk to us</td>
+                </tr>
+                <tr class="sheet-total" data-ask="Total estimate" data-alias="Total|Estimate|My estimate" data-try="Can I cap my bill at this?">
+                  <td class="rn" aria-hidden="true">9</td><th scope="row">Total per month</th><td></td><td></td><td></td><td class="bill total">$135.00</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="sheet-note" id="sheet-note">Free tiers reset on the 1st. No card until you pass one, and a cap per product stops the bill where you say.</p>
+        </div>
+      </section>
+
+      <!-- ───────────── Chat ───────────── -->
+      <section class="win win--chat" id="win-chat" data-win="chat" data-names="Chat|Chat.app" data-icon="chat" data-kind="app" data-drop="chat" aria-labelledby="win-chat-title">
+        <h2 class="win-title" id="win-chat-title">Chat</h2>
+        <div class="win-body chat" id="chat">
+          <noscript><p class="chat-noscript">Chat needs JavaScript. Everything else on this page is plain HTML.</p></noscript>
+        </div>
+      </section>
+
+      <!-- ───────────── Session replay ───────────── -->
+      <section class="win" id="win-replay" data-win="replay" data-try="How much does replay cost?" data-names="Session replay|Replay|Recording|Recordings|Session replays" data-icon="replay" data-kind="app" aria-labelledby="win-replay-title">
+        <h2 class="win-title" id="win-replay-title">Session replay</h2>
+        <div class="win-body replay">
+          <div class="rp-meta" data-ask="Recording #4821" data-val="checkout, 1:12, left without paying" data-alias="Recording|This recording" tabindex="0">
+            <b>Recording #4821</b> · /checkout · Firefox on Windows · 1:12
+            <span class="sample">Burrow · sample</span>
+          </div>
+          <div class="rp-stage">
+            <div class="rp-screen" aria-hidden="true">
+              <div class="rp-chrome"><i></i><i></i><i></i><span>burrow · /checkout</span></div>
+              <div class="rp-page">
+                <p class="rp-plan"><b>Burrow Plus</b><span>$49 / year</span></p>
+                <div class="rp-coupon"><span class="rp-input"><span class="rp-typed"></span><span class="rp-caret"></span><span class="rp-ph">Coupon code</span></span><span class="rp-apply">Apply</span></div>
+                <p class="rp-error">Coupon MOLE50 has expired</p>
+                <span class="rp-pay">Pay $49</span>
+                <span class="rp-rage">rage click ×4</span>
+              </div>
+              <svg class="rp-cursor" viewBox="0 0 14 20"><path d="M1 1v15l4-4 3 7 3-1-3-7h6z"/></svg>
+              <i class="rp-ripple"></i>
+              <div class="rp-ended"><span>Left without paying</span></div>
+            </div>
+          </div>
+          <div class="rp-controls">
+            <button type="button" class="rp-play" aria-label="Play"><svg viewBox="0 0 16 16" aria-hidden="true"><path class="i-play" d="M4 2.5v11l9-5.5z"/><path class="i-pause" d="M4 2.5h3v11H4zM9 2.5h3v11H9z"/></svg></button>
+            <span class="rp-time"><span class="rp-now">0:00</span> / 1:12</span>
+            <div class="rp-track" role="slider" tabindex="0" aria-label="Recording position" aria-valuemin="0" aria-valuemax="72" aria-valuenow="0" aria-valuetext="0:00">
+              <i class="rp-fill"></i>
+              <i class="rp-mark" style="--t:18" data-kind="info"></i>
+              <i class="rp-mark" style="--t:31" data-kind="error"></i>
+              <i class="rp-mark" style="--t:42" data-kind="rage"></i>
+              <i class="rp-mark" style="--t:57" data-kind="info"></i>
+              <i class="rp-mark" style="--t:68" data-kind="exit"></i>
+              <i class="rp-head"></i>
+            </div>
+            <button type="button" class="rp-speed" aria-label="Playback speed">2×</button>
+          </div>
+          <ol class="rp-events" data-ask-group data-try="What does this event tell us?">
+            <li data-ask="Page view at 0:00" data-val="/checkout" data-t="0"><time>0:00</time> Page view · /checkout</li>
+            <li data-ask="Typed a coupon at 0:18" data-val="MOLE50" data-t="18"><time>0:18</time> Typed “MOLE50” in Coupon code</li>
+            <li data-ask="Error at 0:31" data-val="Coupon MOLE50 has expired" data-t="31" data-kind="error"><time>0:31</time> Error: Coupon MOLE50 has expired</li>
+            <li data-ask="Rage click at 0:42" data-try="Why does this count as a rage click?" data-val="4 clicks on Apply coupon" data-alias="Rage click|Rage clicks" data-t="42" data-kind="rage"><time>0:42</time> Rage click · 4× on Apply</li>
+            <li data-ask="Hesitation at 0:57" data-val="hovered Pay $49 for 9 seconds" data-t="57"><time>0:57</time> Hovered “Pay $49” for 9 s</li>
+            <li data-ask="Exit at 1:08" data-val="left without paying" data-t="68" data-kind="exit"><time>1:08</time> Left without paying</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ───────────── Feature flags ───────────── -->
+      <section class="win" id="win-flags" data-win="flags" data-try="How are flag requests billed?" data-names="Feature flags|Flags|Feature flag" data-icon="flags" data-kind="app" aria-labelledby="win-flags-title">
+        <h2 class="win-title" id="win-flags-title">Feature flags</h2>
+        <div class="win-body flags">
+          <div class="win-toolbar">
+            <span class="flags-count">6 flags</span>
+            <span class="sample">Burrow · sample · toggles are pretend</span>
+          </div>
+          <div class="flags-scroll">
+            <table class="flags-table">
+              <thead><tr><th scope="col">Flag</th><th scope="col">Status</th><th scope="col">Rollout</th><th scope="col">Last change</th></tr></thead>
+              <tbody data-ask-group data-try="What does this rollout mean for users?">
+                <tr data-ask="new-onboarding" data-flag-on="true" data-rollout="100" data-note="shipped Sep 7"><th scope="row"><code>new-onboarding</code></th><td><button type="button" class="toggle" role="switch" aria-checked="true" aria-label="new-onboarding"></button></td><td><span class="roll" style="--p:100"></span><span class="pct">100%</span></td><td>Sep 7 · shipped</td></tr>
+                <tr data-ask="checkout-v2" data-flag-on="true" data-rollout="25" data-note="goes to 50% on Sep 29"><th scope="row"><code>checkout-v2</code></th><td><button type="button" class="toggle" role="switch" aria-checked="true" aria-label="checkout-v2"></button></td><td><span class="roll" style="--p:25"></span><span class="pct">25%</span></td><td>Sep 15 · 50% on Sep 29</td></tr>
+                <tr data-ask="coupon-field" data-flag-on="false" data-rollout="0" data-note="killed after rage clicks"><th scope="row"><code>coupon-field</code></th><td><button type="button" class="toggle" role="switch" aria-checked="false" aria-label="coupon-field"></button></td><td><span class="roll" style="--p:0"></span><span class="pct">0%</span></td><td>Sep 24 · killed after rage clicks</td></tr>
+                <tr data-ask="dark-mode" data-flag-on="true" data-rollout="10" data-note="beta cohort"><th scope="row"><code>dark-mode</code></th><td><button type="button" class="toggle" role="switch" aria-checked="true" aria-label="dark-mode"></button></td><td><span class="roll" style="--p:10"></span><span class="pct">10%</span></td><td>Aug 19 · beta cohort</td></tr>
+                <tr data-ask="pricing-headline-test" data-flag-on="true" data-rollout="50" data-note="runs the headline experiment"><th scope="row"><code>pricing-headline-test</code></th><td><button type="button" class="toggle" role="switch" aria-checked="true" aria-label="pricing-headline-test"></button></td><td><span class="roll" style="--p:50"></span><span class="pct">50 / 50</span></td><td>Sep 10 · experiment</td></tr>
+                <tr data-ask="ai-summaries" data-flag-on="false" data-rollout="0" data-note="waiting on legal"><th scope="row"><code>ai-summaries</code></th><td><button type="button" class="toggle" role="switch" aria-checked="false" aria-label="ai-summaries"></button></td><td><span class="roll" style="--p:0"></span><span class="pct">0%</span></td><td>Jul 30 · waiting on legal</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────────── Experiments ───────────── -->
+      <section class="win" id="win-experiments" data-win="experiments" data-try="How do experiments work here?" data-names="Experiments|Experiment|A/B test|Headline test" data-icon="experiments" data-kind="app" aria-labelledby="win-experiments-title">
+        <h2 class="win-title" id="win-experiments-title">Experiments</h2>
+        <div class="win-body exp">
+          <div class="exp-card" data-ask="Pricing headline test" data-val="Test beats Control, 96% chance" data-alias="Headline test|This experiment" tabindex="0">
+            <p class="exp-status"><span class="dot"></span> Running · day 14 · 12,480 visitors <span class="sample">Burrow · sample</span></p>
+            <h3>Pricing page headline</h3>
+            <p class="exp-goal">Goal: <b>signed up</b></p>
+          </div>
+          <ul class="exp-variants" data-ask-group data-try="Is 96% enough to ship?">
+            <li data-ask="Control: “Budgeting, finally”" data-val="4.1% signed up (±0.4), 6,229 visitors" data-alias="Control|Variant A" style="--c:4.1"><span class="exp-name">Control</span><q>Budgeting, finally</q><span class="exp-bar"><i></i></span><b>4.1%</b></li>
+            <li data-ask="Test: “See where your money goes”" data-val="5.3% signed up (±0.5), 6,251 visitors" data-alias="Test|Variant B" style="--c:5.3" class="win-row"><span class="exp-name">Test</span><q>See where your money goes</q><span class="exp-bar"><i></i></span><b>5.3%</b></li>
+          </ul>
+          <p class="exp-verdict" data-ask="Verdict" data-val="96% chance Test is better, +29% signups" tabindex="0"><b>96%</b> chance Test is better (+29% signups). Enough to ship? Probably.</p>
+          <div class="exp-actions"><button type="button" class="chunky" data-toast="Shipped to 100%. (Pretend: it's sample data.)">Ship Test</button></div>
+        </div>
+      </section>
+
+      <!-- ───────────── Surveys ───────────── -->
+      <section class="win" id="win-surveys" data-win="surveys" data-try="How are surveys billed?" data-names="Surveys|Survey|PMF survey" data-icon="surveys" data-kind="app" aria-labelledby="win-surveys-title">
+        <h2 class="win-title" id="win-surveys-title">Surveys</h2>
+        <div class="win-body surveys">
+          <p class="sv-meta">Product-fit survey · 312 responses <span class="sample">Burrow · sample</span></p>
+          <h3 data-ask="Survey question" data-val="How would you feel if you could no longer use Burrow?" tabindex="0">How would you feel if you could no longer use Burrow?</h3>
+          <ul class="sv-bars" data-ask-group data-try="How do I run a survey like this?">
+            <li data-ask="Answer: Very disappointed" data-val="44% of 312 responses" style="--v:44"><span>Very disappointed</span><i></i><b>44%</b></li>
+            <li data-ask="Answer: Somewhat disappointed" data-val="38% of 312 responses" style="--v:38"><span>Somewhat disappointed</span><i></i><b>38%</b></li>
+            <li data-ask="Answer: Not disappointed" data-val="18% of 312 responses" style="--v:18"><span>Not disappointed</span><i></i><b>18%</b></li>
+          </ul>
+          <ul class="sv-quotes" data-ask-group data-try="Can I tag answers like this?">
+            <li data-ask="Quote from a freelancer" data-val="I'd go back to a spreadsheet and I'd hate every minute of it."><q>I'd go back to a spreadsheet and I'd hate every minute of it.</q> <span>— freelancer, 2 yrs</span></li>
+            <li data-ask="Quote from a student" data-val="The Sunday digest is the only email I open."><q>The Sunday digest is the only email I open.</q> <span>— student</span></li>
+            <li data-ask="Quote from a couple" data-val="Wish it did joint accounts."><q>Wish it did joint accounts.</q> <span>— shared household</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ───────────── Data warehouse ───────────── -->
+      <section class="win" id="win-warehouse" data-win="warehouse" data-try="What can I sync into the warehouse?" data-names="Data warehouse|Warehouse|SQL" data-icon="warehouse" data-kind="app" aria-labelledby="win-warehouse-title">
+        <h2 class="win-title" id="win-warehouse-title">Data warehouse</h2>
+        <div class="win-body wh">
+          <ul class="wh-sources" data-ask-group data-try="How fresh is the synced data?" aria-label="Sources">
+            <li data-ask="Source: Postgres" data-val="syncs every 15 minutes"><span class="ok"></span>Postgres <small>every 15 min</small></li>
+            <li data-ask="Source: Billing" data-val="syncs hourly"><span class="ok"></span>Billing <small>hourly</small></li>
+            <li data-ask="Source: CRM" data-val="syncs daily"><span class="ok"></span>CRM <small>daily</small></li>
+          </ul>
+          <pre class="wh-sql" data-ask="SQL query" data-val="people and average MRR per plan, last 30 days" tabindex="0"><code><b>select</b> plan, <b>count</b>(*) <b>as</b> people, <b>round</b>(<b>avg</b>(mrr), 2) <b>as</b> avg_mrr
+<b>from</b> billing.subscriptions
+<b>join</b> molehill.persons <b>using</b> (email)
+<b>where</b> last_seen &gt; now() - <b>interval</b> '30 days'
+<b>group by</b> plan <b>order by</b> avg_mrr <b>desc</b></code></pre>
+          <table class="wh-result">
+            <thead><tr><th scope="col">plan</th><th scope="col">people</th><th scope="col">avg_mrr</th></tr></thead>
+            <tbody data-ask-group data-try="Can I chart a query like this?">
+              <tr data-ask="Result row: Family" data-val="380 people, $7.42 average MRR"><td>Family</td><td>380</td><td>7.42</td></tr>
+              <tr data-ask="Result row: Plus" data-val="2,140 people, $4.08 average MRR"><td>Plus</td><td>2,140</td><td>4.08</td></tr>
+              <tr data-ask="Result row: Free" data-val="11,060 people, $0 average MRR"><td>Free</td><td>11,060</td><td>0.00</td></tr>
+            </tbody>
+          </table>
+          <p class="wh-foot">3 rows · 0.41 s · <span class="sample">Burrow · sample</span></p>
+        </div>
+      </section>
+
+      <!-- ───────────── Changelog.txt ───────────── -->
+      <section class="win" id="win-changelog" data-win="changelog" data-try="What shipped this month?" data-names="Changelog.txt|Changelog|Release notes|What's new" data-icon="txt" data-kind="file" aria-labelledby="win-changelog-title">
+        <h2 class="win-title" id="win-changelog-title">Changelog.txt</h2>
+        <div class="win-body txt">
+          <ol class="txt-lines" data-ask-group data-try="Is this on for every plan?">
+            <li class="c"># Molehill changelog</li>
+            <li class="c"># We ship weird little features on Tuesdays.</li>
+            <li class="c"># Drag a line onto Chat to ask about it.</li>
+            <li class="blank"></li>
+            <li data-ask="2026-09-22" data-val="Surveys: skip logic, jump to a question based on an answer"><time datetime="2026-09-22">2026-09-22</time> <b>Surveys</b>      Skip logic: jump to a question based on an answer</li>
+            <li data-ask="2026-09-15" data-val="Feature flags: scheduled rollouts, widen a flag on a date"><time datetime="2026-09-15">2026-09-15</time> <b>Flags</b>        Scheduled rollouts: widen a flag on a set date</li>
+            <li data-ask="2026-09-08" data-val="Session replay: heatmaps on top of recordings"><time datetime="2026-09-08">2026-09-08</time> <b>Replay</b>       Heatmaps on top of recordings</li>
+            <li data-ask="2026-09-01" data-val="Data warehouse: Postgres syncs every 15 minutes (was hourly)"><time datetime="2026-09-01">2026-09-01</time> <b>Warehouse</b>    Postgres syncs every 15 minutes (it was hourly)</li>
+            <li data-ask="2026-08-25" data-val="Product analytics: funnels broken down by cohort"><time datetime="2026-08-25">2026-08-25</time> <b>Analytics</b>    Funnels broken down by cohort</li>
+            <li data-ask="2026-08-18" data-val="Experiments: sequential testing, peek early and stay honest"><time datetime="2026-08-18">2026-08-18</time> <b>Experiments</b>  Sequential testing: peek early, stay honest</li>
+            <li data-ask="2026-08-11" data-val="Session replay: React Native recordings leave beta"><time datetime="2026-08-11">2026-08-11</time> <b>Replay</b>       React Native recordings leave beta</li>
+            <li data-ask="2026-08-04" data-val="Product analytics: annotations, mark a deploy on any chart"><time datetime="2026-08-04">2026-08-04</time> <b>Analytics</b>    Annotations: mark a deploy on any chart</li>
+            <li class="blank"></li>
+            <li class="c"># Older entries are mostly bug fixes. We fixed a lot of bugs.</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ───────────── Why Molehill.doc ───────────── -->
+      <section class="win" id="win-why" data-win="why" data-try="Why Molehill over the big tools?" data-names="Why Molehill.doc|Why Molehill|About|About Molehill" data-icon="doc" data-kind="file" aria-labelledby="win-why-title">
+        <h2 class="win-title" id="win-why-title">Why Molehill.doc</h2>
+        <div class="win-body doc">
+          <div class="doc-ruler" aria-hidden="true"></div>
+          <article class="doc-page" data-ask-group data-try="Can you tell me more about this?">
+            <h3 class="doc-title">Why Molehill?</h3>
+            <p data-ask-handle data-ask="Intro" data-val="we make molehills: small, specific answers" data-alias="Why Molehill">Most analytics tools make a mountain out of your data. We make molehills: small, specific answers you can act on before lunch.</p>
+            <h4>One hill, six tools</h4>
+            <p data-ask-handle data-ask="One hill, six tools" data-val="one SDK, one set of people, one bill" data-alias="All in one|Six tools">Analytics, replays, flags, experiments, surveys and a warehouse share one SDK, one list of people and one bill. When a funnel dips, the replays of the people who fell out are a click away.</p>
+            <h4>Your data stays yours</h4>
+            <p data-ask-handle data-ask="Your data stays yours" data-val="US or EU hosting, MIT open source, self-host" data-alias="Data|Hosting|EU|Open source|Self-host|Privacy">Pick US or EU hosting when you sign up. The core is open source (MIT), so you can run it on your own servers instead. We don't sell data. We barely share snacks.</p>
+            <h4>Priced like a utility</h4>
+            <p data-ask-handle data-ask="Priced like a utility" data-val="free allowance every month, then per use, caps per product" data-alias="Pricing|Billing|Caps">Every product has a free allowance that resets each month. Past it, you pay per event, recording or response, and a cap per product stops the bill where you say.</p>
+            <h4>Who shouldn't use Molehill</h4>
+            <p data-ask-handle data-ask="Who shouldn't use Molehill" data-val="not for 90-slide quarterly decks" data-alias="Who it's for|Not for">If you need a 90-slide deck every quarter, we'll disappoint you. If you need to know why signups dipped last Tuesday, you're in the right hole.</p>
+            <p class="doc-sign">— the moles</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- ───────────── Quickstart.md ───────────── -->
+      <section class="win" id="win-docs" data-win="docs" data-try="How long does setup take?" data-names="Quickstart.md|Quickstart|Docs|Install|SDK" data-icon="md" data-kind="file" aria-labelledby="win-docs-title">
+        <h2 class="win-title" id="win-docs-title">Quickstart.md</h2>
+        <div class="win-body md">
+          <h3># Quickstart</h3>
+          <p>Three steps. Autocapture picks up clicks and pageviews on its own; replays start recording once you allow them.</p>
+          <ol class="md-steps" data-ask-group data-try="Does this work with React?">
+            <li data-ask="Step 1: install" data-val="npm install @molehill/web"><span>1. Install</span><code>npm install @molehill/web</code></li>
+            <li data-ask="Step 2: initialize" data-val="molehill.init('mh_pk_…', { region: 'eu' })" data-alias="Init|Region"><span>2. Initialize</span><code>molehill.init('mh_pk_7Qx…', { region: 'eu' })</code></li>
+            <li data-ask="Step 3: capture an event" data-val="molehill.capture('coupon_applied', { code: 'MOLE50' })" data-alias="Capture|Events"><span>3. Capture something</span><code>molehill.capture('coupon_applied', { code: 'MOLE50' })</code></li>
+          </ol>
+          <p class="md-sdks" data-ask="SDKs" data-val="JavaScript, React, Node, Python, Go, Ruby, iOS, Android, React Native, Flutter" tabindex="0">SDKs: JavaScript · React · Node · Python · Go · Ruby · iOS · Android · React Native · Flutter</p>
+        </div>
+      </section>
+
+      <!-- ───────────── Trash ───────────── -->
+      <section class="win" id="win-trash" data-win="trash" data-try="What happened to these?" data-names="Trash|Our mistakes|Recycle bin" data-icon="trash" data-kind="app" aria-labelledby="win-trash-title">
+        <h2 class="win-title" id="win-trash-title">Trash</h2>
+        <div class="win-body trash">
+          <ul class="trash-list" data-ask-group data-try="Why did this end up in the trash?">
+            <li data-ask="pageviews-only-analytics.zip" data-val="our first product, 2021"><i class="px" data-icon="zip" aria-hidden="true"></i><span><b>pageviews-only-analytics.zip</b> Our first product. Pageviews told us nothing.</span></li>
+            <li data-ask="pricing-v1-seven-tiers.pdf" data-val="seven plans, nobody could pick one"><i class="px" data-icon="file" aria-hidden="true"></i><span><b>pricing-v1-seven-tiers.pdf</b> Seven plans. Nobody could pick one.</span></li>
+            <li data-ask="dashboard-with-94-charts.json" data-val="we made a mountain"><i class="px" data-icon="file" aria-hidden="true"></i><span><b>dashboard-with-94-charts.json</b> We made a mountain. Sorry.</span></li>
+          </ul>
+          <div class="trash-foot"><span>3 items</span><button type="button" class="chunky chunky--quiet" data-empty-trash>Empty Trash</button></div>
+        </div>
+      </section>
+
+      <!-- ───────────── Setup (the "Get started" button) ───────────── -->
+      <section class="win win--dialog" id="win-setup" data-win="setup" data-names="Setup|Get started|Sign up" data-icon="setup" data-kind="app" aria-labelledby="win-setup-title">
+        <h2 class="win-title" id="win-setup-title">Molehill Setup</h2>
+        <div class="win-body setup">
+          <i class="px setup-icon" data-icon="setup" aria-hidden="true"></i>
+          <div>
+            <p><b>There's nothing to install.</b> Molehill is made up.</p>
+            <p>The chat is real, though: it runs on Stand's Visitor API, and the section below this desktop shows how it's built.</p>
+            <p class="setup-actions"><a class="chunky" href="#how-it-works">How it's built ↓</a> <button type="button" class="chunky chunky--quiet" data-close>Close</button></p>
+          </div>
+        </div>
+      </section>
+
+      <div class="mh-molehill" aria-hidden="false"></div>
+
+    </main>
+
+    <nav class="mh-taskbar" aria-label="Open windows">
+      <ul class="mh-tasks"></ul>
+      <p class="mh-watermark">Molehill is a fictional company. This desktop demonstrates a custom chat UI on Stand Chat's Visitor API.</p>
+      <button type="button" class="mh-task mh-task--chat" data-open="chat" data-drop="chat"><i class="px" data-icon="chat" aria-hidden="true"></i><span class="t-desk">Chat</span><span class="t-phone">Ask us anything</span><b class="badge" hidden></b></button>
+    </nav>
+
+    <p class="sr-only" aria-live="polite" id="mh-live"></p>
+  </div>
+
+  <section id="how-it-works" class="sx-explainer">
+    <div class="sx-wrap">
+      <p class="sx-eyebrow">How it works</p>
+      <h2>Let visitors hand you the thing they're confused about</h2>
+      <p class="sx-lead">Questions on a website are rarely general. They're about one row of the pricing table, a dip in a chart, a line in the changelog. Here, visitors can drag any of those onto the chat. It rides along with the question as an attachment, so whoever answers sees exactly what the visitor was looking at, and the reply can open the window it talks about.</p>
+      <p>The desktop is plain HTML, CSS and JavaScript in this folder, with no dependencies and no build step. The conversation is real: it runs on Stand's Visitor API, so an AI Stand-in answers and someone from the team can take over.</p>
+
+      <h3>Try it</h3>
+      <ol class="sx-steps">
+        <li>Grab a row of <strong>Pricing.sheet</strong>, a point on the chart in <strong>Product analytics</strong> or a line of <strong>Changelog.txt</strong>, and drop it on <strong>Chat</strong>. It lands as a chip above the message box. Collect a few, then ask.</li>
+        <li>Watch the reply. Names in it are chips too: <em>Pricing.sheet › Session replay</em> opens that window next to the chat and lights up the row.</li>
+        <li>No mouse? Tab to a row or a line and press <kbd>Enter</kbd> to attach it, or <kbd>Shift</kbd> + <kbd>F10</kbd> for its menu. On a phone, tap anything in an app, then <strong>Ask about this</strong>.</li>
+        <li>Ask something, then minimize Chat right away. The mole digs while the answer is on its way, and pops up with a flag when it lands. Reload: windows, attachments and the conversation all come back.</li>
+      </ol>
+
+      <div class="sx-note">This page uses <code>site: 'demo'</code>, Stand Chat's shared demo site, which works on any domain. Its demo Stand-in follows this page's prompt, including Molehill's made-up prices. With your own Site ID, your own Stand-ins and team answer, and every question shows up in Stand's History with its attachments.</div>
+
+      <h3>1. Mark what can be asked about</h3>
+      <p>Anything with a <code>data-ask</code> attribute can be dragged onto the chat, or attached with the keyboard or the ⋯ menu. The attribute names the thing; <code>data-val</code> is a short preview of what it showed. The window around it supplies the source, and <code>data-alias</code> adds names a reply might use for it.</p>
+      <pre class="sx-code" data-file="index.html" data-wrap><code class="language-html">&lt;section class="win" data-win="pricing" data-names="Pricing.sheet|Pricing"&gt;
+  &lt;tr data-ask="Session replay" data-alias="Replay|Recordings"&gt;…&lt;/tr&gt;
+&lt;/section&gt;
+
+&lt;section class="win" data-win="changelog" data-names="Changelog.txt|Changelog"&gt;
+  &lt;li data-ask="2026-09-08" data-val="Session replay: heatmaps on top of recordings"&gt;…&lt;/li&gt;
+&lt;/section&gt;</code></pre>
+      <p>What each kind of thing carries, as the preview in parentheses:</p>
+      <ul>
+        <li><strong>A pricing row</strong>: its free tier and unit price, plus your usage and bill once you've typed an estimate in <em>Your usage</em>.</li>
+        <li><strong>A week on the chart</strong>: that week's three numbers and any annotation. Grab near a line and you get just that series' point.</li>
+        <li><strong>A changelog line, a feature flag, a replay event, a funnel step</strong>: what it shows right now. Flip a flag off, and its row says so.</li>
+        <li><strong>A desktop icon, or the icon in a window's title bar</strong>: the whole app or file.</li>
+        <li><strong>Text you selected</strong>, dropped on Chat: a quote, with the window it came from.</li>
+      </ul>
+      <p><code>drag.js</code> handles the gesture with pointer events: a small move starts a drag with a mouse, a long press with a finger. It draws the ghost, lights up any <code>[data-drop="chat"]</code> under the pointer, and flies the ghost into the message box on drop. Desktop icons and title-bar icons attach a whole app or file.</p>
+
+      <h3>2. Attachments are lines of the message</h3>
+      <p>The Visitor API sends text, and that's enough. Each attachment becomes one line at the top of the message: a 📎, where it came from, what it is, and its preview in parentheses. People on the team read it as is in Stand; the page parses it back into chips, in the transcript and after a reload.</p>
+      <pre class="sx-code" data-file="What Stand receives" data-wrap><code>📎 Pricing.sheet › Session replay (5,000 recordings free/mo, then $0.005 each · your usage 8,000 → $15.00/mo)
+📎 Changelog.txt › 2026-09-08 (Session replay: heatmaps on top of recordings)
+Do heatmaps count as extra recordings?</code></pre>
+      <p>Your next message, live from this page. Drag something onto Chat and type, then look again:</p>
+      <pre class="dta-live" data-file="Your next message" data-live="draft"><code>(Nothing attached yet. Drag something onto Chat.)</code></pre>
+      <pre class="sx-code" data-file="message-format.js, simplified"><code class="language-js">export const MARK = '📎';
+
+// { source: 'Pricing.sheet', item: 'Session replay', value: '5,000 recordings…' }
+export function attachmentLine({ source, item, value }) {
+  return `${MARK} ${[source, item].filter(Boolean).join(' › ')}${value ? ` (${value})` : ''}`;
+}
+
+export function formatMessage({ attachments = [], text = '' }) {
+  return [...attachments.map(attachmentLine), text.trim()].filter(Boolean).join('\n');
+}
+
+// Lines that start with the marker are attachments; everything else is the question.
+export function parseMessage(body) {
+  const attachments = [];
+  const text = [];
+  for (const line of body.split('\n')) {
+    if (line.startsWith(`${MARK} `)) attachments.push(parseAttachment(line));
+    else text.push(line);
+  }
+  return { attachments, text: text.join('\n').trim() };
+}</code></pre>
+      <p>The first message also stores private context for whoever answers, and that context can't change later. Attachments ride in each message instead, so the fifth question carries its own context as clearly as the first.</p>
+
+      <h3>3. Replies that open windows</h3>
+      <p>The prompt asks the Stand-in to name a window or a row in double square brackets when it helps. <code>resolve()</code> matches the name against the windows' <code>data-names</code> and the rows' <code>data-ask</code> and <code>data-alias</code>, ignoring case and file extensions. A match becomes a chip that opens the window and lights up the row; a name the page doesn't know stays plain text. When a new reply arrives, its first reference opens beside the chat by itself, without taking the keyboard focus away from the message box.</p>
+      <pre class="sx-code" data-file="chat.js, simplified"><code class="language-js">// "…then $0.005 each [[Pricing.sheet: Session replay]]." → text, a chip, text
+for (const part of parseReply(message.body)) {
+  if (part.ref) {
+    const target = desktop.resolve(part.ref); // { win: 'pricing', el: &lt;tr&gt; } or null
+    bubble.append(target ? refChip(part.ref, target) : part.ref);
+  } else {
+    bubble.append(formatText(part.text)); // escaped, then paragraphs, lists, bold, code, links
+  }
+}
+if (isNew &amp;&amp; firstTarget) desktop.reveal(firstTarget, { beside: 'chat', focus: false });</code></pre>
+      <p>References only ever open, focus and highlight things on the page. Nothing in a reply runs code or follows a link by itself.</p>
+
+      <h3>4. The prompt</h3>
+      <p>Sent once, with the first message, as private context (at most 2,000 characters). It gives the Stand-in Molehill's facts, the attachment format and the window names. The last line describes the desktop at that moment; it's live below.</p>
+      <pre class="dta-live" data-file="prompt.js → buildPrompt()" data-live="prompt"><code></code></pre>
+
+      <h3>5. What the team learns</h3>
+      <p>A question that arrives with its row, chart point or changelog line attached needs no "which plan did you mean?". Over a few weeks, the attachments in Stand's History add up to a map of what confuses people: which pricing rows get dragged most, which chart gets asked about, which release notes raise eyebrows. That's the product learning a plain chat box never gets.</p>
+
+      <h3>6. The conversation behind it</h3>
+      <p><code>stand-visitor.js</code> is the network side, copied from the stand-inline example: discovery, one-time creation, sends over HTTP, replies over a WebSocket, and recovery after reloads and dropped connections. Chat just renders its state. The unsent message, attachments included, is the client's draft, so it survives a reload too.</p>
+      <pre class="sx-code" data-file="main.js"><code class="language-js">import { getClient } from './stand-visitor.js';
+
+const client = getClient({ site: 'demo' }); // Your Site ID from Stand goes here.
+client.subscribe((state) =&gt; chat.render(state));
+client.mount(); // Asks who can answer, or restores the conversation.
+
+// On send: the first message starts the conversation, with the prompt.
+client.setDraft('');
+const context = () =&gt; ({ open: desktop.openNames(), estimate: apps.estimate() });
+await client.send(formatMessage(composer), { prompt: buildPrompt(context()) });</code></pre>
+
+      <h3>Good to know</h3>
+      <ul>
+        <li><strong>Honest about who answers.</strong> Chat shows the responder's name as Stand gives it and an <em>AI</em> badge while the AI Stand-in answers. If someone from the team joins, the badge changes and the transcript says so. The mole is Molehill's mascot, not the responder: it never speaks in the chat.</li>
+        <li><strong>The demo attaches nothing.</strong> On a first visit, a pointer drags a pricing row onto Chat to show the idea. The row lands as a suggestion marked <em>Demo</em>, outside the message, and joins a question only if you click <em>Attach</em>. A drag of your own or a sent question clears it.</li>
+        <li><strong>Closing isn't ending.</strong> Closing or minimizing Chat keeps the conversation going, and the mole tells you when a reply lands. <em>End conversation</em> in Chat's ⋯ menu ends it in Stand.</li>
+        <li><strong>A reload keeps everything.</strong> The transcript and the unsent message come back from the client's <code>sessionStorage</code>; window positions, flag toggles and your usage estimate from this page's own entry. Without storage it all works, and forgets on reload.</li>
+        <li><strong>Nobody around.</strong> If Stand finds no one to answer, Chat says so and offers to check again, and the mole dozes off. Drags still collect attachments; they just wait.</li>
+        <li><strong>Keyboard and screen readers.</strong> Every draggable is focusable with a name, <kbd>Enter</kbd> attaches it, <kbd>Shift</kbd> + <kbd>F10</kbd> opens its menu, and arrow keys move between rows. <kbd>Esc</kbd> closes menus and cancels a drag. Whole replies are announced, not letters.</li>
+        <li><strong>Reduced motion.</strong> No ghost flying across the screen, no digging: attachments appear in place, the mole holds still, and the replay doesn't autoplay.</li>
+        <li><strong>It's a beta.</strong> The Visitor API can grow new fields and events. The client ignores what it doesn't know.</li>
+      </ul>
+
+      <details class="made">
+        <summary>How this was made</summary>
+        <div class="made-body">
+          <p>Written by <strong>Claude Opus 5.5 in Claude Code</strong>. A lead session reworked a list of ideas for custom chat UIs, wrote this example's brief and reviewed the result. A separate Claude agent built the page in its own git worktree: it studied the reference product's website for its tone, drew the pixel icons and the mole in code, tuned the prompt in real conversations with Stand's demo Stand-in until attachments and window names came back right, and tested drags, reloads and failures in headless Chrome at desktop and phone sizes.</p>
+
+          <p class="made-label">The prompt, lightly edited</p>
+          <blockquote class="made-prompt">Given Stand Chat's target audience, find ten products they look up to and would recognize, products that might have the same problems as their own. It could be the market's dominant player. For each, work out how it could embed Stand on its website in an innovative way that pulls visitors in to interact. Not just a chat button, but something novel: something our audience would see and think, "I want that on MY website."
+
+Build each one in a separate session, as its own pull request. Don't use the brand names, but make each website resemble its product in a subtle way.</blockquote>
+
+          <p class="made-label">The follow-up</p>
+          <blockquote class="made-prompt">Do the same again, but raise the quality bar. Feel free to change the ideas.</blockquote>
+
+          <p class="made-label">This example's brief</p>
+          <blockquote class="made-prompt">A product analytics suite whose website is a playful retro desktop: icons, draggable windows, a menu bar, cheeky copy. Its chat is one more app window.
+
+The interaction: drag anything on the desktop onto the chat to ask about it. An app icon, a chart, a pricing row, a changelog line lands as an attachment chip, and the team sees exactly what the visitor was looking at. Keyboard, right-click and long-press do the same.
+
+Attachments travel as a parseable prefix in the message text and come back as chips after a reload. Replies name windows in [[double brackets]], which open and highlight them.
+
+An original mole lives in a molehill in the corner: it peeks, digs while the answer is being written, and pops up with a flag when a reply arrives. On phones the desktop becomes a home screen of apps.</blockquote>
+
+          <p class="made-label">If you try this yourself</p>
+          <ul>
+            <li>Point your agent at the <a href="https://stand.chat/guide/custom-chat-ui">custom chat UI guide</a> and start on the <code>demo</code> Site ID, so it can hold real conversations while it builds.</li>
+            <li>Keep context in the message text, in a format both people and code can read. A fixed marker at the start of a line is easy to parse, and the team never needs a special viewer.</li>
+            <li>Name the page's parts in the prompt, then test replies for real. Here the Stand-in used the window names reliably once the prompt showed a few examples of the format, and the resolver forgives the rest: extensions, case, aliases.</li>
+            <li>Make the drag testable: this one uses pointer events rather than native drag and drop, so a headless browser can drive it, and touch gets a long press instead of fighting the scroll.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h3>Copy this example</h3>
+      <pre class="sx-code"><code class="language-sh">npx degit standchat/examples/drag-to-ask my-drag-to-ask</code></pre>
+
+      <ul class="sx-links">
+        <li><a href="https://stand.chat/guide/custom-chat-ui">Custom chat UI guide ↗</a></li>
+        <li><a href="https://stand.chat/features/custom-chat-ui">Custom chat UI reference ↗</a></li>
+        <li><a href="https://github.com/standchat/examples/tree/main/drag-to-ask/">Source on GitHub ↗</a></li>
+      </ul>
+    </div>
+  </section>
+</body>
+</html>
