@@ -1,8 +1,8 @@
 // Captures an example's social image, <folder>/og.png, the same way for everyone:
-// a 1200×630 browser window on the live page, taken once Stand has a responder,
-// without the site's top bar. The images are committed; the site's build and
-// Vercel never run this. No dependencies; needs Node 22+ and Chrome, Chromium or
-// Edge (or CHROME_PATH).
+// a 1200×630 browser window on the live page, taken once the page has loaded and
+// Stand has a responder, without the site's top bar. The images are committed;
+// the site's build and Vercel never run this. No dependencies; needs Node 22+ and
+// Chrome, Chromium or Edge (or CHROME_PATH).
 //
 //   npm run og                        every example, then the default image
 //   npm run og -- my-example          one example
@@ -70,7 +70,15 @@ async function capture(url, out) {
     const page = await connect(port);
     await page.send('Emulation.setDeviceMetricsOverride', { width: WIDTH, height: HEIGHT, deviceScaleFactor: 1, mobile: false });
     await page.send('Page.enable');
+    const loaded = page.once('Page.loadEventFired');
     await page.send('Page.navigate', { url });
+    // Page.navigate returns while the page is still loading, and data-og-focus measured
+    // before its stylesheets and web fonts apply is in the wrong place. Wait for both,
+    // for at most 30 s.
+    await Promise.race([
+      loaded.then(() => page.evaluate('document.fonts.ready')),
+      new Promise((r) => setTimeout(r, 30000).unref()),
+    ]);
     await page.evaluate(`new Promise((done) => {
       const start = Date.now();
       const usesStand = document.querySelector('script[src*="stand.js"]');
@@ -119,17 +127,22 @@ async function connect(port) {
   await new Promise((r) => ws.addEventListener('open', r, { once: true }));
   let id = 0;
   const pending = new Map();
+  const events = new Map();
   ws.addEventListener('message', (event) => {
     const message = JSON.parse(event.data);
     pending.get(message.id)?.(message);
     pending.delete(message.id);
+    events.get(message.method)?.(message.params);
+    events.delete(message.method);
   });
   const send = (method, params = {}) => new Promise((ok, fail) => {
     pending.set(++id, (m) => (m.error ? fail(new Error(`${method}: ${m.error.message}`)) : ok(m.result)));
     ws.send(JSON.stringify({ id, method, params }));
   });
   const evaluate = (expression) => send('Runtime.evaluate', { expression, awaitPromise: true });
-  return { send, evaluate, close: () => ws.close() };
+  // The next event of a kind, such as Page.loadEventFired.
+  const once = (method) => new Promise((ok) => events.set(method, ok));
+  return { send, evaluate, once, close: () => ws.close() };
 }
 
 // A tiny static server that behaves like the Vercel deployment (trailing slashes).
