@@ -460,7 +460,7 @@
         <li>Gilly shows up once the voice is ready. The first visit downloads it, 326 MB, with a note in the corner showing how far along it is; after that, your browser has it in a few seconds.</li>
         <li>Leave Gilly alone for a minute. Gilly gets bored: glances around, sighs, checks the time, blows bubbles, does a flip, sits down to wait, and finally dozes off.</li>
         <li>Move your pointer close and Gilly perks up and watches it. Click Gilly, or tab to Gilly and press Enter.</li>
-        <li>Gilly startles awake, waves and says hello, lighting up each word as it's spoken. Ask something like <em>When do the otters eat?</em> Gilly leans in while you type, thinks while the answer is being written, then answers out loud.</li>
+        <li>Gilly startles awake, waves and says hello, lighting up each word as it's spoken. Ask something like <em>When do the otters eat?</em> Gilly leans in while you type, thinks while the answer is being written, then answers out loud. Ask in Italian or Spanish, and the answer comes in the browser's own voice for that language: the neural voice only speaks English.</li>
         <li>Tap the microphone once and just talk (Chrome, Edge and Safari). Gilly answers, then listens again with a little chirp, so the conversation keeps going hands-free. Tap Gilly to cut in; tap the mic, type, or stay quiet to stop. The speaker button turns the voice off; everything still works as text.</li>
         <li>Close the bubble, or reload the page: the conversation picks up where it left off.</li>
         <li>On iPhone or iPad, choose <strong>See Gilly in your room</strong> in the chat's ⋯ menu or the <em>Meet Gilly</em> section. On Apple Vision Pro, Gilly is a real 3D model with depth, standing in a soft window into the page: pinch and drag Gilly out of the page into your room.</li>
@@ -470,7 +470,7 @@
 
       <h3>The pieces</h3>
       <ul>
-        <li><strong><code>stand-client.js</code></strong> talks to Stand: discovery, one-time session creation, sending over HTTP, replies over a WebSocket, reconnects and reload recovery. It follows the <a href="https://stand.chat/guide/custom-chat-ui">custom chat UI guide</a>'s reference client and adds typing and streamed-reply events, so Gilly can think while an answer is being written.</li>
+        <li><strong><code>stand-client.js</code></strong> talks to Stand: discovery, one-time session creation, sending over HTTP, replies over a WebSocket, reconnects and reload recovery. It follows the <a href="https://stand.chat/guide/custom-chat-ui">custom chat UI guide</a>'s reference client and adds typing and streamed-reply events, so Gilly can think while an answer is being written, and the conversation's language, so Gilly can pick a voice.</li>
         <li><strong><code>chat.js</code></strong> is the interface: speech bubbles, the reply bubble, and what Gilly does in each state of the chat.</li>
         <li><strong><code>voice.js</code></strong> speaks, keeps the bubble and the mouth in step with the audio, and listens with <code>SpeechRecognition</code>. Where there's no WebGPU, it speaks with the built-in <code>speechSynthesis</code>.</li>
         <li><strong><code>voice-worker.js</code></strong> runs Kokoro, an open neural voice, on the GPU in a worker, so making speech never stalls the animation.</li>
@@ -531,6 +531,12 @@ clip.start(Math.max(ctx.currentTime, previousClipEnd));</code></pre>
       <p>The bubble and the mouth follow the audio itself. <code>voice.js</code> measures each clip's loudness every 10 ms, spreads the words over the stretches with voice in them, and pins commas and full stops to the pauses. Each letter picks a mouth shape (open, wide or round) that blends into Gilly's face; the loudness decides how far it opens, so the lips close in the pauses.</p>
       <p>The model is a 326 MB download, once; after that it loads from the browser's cache in about a second. Only its full-precision build sounds right on WebGPU: the smaller half-precision and 8-bit builds come out garbled. So Gilly waits in the wings until the voice is ready, then pops up with the first hello already made, and speaks it the moment you click. Browsers only let sound start after a click or a tap, which is why Gilly greets you then.</p>
       <p>Phones, Data Saver, browsers without WebGPU and GPUs too slow to keep up get the browser's built-in voice instead, with <code>speechSynthesis</code>, and word boundaries or the speaking rate keep the bubble in step. Add <code>?voice=system</code> or <code>?voice=neural</code> to the address to hear the difference.</p>
+      <p>Kokoro only speaks English, so a reply in another language gets the built-in voice too. Stand decides the conversation's language from what the visitor writes and sends a <code>conversation.language</code> event just before the first reply in a new language. Gilly speaks that reply with the browser's best voice for the language, or shows the words without sound if there's none; Gilly's own lines stay English, in Kokoro.</p>
+      <pre class="sx-code" data-file="stand-client.js and chat.js, simplified"><code class="language-js">// Stand sends this just before the first reply in a new language.
+if (data.type === 'conversation.language') language = data.languageTag;
+
+// English: Kokoro. Anything else: the browser's voice for it.
+voice.speak(reply.body, { lang: language });</code></pre>
 
       <h3>4. Talk hands-free</h3>
       <p>One tap on the mic starts a conversation. Gilly listens, sends what you said when you pause, answers, and listens again. Replies wait while the mic is open, and listening starts a moment after Gilly finishes, so Gilly's voice never reaches the mic.</p>
@@ -577,7 +583,7 @@ if (talkMode) setTimeout(() => (chirp(), listen()), 350);</code></pre>
       <details class="made">
         <summary>How this was made</summary>
         <div class="made-body">
-          <p>This example is nearly a one-shot. <strong>Claude Opus 5.5, with max effort, in Claude Code</strong>, built it in one session from the prompt below, plus one follow-up asking for this box. It modeled and rigged Gilly with headless Blender scripts, wrote the animation engine and the chat, held real conversations with Stand's demo site in headless Chrome, judged the animation from filmstrips, and tested on the iOS and visionOS simulators. A sub-agent designed and illustrated the aquarium website in parallel, from a written brief. A later session gave Gilly a neural voice, from the last two prompts below: Claude compared three voice models that run in the browser, transcribed every sample back with Whisper to catch broken ones, and made a page of samples to choose from.</p>
+          <p>This example is nearly a one-shot. <strong>Claude Opus 5.5, with max effort, in Claude Code</strong>, built it in one session from the prompt below, plus one follow-up asking for this box. It modeled and rigged Gilly with headless Blender scripts, wrote the animation engine and the chat, held real conversations with Stand's demo site in headless Chrome, judged the animation from filmstrips, and tested on the iOS and visionOS simulators. A sub-agent designed and illustrated the aquarium website in parallel, from a written brief. A later session gave Gilly a neural voice, from the last three prompts below: Claude compared three voice models that run in the browser, transcribed every sample back with Whisper to catch broken ones, and made a page of samples to choose from.</p>
           <p>A chat doesn't have to be a box in the corner. With AI writing the front end, it can be a character who lives on your site, while Stand's custom chat UI API keeps the conversation, the AI Stand-in and your team behind it.</p>
 
           <p class="made-label">The prompt, lightly edited</p>
@@ -607,6 +613,9 @@ Blender is probably in use by another chat, "Vintage Terminal chat UI". Coordina
 
           <p class="made-label">After listening to the samples</p>
           <blockquote class="made-prompt">"af_heart, Gilly-sized" is perfect. Could you wire that up in the Gilly example, making Gilly appear only once it's loaded, with speech on by default? Also, is there a way to make turning on the microphone easier, so that a conversation could be more natural?</blockquote>
+
+          <p class="made-label">And one more</p>
+          <blockquote class="made-prompt">For the example, use the browser's own TTS for languages other than English, as Kokoro only supports English.</blockquote>
 
           <p class="made-label">If you try this yourself</p>
           <ul>

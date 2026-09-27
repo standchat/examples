@@ -2,12 +2,12 @@
 //
 // speak() reads text aloud and reports progress as a character index, so the
 // speech bubble and the mouth stay in sync. Where the browser has WebGPU, Gilly
-// speaks with Kokoro, a neural voice that runs on the device (voice-worker.js).
-// Its audio is made a sentence or two ahead and played with Web Audio, and the
-// progress comes from the audio itself. Elsewhere Gilly uses the browser's
-// built-in Web Speech voice: voices that report word boundaries drive progress
-// exactly, others are estimated from the speaking rate. Muted, the same
-// timeline runs silently.
+// speaks English with Kokoro, a neural voice that runs on the device
+// (voice-worker.js). Its audio is made a sentence or two ahead and played with
+// Web Audio, and the progress comes from the audio itself. Other languages, and
+// browsers without Kokoro, get the browser's built-in Web Speech voice: voices
+// that report word boundaries drive progress exactly, others are estimated
+// from the speaking rate. Muted, the same timeline runs silently.
 // listen() wraps SpeechRecognition where the browser has it (Chrome, Edge,
 // Safari); elsewhere canListen is false.
 
@@ -118,6 +118,21 @@ export class Voice {
     this.voice = voices.find((v) => v.localService && /US/.test(v.lang)) ?? voices.find((v) => v.default) ?? voices[0];
   }
 
+  // The built-in voice for a language: the one picked above for English, or
+  // the best one installed for another language.
+  voiceFor(lang) {
+    if (isEnglish(lang)) {
+      if (!this.voice) this.pickVoice();
+      return this.voice;
+    }
+    const tag = lang.toLowerCase().replace('_', '-');
+    const voices = synth.getVoices().filter((v) => v.lang?.toLowerCase().replace('_', '-').split('-')[0] === tag.split('-')[0]);
+    // The same region first, then enhanced and neural voices, then local ones.
+    const score = (v) => (v.lang.toLowerCase().replace('_', '-') === tag ? 0 : 5)
+      + (/Premium|Enhanced/i.test(v.name) ? 0 : /Natural/i.test(v.name) ? 1 : /^Google/i.test(v.name) ? 2 : v.localService ? 3 : 4);
+    return voices.sort((a, b) => score(a) - score(b))[0] ?? null;
+  }
+
   setMuted(muted) {
     this.muted = muted;
     settings.set('gilly-voice', muted ? 'off' : 'on');
@@ -180,13 +195,15 @@ export class Voice {
   /**
    * Speaks text and reports progress.
    * @param {string} text
-   * @param {{ onStart?: () => void, onProgress?: (charIndex: number) => void, onMouth?: (shape: number[]) => void, onEnd?: (completed: boolean) => void }} handlers
+   * @param {{ lang?: string, onStart?: () => void, onProgress?: (charIndex: number) => void, onMouth?: (shape: number[]) => void, onEnd?: (completed: boolean) => void }} options
+   *   lang: the text's language (BCP 47); English when not given.
    * @returns {{ cancel: () => void, done: Promise<boolean> }}
    */
-  speak(text, handlers = {}) {
+  speak(text, { lang, ...handlers } = {}) {
     this.cancel();
-    if (this.engine === 'neural' && !this.muted) return this.speakNeural(text, handlers);
-    return this.speakSystem(text, handlers);
+    // Kokoro only speaks English: other languages get the browser's voice for them.
+    if (this.engine === 'neural' && !this.muted && isEnglish(lang)) return this.speakNeural(text, handlers);
+    return this.speakSystem(text, handlers, { lang });
   }
 
   // The neural voice: each chunk of text becomes a clip, scheduled right after
@@ -291,10 +308,13 @@ export class Voice {
   }
 
   // The built-in voice, sentence by sentence. With { silent }, or muted, only
-  // the timeline runs.
-  speakSystem(text, { onStart, onProgress, onMouth, onEnd } = {}, { silent = false } = {}) {
+  // the timeline runs; so it does for a language this browser has no voice for,
+  // rather than reading it in an English voice.
+  speakSystem(text, { onStart, onProgress, onMouth, onEnd } = {}, { silent = false, lang } = {}) {
     const chunks = splitSentences(text);
-    const run = { cancelled: false, raf: 0, char: 0, audio: Boolean(synth) && this.engine === 'system' && !this.muted && !silent };
+    const voice = synth && this.voiceFor(lang);
+    const known = Boolean(synth?.getVoices().length); // Some browsers list voices late.
+    const run = { cancelled: false, raf: 0, char: 0, audio: Boolean(synth) && !this.muted && !silent && (Boolean(voice) || !known) };
     let resolveDone;
     const done = new Promise((r) => (resolveDone = r));
     const finish = (completed) => {
@@ -364,8 +384,8 @@ export class Voice {
         return;
       }
       const u = new SpeechSynthesisUtterance(chunk.text);
-      if (this.voice) u.voice = this.voice;
-      u.lang = this.voice?.lang || document.documentElement.lang || 'en-US';
+      if (voice) u.voice = voice;
+      u.lang = voice?.lang || lang || document.documentElement.lang || 'en-US';
       u.rate = this.rate;
       u.pitch = this.pitch;
       u.onstart = () => {
@@ -468,6 +488,10 @@ export class Voice {
 }
 
 // --- The neural voice ---------------------------------------------------------
+
+function isEnglish(lang) {
+  return !lang || /^en(-|_|$)/i.test(lang);
+}
 
 // Kokoro needs WebGPU and a one-time 326 MB download, so phones and Data Saver
 // keep the built-in voice. ?voice=neural or ?voice=system decides instead.
@@ -699,11 +723,12 @@ export function splitSentences(text) {
 // little wobble so held vowels don't look frozen. With the neural voice, the
 // loudness of the audio (0 to about 1) opens or closes it.
 export function mouthAt(text, index, now, level = 1) {
-  const ch = text[index]?.toLowerCase() ?? ' ';
-  if (!/[a-z]/.test(ch)) return [0, 0, 0];
-  const next = text[index + 1]?.toLowerCase() ?? ' ';
-  const a = SHAPES[ch] ?? [0.3, 0.2, 0];
-  const b = SHAPES[next] ?? a;
+  // Accents off (è → e); letters of other scripts get a middling shape.
+  const letter = (c) => (c ?? ' ').toLowerCase().normalize('NFD')[0];
+  const ch = letter(text[index]);
+  if (!/\p{L}/u.test(ch)) return [0, 0, 0];
+  const a = SHAPES[ch] ?? [0.35, 0.25, 0.05];
+  const b = SHAPES[letter(text[index + 1])] ?? a;
   const wobble = 0.85 + 0.15 * Math.sin(now / 45);
   const open = 0.35 + 0.65 * Math.min(1, level);
   return [((a[0] + b[0]) / 2) * wobble * open, ((a[1] + b[1]) / 2) * Math.min(1, level * 1.4), ((a[2] + b[2]) / 2) * Math.min(1, level * 1.4)];

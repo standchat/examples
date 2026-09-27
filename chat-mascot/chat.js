@@ -534,7 +534,8 @@ class GillyChat {
       if (this.spoken.has(m.messageId) || !isSpeech(m) || m.senderType === 'visitor') continue;
       this.spoken.add(m.messageId);
       if (this.greeting && m.body.trim() === this.greeting.trim()) continue; // Already said it.
-      const item = { id: m.messageId, text: m.body };
+      // Stand announces a new language just before the reply in it. Gilly's own lines are English.
+      const item = { id: m.messageId, text: m.body, lang: s.language };
       if (this.open) this.say(item);
       else {
         this.unread.push(item);
@@ -597,6 +598,7 @@ class GillyChat {
     this.updateGilly();
     this.render();
     this.voice.speak(item.text, {
+      lang: item.lang,
       onStart: () => {
         if (this.speaking?.id !== item.id) return;
         this.speaking.started = true;

@@ -3,8 +3,9 @@
 //
 // Discovery, one-time session creation, HTTP sends, a WebSocket for replies,
 // reload and reconnect recovery. It follows the guide's reference client and
-// adds the optional live events a character needs: typing, and streamed
-// previews of an AI reply while it is being written.
+// adds the optional live events a character needs: typing, streamed
+// previews of an AI reply while it is being written, and the conversation's
+// language, so Gilly can speak in the right voice.
 //
 // The UI subscribes to one state object and calls send(), retry(), end(),
 // newChat(), submitEmail() and trackLinkClick(). Nothing here touches the DOM.
@@ -25,6 +26,7 @@ export const INITIAL_STATE = {
   followupOffered: false,
   typing: false, // the responder is typing or an AI turn is in progress
   preview: '', // streamed text of the AI reply in progress
+  language: '', // the conversation's language as Stand decides it (BCP 47), '' until known
 };
 
 class HttpError extends Error {
@@ -57,6 +59,7 @@ export class StandChatClient {
   #uncertain = false;
   #typingTimer;
   #turn = { id: '', seq: -1 };
+  #liveLanguage = false; // a language event arrived on this socket: newer than any snapshot
 
   /**
    * @param {object} config
@@ -215,6 +218,7 @@ export class StandChatClient {
 
   #applySession(data) {
     if (data.sessionId !== this.#session?.sessionId) throw new Error('Unexpected session response');
+    if (text(data.conversationLanguage) && !this.#liveLanguage) this.#update({ language: data.conversationLanguage });
     const participant = (Array.isArray(data.participants) ? data.participants : []).map(object).find((p) => p.isRep === true);
     if (participant) {
       this.#update({
@@ -321,6 +325,7 @@ export class StandChatClient {
     url.searchParams.set('token', this.#session.visitorToken);
     const socket = new WebSocket(url);
     this.#socket = socket;
+    this.#liveLanguage = false;
     const current = () => this.#mounted && epoch === this.#epoch && this.#socket === socket && Boolean(this.#session);
     this.#timer = setTimeout(() => {
       this.#timer = undefined;
@@ -358,6 +363,7 @@ export class StandChatClient {
       else if (data.type === 'typing') this.#onTyping(data);
       else if (data.type === 'standin.status') this.#onStandinStatus(data);
       else if (data.type === 'standin.delta') this.#onDelta(data);
+      else if (data.type === 'conversation.language') this.#onLanguage(data);
       else if (data.type === 'message.rejected') this.retry();
       else {
         const incoming = toMessages([data]);
@@ -371,6 +377,14 @@ export class StandChatClient {
       }
     };
     socket.onerror = () => { /* onclose drives recovery. */ };
+  }
+
+  // The visitor switched language. Stand says so before the reply in the new
+  // language; a snapshot requested earlier may still carry the old one.
+  #onLanguage(data) {
+    if (!text(data.languageTag)) return;
+    this.#liveLanguage = true;
+    this.#update({ language: data.languageTag });
   }
 
   // Live, non-persisted events: a typing responder and an AI reply being written.
