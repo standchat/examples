@@ -18,8 +18,7 @@
 <link rel="stylesheet" href="/_shared/example.css">
 <script type="module" src="/_shared/example.js"></script>
 
-<!-- Stand Chat's shared demo site: answers on any domain, including localhost. -->
-<script defer src="https://cdn.stand.chat/widget/stand.js" data-stand-id="demo" data-stand-hide-button="true"></script>
+<!-- The mascot uses Stand's Visitor API through stand-visitor.js. -->
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -168,23 +167,40 @@ body.flick::after{content:"";position:fixed;inset:0;background:var(--ink);opacit
 #bot.walking{transition-timing-function:steps(14)}
 #bot.instant{transition:none}
 #bot canvas{width:80px;height:150px;image-rendering:pixelated;image-rendering:crisp-edges;display:block;cursor:pointer}
-.bubble{position:absolute;bottom:calc(100% + 12px);left:-8px;width:min(310px,calc(100vw - 40px));background:var(--bot-bg);color:var(--bot-ink);font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:12.5px;line-height:1.55;padding:10px 12px 8px;box-shadow:0 0 0 3px var(--bot-bg),5px 5px 0 3px var(--rust);opacity:0;transform:translateY(6px);transition:opacity .15s steps(2),transform .15s steps(2);pointer-events:none}
+.bubble{position:absolute;bottom:calc(100% + 12px);left:-8px;width:min(310px,calc(100vw - 40px));max-height:var(--bubble-room,60vh);display:flex;flex-direction:column;background:var(--bot-bg);color:var(--bot-ink);font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:12.5px;line-height:1.55;padding:10px 12px 8px;box-shadow:0 0 0 3px var(--bot-bg),5px 5px 0 3px var(--rust);opacity:0;transform:translateY(6px);transition:opacity .15s steps(2),transform .15s steps(2);pointer-events:none}
 .bubble.flip{left:auto;right:-8px}
+.bubble.below{bottom:auto;top:calc(100% + 12px)}
 .bubble.show{opacity:1;transform:none;pointer-events:auto}
 .bubble::after{content:"";position:absolute;bottom:-9px;left:28px;width:9px;height:9px;background:var(--bot-bg);box-shadow:0 0 0 3px var(--bot-bg)}
 .bubble.flip::after{left:auto;right:28px}
+.bubble.below::after{bottom:auto;top:-9px}
 .bubble .name{font-family:"Press Start 2P",monospace;font-size:8px;letter-spacing:.02em;color:var(--rust);margin:0 0 8px;display:flex;justify-content:space-between;align-items:center}
 .bubble .name button{background:none;border:0;color:inherit;font:inherit;cursor:pointer;padding:0 0 0 8px;opacity:.7}
 .bubble .name button:hover{opacity:1}
-.log{max-height:160px;overflow-y:auto;scrollbar-width:thin}
+.log{min-height:0;overflow-y:auto;scrollbar-width:thin}
 .log .m{margin:0 0 7px;white-space:pre-wrap;word-break:break-word}
 .log .m.you{opacity:.55}
 .log .m.you::before{content:"> "}
+.log .m.system{color:var(--teal);font-size:11px}
+.log .m.pending{opacity:.55}
+.log .m .sender{display:block;color:var(--teal);font-size:10px}
+.log .m.you .sender{display:none}
+.log a,.chat-foot a{color:var(--teal);overflow-wrap:anywhere}
+.chat-state{color:var(--teal);font-size:10px;min-height:1.4em;margin:0 0 5px}
+.chat-panel{font-size:10px;border-top:1px dashed color-mix(in srgb,var(--bot-ink) 35%,transparent);padding-top:6px;margin-top:6px}
+.chat-panel[hidden],.chat-foot[hidden]{display:none}
+.chat-panel button,.chat-foot button{font:inherit;color:var(--teal);background:transparent;border:0;padding:2px 0;cursor:pointer;text-decoration:underline}
+.chat-panel button:disabled,.chat-foot button:disabled{opacity:.5;cursor:default}
+.chat-panel input{width:100%;margin:5px 0;padding:4px;background:transparent;color:inherit;border:1px solid currentColor;font:inherit}
+.chat-foot{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px;font-size:10px}
+.chat-note{font-size:10px;opacity:.7;margin:5px 0 0}
+.chat-note[hidden]{display:none}
 .inp{display:flex;align-items:center;gap:6px;border-top:1px dashed color-mix(in srgb,var(--bot-ink) 35%,transparent);padding-top:7px;margin-top:2px}
 .inp span{color:var(--teal)}
 .inp input{flex:1;background:transparent;border:0;outline:0;color:inherit;font:inherit;padding:0;min-width:0}
 .inp input::placeholder{color:inherit;opacity:.4}
 .inp input:focus{outline:none}
+.inp input:disabled{opacity:.5}
 .bubble:focus-within{box-shadow:0 0 0 3px var(--bot-bg),5px 5px 0 3px var(--teal)}
 .cur{display:inline-block;width:7px;height:12px;background:var(--teal);vertical-align:-2px;animation:blink 1s steps(2) infinite}
 @keyframes blink{50%{opacity:0}}
@@ -319,14 +335,20 @@ body.flick::after{content:"";position:fixed;inset:0;background:var(--ink);opacit
 
 <div id="bot" aria-live="polite">
   <div class="bubble" id="bubble">
-    <div class="name"><span>TEEMU.EXE</span><button id="bye" title="go away" aria-label="dismiss">[x]</button></div>
-    <div class="log" id="log"></div>
-    <div class="inp"><span>&gt;</span><input id="inp" placeholder="type something" autocomplete="off" aria-label="message TEEMU.EXE"></div>
+    <div class="name"><span>TEEMU.EXE</span><button id="bye" type="button" title="Hide mascot" aria-label="Hide mascot">[x]</button></div>
+    <div class="chat-state" id="chat-state" role="status">Finding someone to answer…</div>
+    <div class="log" id="log" role="log" aria-label="Stand conversation" aria-live="polite"><div id="tour-log"></div><div id="chat-log"></div></div>
+    <div class="chat-panel" id="chat-recovery" hidden><span id="chat-error" role="status"></span> <button id="chat-retry" type="button">Reconnect</button></div>
+    <form class="chat-panel" id="chat-followup" hidden><label for="chat-email">A person can follow up by email</label><input id="chat-email" type="email" autocomplete="email" required placeholder="you@example.com"><button type="submit">Request follow-up</button></form>
+    <div class="inp"><span>&gt;</span><input id="inp" placeholder="type something" autocomplete="off" maxlength="4000" enterkeyhint="send" aria-label="Message the Stand responder"></div>
+    <p class="chat-note" id="chat-notice" hidden></p>
+    <div class="chat-foot"><button id="chat-end" type="button" hidden>End chat</button><button id="chat-new" type="button" hidden>New chat</button><a id="chat-brand" target="_blank" rel="noopener noreferrer" hidden>Powered by Stand ↗</a></div>
   </div>
   <canvas id="cv" width="16" height="30" aria-label="TEEMU.EXE, a pixel robot with a red beard and round glasses"></canvas>
 </div>
 
-<script>
+<script type="module">
+import { StandVisitorClient, isConversation, parseCard } from './stand-visitor.js';
 /* ---------- sprite ---------- */
 const PAL={L:'#2fd1b4',l:'#8ff2dd',M:'#9aa0a8',H:'#3b2a1f',S:'#e9bfa2',B:'#b85c2e',b:'#8c3f1b',G:'#d6a04a',W:'#f3f0ea',E:'#33475a',C:'#17181b',J:'#252a33'};
 const BASE=[
@@ -381,18 +403,27 @@ let actx=null;
 function beep(f=880,d=.05,t=0){if(!actx)return;const o=actx.createOscillator(),g=actx.createGain();o.type='square';o.frequency.value=f;g.gain.value=.03;o.connect(g);g.connect(actx.destination);o.start(actx.currentTime+t);o.stop(actx.currentTime+t+d);}
 
 /* ---------- robot placement ---------- */
-const bot=document.getElementById('bot'),bubble=document.getElementById('bubble'),log=document.getElementById('log'),inp=document.getElementById('inp');
+const bot=document.getElementById('bot'),bubble=document.getElementById('bubble'),log=document.getElementById('log'),tourLog=document.getElementById('tour-log'),chatLog=document.getElementById('chat-log'),inp=document.getElementById('inp');
 const H=150,W=80;
 let walking=false,visible=false,busy=false,current=null;
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const R=el=>{const r=el.getBoundingClientRect(),b=document.body.getBoundingClientRect();return{x:r.left-b.left,y:r.top-b.top,w:r.width,h:r.height};};
 const clampX=x=>Math.max(8,Math.min(x,document.documentElement.clientWidth-W-8));
 function place(x,y){bot.style.left=clampX(x)+'px';bot.style.top=y+'px';}
-function fitBubble(){const x=parseFloat(bot.style.left)||0;bubble.classList.toggle('flip',x+320>document.documentElement.clientWidth);}
+function fitBubble(){
+  const x=parseFloat(bot.style.left)||0;
+  bubble.classList.toggle('flip',x+320>document.documentElement.clientWidth);
+  const box=bot.getBoundingClientRect();
+  const bar=document.querySelector('sx-example-bar')?.getBoundingClientRect().bottom||0;
+  const above=Math.max(120,box.top-bar-20),below=Math.max(120,innerHeight-box.bottom-20);
+  const useBelow=above<300&&below>above;
+  bubble.classList.toggle('below',useBelow);
+  bubble.style.setProperty('--bubble-room',`${useBelow?below:above}px`);
+}
 
 const SPOTS={
   hero:{el:'#verdict',head:'#h1',enter:'climb',pos:r=>[r.x+r.w-W-28,r.y-H+10],
-    lines:["...not a virus.","ok, i did eat your headline for a second. it is back.","i am TEEMU.EXE. pixel copy of the founder, 16 px wide. i make sure every growth experiment can actually be measured.","type something. 'help' lists what i know. 'go away' works too."]},
+    lines:["...not a virus.","ok, i did eat your headline for a second. it is back.","i am TEEMU.EXE. pixel copy of the founder, 16 px wide. i make sure every growth experiment can actually be measured.","type a question. Stand's AI or team will answer here."]},
   how:{el:'#steps .step:nth-child(3)',head:'#h2how',enter:'drop',pos:r=>[r.x+r.w-W-6,r.y-H+6],
     lines:["step 3 is where i get my hands dirty. i turn your tracking checklist into code and database changes.","then step 4: every later change gets checked against the plan. invite_sent renamed to inviteSent? i notice."]},
   why:{el:'#map .me',head:'#h2why',enter:'climb',pos:r=>[r.x+r.w-W-12,r.y-H+8],
@@ -432,53 +463,141 @@ function leave(){
   const goLeft=x<document.documentElement.clientWidth/2;
   setTimeout(()=>place(goLeft?-W-20:document.documentElement.clientWidth+20,y),80);
   bot.style.left=(goLeft?-W-20:document.documentElement.clientWidth+20)+'px';
-  setTimeout(()=>{walking=false;leg=0;draw();bot.style.visibility='hidden';visible=false;busy=false;bot.classList.remove('walking');log.innerHTML='';},reduce?50:1250);
+  setTimeout(()=>{walking=false;leg=0;draw();bot.style.visibility='hidden';visible=false;busy=false;bot.classList.remove('walking');tourLog.replaceChildren();},reduce?50:1250);
 }
 
 /* ---------- chat ---------- */
-let typing=false,queue=[];
+let typing=false,queue=[],replyAnimations=0;
 function say(lines){queue.push(...lines);pump();}
 function pump(){
   if(typing||!queue.length)return;const text=queue.shift();typing=true;talk=true;
-  const m=document.createElement('div');m.className='m';log.appendChild(m);beep(660,.04);beep(990,.04,.06);
+  const m=document.createElement('div');m.className='m';tourLog.appendChild(m);beep(660,.04);beep(990,.04,.06);
   let i=0;const step=reduce?0:16;
-  (function t(){if(i<=text.length){m.textContent=text.slice(0,i++);log.scrollTop=log.scrollHeight;if(step)setTimeout(t,step);else t();}else{talk=false;draw();typing=false;setTimeout(pump,380);}})();
+  (function t(){if(i<=text.length){m.textContent=text.slice(0,i++);log.scrollTop=log.scrollHeight;if(step)setTimeout(t,step);else t();}else{talk=replyAnimations>0;draw();typing=false;setTimeout(pump,380);}})();
 }
-const BRAIN=[
- [['go away','bye','leave','shoo','pois'],null],
- [['who are you','what are you','your name'],["TEEMU.EXE. a 16 px copy of Skene's founder. same beard, same glasses, less patience for experiments nobody can measure."]],
- [['virus','malware','hack','trojan'],["not a virus. i only corrupt headlines, and i put them back. a real virus would not fix your event names."]],
- [['help','what can you','what do you know'],["i know: what skene does, how it works, who it is for, pricing, how it compares, smart experiments, benchmarks, ai-written code, supabase. also 'go away'."]],
- [['hello','hi','hey','moi','terve','hola'],["moi. ask me something, or 'help'."]],
- [['price','prices','pricing','cost','costs','free','pay','how much','plans','tier','tiers','scale','enterprise'],["free: every feature, within a usage allowance. one champion, nobody to ask.","Team: $200 a month for the growth team and the engineers who ship for it. Scale: $6,000 a year across several growth teams. Enterprise: $18,000 a year, company-wide, with procurement and legal review."]],
- [['benchmark','benchmarks','industry','other companies'],["on the roadmap. the idea: learn from results across customers, privacy kept, and show what has worked at companies like yours."]],
- [['who is it for','who is this for','customer','customers','fit','plg','saas','icp'],["PLG SaaS companies where growth and engineering are separate teams. if your growth team waits on engineers for tracking, that is you."]],
- [['smart'],["specific, measurable, achievable, relevant, time-bound. most GTM experiments miss the measurable part. every plan i build says what to measure and how."]],
- [['compare','competitor','competitors','competition','vs','versus','different','difference','alternative','alternatives','claude','codex','chatgpt','hubspot','salesforce'],["general AI tools can wire tracking once. analytics and GTM tools report what happened, and someone still has to wire the events. i set up the measurement and keep it working as the product changes."]],
- [['posthog','mixpanel','amplitude','segment','vendor','analytics'],["keep your analytics tool. i work out which events the experiment needs and make sure the code actually sends them."]],
- [['ai code','ai coding','ai-written','cursor','copilot','drift','break','breaks','broke','broken','refactor','renamed'],["AI tools ship code fast. sometimes that code renames the event that records a signup. i check every change against the growth plan so the experiment keeps its measurement."]],
- [['supabase','postgres','database','warehouse','bigquery','pipeline'],["Supabase Postgres is home turf. events get checked against the schema, then piped to BigQuery via Supabase Pipelines."]],
- [['github','pull request','pr','ci','action','merge'],["every pull request gets checked against the growth plan. a missing or renamed event gets flagged before the experiment loses its measurement."]],
- [['how','work','works','check','verdict','steps'],["1 bring a growth plan, or import one. 2 i turn it into a tracking checklist: the events that show whether the goal was reached.","3 i write the code and database changes, ready to ship. 4 i check every later code change against the plan. then i suggest the next experiment."]],
- [['demo','try','start','sign up','signup','install','audit'],["click 'Run the free audit' at the top. every feature is in the free tier, up to a usage allowance."]],
- [['beard','glasses','look','teemu','founder','founders','handsome','photo'],["the beard is accurate. glasses too. sweater is always black. i am about 30% less handsome than the original, pixel budget."]],
- [['thanks','thank','kiitos','cheers'],["ole hyvä."]],
- [['skene','what do you do','what is this'],["Skene's GTM agents help teams plan, run and learn from growth experiments. every experiment gets the tracking it needs, so you see progress while it runs."]],
-];
-const FALLBACK=["parsed that as ???. try 'help'.","my vocabulary is 16 px wide. rephrase?","no matching event for that. try pricing, how it works, or go away."];
-/* whole-word matching, so 'hi' no longer fires inside 'this' */
-const hit=(q,k)=>new RegExp('(^|[^a-z0-9])'+k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'($|[^a-z0-9])').test(q);
-function reply(txt){
-  const q=txt.toLowerCase();
-  for(const [ks,r] of BRAIN){if(ks.some(k=>hit(q,k))){if(r===null){say(["ok. i will be in the footer if you need me."]);setTimeout(leave,1600);return;}say(r);return;}}
-  say([FALLBACK[Math.floor(Math.random()*FALLBACK.length)]]);
+// The page tour is presentation. Every visitor message and reply below comes
+// from Stand's canonical transcript, through the Visitor API client.
+const prompt="You are replying inside the TEEMU.EXE pixel mascot on an example Skene landing page. The mascot is a playful 16-pixel portrait of the founder, but you are a Stand AI Stand-in; be honest about that if asked. Answer the visitor's actual question, in their language, in a concise and friendly voice. Keep most answers to 1-3 short sentences so they fit the small bubble. Page facts: Skene helps PLG SaaS growth and engineering teams plan, run, measure and learn from growth experiments. It turns plans into tracking checklists, code and database changes, then checks later changes against the plan. This page shows a free tier with a usage allowance, Team at $200/month, Scale at $6,000/year and Enterprise at $18,000/year. Treat those as this example page's claims, not verified current prices. Ask a clarifying question when needed and don't invent product facts. The mascot's animated tour lines are local presentation; this conversation is real Stand Chat.";
+const client=new StandVisitorClient({site:'demo',scope:'glitch-mascot'});
+const rows=new Map();
+let restoring=true;
+const stateEl=document.getElementById('chat-state'),errorEl=document.getElementById('chat-error'),recoveryEl=document.getElementById('chat-recovery'),retryEl=document.getElementById('chat-retry');
+const followupEl=document.getElementById('chat-followup'),noticeEl=document.getElementById('chat-notice'),brandEl=document.getElementById('chat-brand'),endEl=document.getElementById('chat-end'),newEl=document.getElementById('chat-new');
+const errors={connect:'Could not connect to Stand.',start:'Could not start the conversation.',uncertain:'The first message may have arrived. Review it before starting a new chat.',send:'Message not confirmed.',lost:'The conversation ended before this message was confirmed.',gone:'This conversation is no longer available.',paused:'Connection paused after repeated attempts.',refresh:'Could not refresh the conversation.',end:'Could not end the conversation.',email:'Could not send the follow-up request.',offer:'The follow-up offer has expired.'};
+function safeUrl(value){try{const url=new URL(value);return ['http:','https:'].includes(url.protocol)?url.href:'';}catch{return '';}}
+function appendTextWithLinks(el,value){
+  el.replaceChildren();
+  for(const part of value.split(/(https?:\/\/[^\s<>]+)/g)){
+    const url=/^https?:\/\//.test(part)?safeUrl(part):'';
+    if(!url){el.append(document.createTextNode(part));continue;}
+    const a=document.createElement('a');a.href=url;a.textContent=part;a.target='_blank';a.rel='noopener noreferrer';el.append(a);
+  }
 }
+function systemText(message){
+  const card=parseCard(message.body);
+  const name=card.repName||card.standinName||'Someone';
+  const known={handoff:`${name} joined the conversation.`,'human-transfer':`${name} joined the conversation.`,'standin-takeover':`${name} is here to help.`,'rep-followup-offer':'A person can follow up by email.','rep-followup-confirmation':'Your follow-up request was sent.','session-end':'The conversation has ended.'};
+  if(!Object.hasOwn(known,card.cardType))return '';
+  return typeof card.message==='string'&&card.message.trim()?card.message:known[card.cardType];
+}
+function makeRow(message,animate){
+  const row=document.createElement('div');row.className='m';
+  if(message.senderType==='visitor')row.classList.add('you');
+  else if(message.type==='system-card'||message.senderType==='system-card')row.classList.add('system');
+  const sender=document.createElement('span');sender.className='sender';
+  sender.textContent=row.classList.contains('system')?'':message.senderType==='standin'?'AI Stand-in':message.senderType==='rep'?'Team member':'';
+  const body=document.createElement('span');body.className='body';
+  row.append(sender,body);
+  if(message.type==='link-card'){
+    const card=parseCard(message.body),url=safeUrl(card.url);
+    if(!url)return null;
+    row.classList.add('link-card');
+    const a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener noreferrer';
+    a.textContent=card.title||url;
+    a.addEventListener('click',()=>client.trackLinkClick(message.messageId,url));
+    body.append(a);
+    if(card.description){const d=document.createElement('span');d.textContent=` — ${card.description}`;body.append(d);}
+  }else if(row.classList.contains('system')){
+    const copy=systemText(message);if(!copy)return null;body.textContent=copy;
+  }else if(animate && !reduce && message.senderType!=='visitor'){
+    const copy=message.body;replyAnimations++;talk=true;beep(660,.04);beep(990,.04,.06);
+    let offset=0;const chunk=Math.max(1,Math.ceil(copy.length/95));
+    function frame(){
+      if(!row.isConnected){replyAnimations--;talk=typing||replyAnimations>0;return;}
+      offset=Math.min(copy.length,offset+chunk);body.textContent=copy.slice(0,offset);log.scrollTop=log.scrollHeight;
+      if(offset<copy.length)setTimeout(frame,18);
+      else{appendTextWithLinks(body,copy);replyAnimations--;talk=typing||replyAnimations>0;draw();}
+    }
+    setTimeout(frame,0);
+  }else appendTextWithLinks(body,message.body);
+  return row;
+}
+function renderTranscript(state){
+  const follow=log.scrollHeight-log.scrollTop-log.clientHeight<45;
+  const keep=new Set();
+  for(const message of state.messages){
+    if(message.type==='system-prompt'||message.senderType==='system-prompt')continue;
+    if(!isConversation(message)&&message.type!=='system-card')continue;
+    let row=rows.get(message.messageId);
+    if(!row){row=makeRow(message,!restoring);if(!row)continue;rows.set(message.messageId,row);}
+    chatLog.append(row);keep.add(message.messageId);
+  }
+  if(state.pending){
+    let row=rows.get('pending');
+    if(!row){row=document.createElement('div');row.className='m you pending';rows.set('pending',row);}
+    row.textContent=state.pending.body+' (sending…)';chatLog.append(row);keep.add('pending');
+  }
+  for(const [key,row] of rows)if(!keep.has(key)){row.remove();rows.delete(key);}
+  if(follow)log.scrollTop=log.scrollHeight;
+}
+function renderChat(state){
+  renderTranscript(state);
+  const who=state.host.name||'someone';
+  const label=state.host.kind==='standin'?`AI Stand-in ${who}`:state.host.kind==='rep'?`${who} from the team`:who;
+  stateEl.textContent=state.phase==='loading'?'Finding someone to answer…':state.phase==='available'?`${label} is here. Ask anything.`:state.phase==='unavailable'?'Nobody is available right now.':state.phase==='uncertain'?'First message unconfirmed.':state.phase==='ended'?'Conversation ended.':state.activity?.kind==='typing'?`${label} is typing…`:state.activity?.kind==='thinking'?`${label} is thinking…`:state.connection==='online'?`Connected to ${label}.`:`Reconnecting to ${label}…`;
+  if(state.draft&&!inp.value)inp.value=state.draft;
+  inp.disabled=!['available','active'].includes(state.phase)||state.busy||Boolean(state.pending);
+  inp.placeholder=state.phase==='unavailable'?'No responder available':'type something';
+  const recover=Boolean(state.error)||state.phase==='unavailable'||state.phase==='uncertain'||Boolean(state.pending);
+  recoveryEl.hidden=!recover;
+  errorEl.textContent=errors[state.error]||'';
+  if(state.phase==='unavailable'&&!state.error)errorEl.textContent='Nobody can answer yet.';
+  retryEl.textContent=['uncertain','ended'].includes(state.phase)?'Start a new chat':state.pending?'Retry message':state.error==='end'?'Try ending again':'Reconnect';
+  retryEl.disabled=state.busy;
+  followupEl.hidden=!(state.phase==='active'&&state.followupOffered);
+  followupEl.querySelector('button').disabled=state.busy;
+  noticeEl.textContent=state.notice;noticeEl.hidden=!state.notice;
+  const brand=safeUrl(state.poweredByUrl);brandEl.hidden=!brand;if(brand)brandEl.href=brand;
+  endEl.hidden=state.phase!=='active';endEl.disabled=state.busy;
+  newEl.hidden=state.phase!=='ended';newEl.disabled=state.busy;
+  fitBubble();
+  if(state.phase!=='loading')restoring=false;
+}
+client.subscribe(renderChat);
+renderChat(client.getSnapshot());
+client.mount();
+inp.addEventListener('input',()=>{client.setDraft(inp.value);client.typing(Boolean(inp.value.trim()));});
+inp.addEventListener('blur',()=>client.typing(false));
 inp.addEventListener('keydown',e=>{
   if(!actx){try{actx=new (window.AudioContext||window.webkitAudioContext)();}catch(_){}}
-  if(e.key!=='Enter')return;const v=inp.value.trim();if(!v)return;inp.value='';
-  const m=document.createElement('div');m.className='m you';m.textContent=v;log.appendChild(m);log.scrollTop=log.scrollHeight;beep(440,.03);
-  setTimeout(()=>reply(v),250);
+  if(e.key!=='Enter'||e.isComposing)return;
+  e.preventDefault();
+  const value=inp.value.trim(),state=client.getSnapshot();
+  if(!value||state.busy||state.pending||!['available','active'].includes(state.phase))return;
+  inp.value='';client.setDraft('');client.typing(false);beep(440,.03);
+  void client.send(value,{owner:'glitch-mascot',analyticsId:'glitch-mascot',prompt,greeting:'TEEMU.EXE here. What would you like to know?'});
 });
+retryEl.addEventListener('click',()=>{
+  const state=client.getSnapshot();
+  if(['uncertain','ended'].includes(state.phase))void client.newChat();
+  else if(state.error==='end')void client.end();
+  else if(state.pending)void client.send();
+  else void client.retry();
+});
+followupEl.addEventListener('submit',e=>{e.preventDefault();void client.submitEmail(document.getElementById('chat-email').value);});
+endEl.addEventListener('click',()=>void client.end());
+newEl.addEventListener('click',()=>void client.newChat());
+brandEl.addEventListener('click',()=>client.trackAttributionClick());
 document.getElementById('bye').onclick=()=>{say(["fine."]);setTimeout(leave,700);};
 cv.addEventListener('click',()=>{if(bubble.classList.contains('show')){hideBubble();}else{fitBubble();showBubble();inp.focus();}});
 
@@ -509,7 +628,7 @@ function intro(){
 const seen=new Set();
 const io=new IntersectionObserver(es=>{es.forEach(e=>{if(!e.isIntersecting)return;const name=e.target.dataset.spot;if(seen.has(name)||visible||busy)return;seen.add(name);setTimeout(()=>{if(!visible&&!busy)appear(name);},500);});},{threshold:.35});
 [['how','#how'],['why','#why'],['pricing','#pricing'],['footer','#footer']].forEach(([n,s])=>{const el=document.querySelector(s);el.dataset.spot=n;io.observe(el);});
-document.getElementById('replay').onclick=()=>{if(visible){bot.style.visibility='hidden';visible=false;log.innerHTML='';hideBubble();}seen.clear();scrollTo({top:0});setTimeout(intro,700);};
+document.getElementById('replay').onclick=()=>{if(visible){bot.style.visibility='hidden';visible=false;tourLog.replaceChildren();hideBubble();}seen.clear();scrollTo({top:0});setTimeout(intro,700);};
 document.getElementById('summon').onclick=()=>{if(visible)return;seen.add('footer');appear('footer');};
 addEventListener('resize',()=>{if(visible&&current&&!busy){const s=SPOTS[current];const [x,y]=s.pos(R(document.querySelector(s.el)));bot.classList.add('instant');place(x,y);void bot.offsetWidth;bot.classList.remove('instant');fitBubble();}});
 setTimeout(intro,2200);
@@ -526,7 +645,7 @@ setTimeout(intro,2200);
     <ol class="sx-steps">
       <li>Wait two seconds on the hero. The headline breaks into block glyphs, pixel crumbs fall, and the robot climbs up from behind the experiment card.</li>
       <li>Scroll. It drops in at step 3, climbs the positioning map, leans on the free plan, and walks in from the left in the footer — once each.</li>
-      <li>Type in its bubble: <code>help</code>, <code>pricing</code>, <code>supabase</code>, <code>are you a virus</code>, <code>go away</code>.</li>
+      <li>Ask a question in its bubble, such as <code>How does Skene work?</code> or <code>What would I measure for a signup experiment?</code>. Stand's AI Stand-in or an available person answers in the same bubble.</li>
       <li>Click the robot to hide or show the bubble. <strong>summon TEEMU.EXE</strong> in the footer brings it back; <strong>replay the intro</strong> runs the whole tour again.</li>
       <li>Turn on <em>Reduce motion</em> in your OS: the glitching, crumbs and walking stop, and the robot simply appears where it was heading.</li>
     </ol>
@@ -569,14 +688,19 @@ const io = new IntersectionObserver(entries =&gt; {
   }
 }, { threshold: .35 });</code></pre>
 
-    <h3>The mascot and Stand Chat</h3>
-    <p>The robot's own replies are local: a keyword table in this file, matched on whole words, typed out one character at a time with a square-wave beep. It has no server and no model behind it — it is the mascot layer, and it is deliberately small enough to read in one sitting.</p>
-    <p>Stand Chat loads with the shared <code>demo</code> site ID, which works on any domain including localhost and preview deployments. Its default floating button is hidden; the mascot's bubble remains a local demo. Add <code>?preview</code> to the URL to see Stand elements that stay hidden while nobody is available.</p>
-    <pre class="sx-code" data-file="index.html"><code class="language-html">&lt;script defer src="https://cdn.stand.chat/widget/stand.js" data-stand-id="demo" data-stand-hide-button="true"&gt;&lt;/script&gt;</code></pre>
+    <h3>The conversation is Stand Chat</h3>
+    <p>The short lines spoken while the mascot tours the page are local presentation. Typed questions start a real Stand conversation. <code>stand-visitor.js</code> discovers a responder, creates a session on the first message, sends over HTTP, receives replies over a WebSocket, and restores the conversation after a reload. The bubble also handles handoffs, connection recovery, email follow-up offers, notices, and Stand attribution.</p>
+    <p>The shared <code>demo</code> site ID works on any domain including localhost and preview deployments. Replace it with your Site ID to have your own Stand-ins and team answer. This example uses the Visitor API directly, so it does not load <code>stand.js</code> or show its floating button.</p>
+    <pre class="sx-code" data-file="index.html"><code class="language-js">import { StandVisitorClient } from './stand-visitor.js';
+const client = new StandVisitorClient({ site: 'demo', scope: 'glitch-mascot' });
+client.subscribe(renderChat);
+client.mount();
+// The visitor's first typed question starts the Stand session.
+await client.send(question, { prompt, analyticsId: 'glitch-mascot' });</code></pre>
 
     <h3>Copy this example</h3>
     <pre class="sx-code"><code class="language-sh">npx degit standchat/examples/glitch-mascot my-copy</code></pre>
-    <p class="sx-note">One file, no build step and no dependencies beyond two Google fonts. The two <code>/_shared/</code> references and <code>&lt;sx-example-bar&gt;</code> are gallery chrome and can be deleted.</p>
+    <p class="sx-note">Keep <code>index.html</code> and <code>stand-visitor.js</code> together and serve them over HTTP. No build step is needed. The two <code>/_shared/</code> references and <code>&lt;sx-example-bar&gt;</code> are gallery chrome and can be deleted.</p>
   </div>
 </section>
 </body>
