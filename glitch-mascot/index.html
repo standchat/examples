@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<title>Pixel mascot page tour</title>
+<meta name="description" content="A 16-pixel robot climbs out from behind a SaaS landing page, eats the headline, and follows the reader down the page with one remark per section. Its bubble takes typed questions, and Stand Chat handles the real conversation.">
+<meta name="author" content="Teemu Kinos">
+<link rel="author" href="https://github.com/teekoo5">
+<meta name="keywords" content="mascot, pixel art, canvas, scroll, landing page">
+<meta property="og:title" content="Pixel mascot page tour">
+<meta property="og:description" content="A 16-pixel robot climbs out from behind the landing page, eats the headline, and follows the reader down the page with one remark per section.">
+<meta property="og:image" content="https://examples.stand.chat/glitch-mascot/og.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- Site chrome: the top bar and "How it works" styles. The demo works without them. -->
+<link rel="stylesheet" href="/_shared/example.css">
+<script type="module" src="/_shared/example.js"></script>
+
+<!-- Stand Chat's shared demo site: answers on any domain, including localhost. -->
+<script defer src="https://cdn.stand.chat/widget/stand.js" data-stand-id="demo"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#ffffff; --ink:#15171a; --ink-2:#4a4f57; --rule:#d9dbdf; --panel:#f1f2f4;
+  --teal:#1fb89c; --rust:#b85c2e; --bot-bg:#15171a; --bot-ink:#f3f0ea;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --paper:#141518; --ink:#ecebe6; --ink-2:#a3a7ae; --rule:#2c2f35; --panel:#1d1f24; --bot-bg:#f3f0ea; --bot-ink:#15171a; }
+}
+:root[data-theme="dark"]{ --paper:#141518; --ink:#ecebe6; --ink-2:#a3a7ae; --rule:#2c2f35; --panel:#1d1f24; --bot-bg:#f3f0ea; --bot-ink:#15171a; }
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif;font-size:17px;line-height:1.5;position:relative;overflow-x:hidden}
+a{color:inherit}
+.wrap{max-width:1040px;margin:0 auto;padding:0 24px}
+
+nav{border-bottom:1px solid var(--rule);position:relative;z-index:5;background:var(--paper)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo{font-weight:600;letter-spacing:-.01em;font-size:18px;text-decoration:none}
+nav ul{list-style:none;margin:0;padding:0;display:flex;gap:26px;font-size:15px}
+nav ul a{text-decoration:none;color:var(--ink-2)}
+nav ul a:hover{color:var(--ink)}
+
+header{padding:88px 0 72px}
+h1{font-size:clamp(34px,5.4vw,58px);line-height:1.05;letter-spacing:-.025em;font-weight:600;margin:0 0 22px;max-width:15ch}
+.lede{font-size:19px;color:var(--ink-2);max-width:52ch;margin:0 0 30px}
+.cta{display:inline-block;background:var(--ink);color:var(--paper);text-decoration:none;padding:13px 20px;font-weight:500;border:0;font:inherit;cursor:pointer}
+.cta.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink);margin-left:10px}
+
+.hero-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:end}
+@media (max-width:820px){.hero-grid{grid-template-columns:1fr;gap:40px}}
+
+/* verdict card: the thing the robot climbs out from behind */
+.verdict{position:relative;z-index:2;background:var(--panel);border:1px solid var(--rule);padding:22px 24px;font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:14px;line-height:1.6}
+.verdict .row{display:flex;justify-content:space-between;gap:12px}
+.verdict .head{color:var(--ink-2);margin-bottom:10px;padding-bottom:10px;border-bottom:1px dashed var(--rule)}
+.verdict .fail{color:var(--rust)}
+.verdict .ok{color:var(--teal)}
+.verdict .tag{display:inline-block;padding:2px 7px;background:var(--rust);color:#fff;font-size:12px}
+
+section{padding:64px 0;border-top:1px solid var(--rule)}
+h2{font-size:28px;letter-spacing:-.02em;font-weight:600;margin:0 0 8px}
+.sub{color:var(--ink-2);margin:0 0 34px;max-width:56ch}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;counter-reset:step}
+@media (max-width:820px){.steps{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.steps{grid-template-columns:1fr}}
+.step{position:relative;z-index:2;background:var(--paper);border-top:2px solid var(--ink);padding:18px 0 0}
+.step::before{counter-increment:step;content:counter(step);font-family:"IBM Plex Mono",monospace;color:var(--ink-2);font-size:13px;display:block;margin-bottom:8px}
+.step h3{margin:0 0 6px;font-size:17px;font-weight:600}
+.step p{margin:0;color:var(--ink-2);font-size:15px}
+
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media (max-width:820px){.plans{grid-template-columns:1fr}}
+.plan{position:relative;z-index:2;background:var(--panel);border:1px solid var(--rule);padding:24px}
+.plan h3{margin:0 0 4px;font-size:20px}
+.plan .who{color:var(--ink-2);font-size:14px;margin:0 0 16px}
+.plan p{margin:0 0 18px;font-size:15px}
+.plan .cta{font-size:15px;padding:10px 16px}
+
+footer{position:relative;z-index:2;border-top:1px solid var(--rule);background:var(--paper);padding:34px 0 60px;color:var(--ink-2);font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+footer button{background:none;border:0;padding:0;font:inherit;color:var(--ink-2);text-decoration:underline;cursor:pointer}
+
+/* ---------- added: safe areas, new sections, four plans ---------- */
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+h2{max-width:30ch}
+.verdict .goal{color:var(--ink-2);margin:0 0 8px}
+.verdict .foot{border:0;margin:10px 0 0;padding:10px 0 0;border-top:1px dashed var(--rule)}
+
+.problems{display:grid;grid-template-columns:1fr 1fr;gap:28px 40px}
+@media (max-width:640px){.problems{grid-template-columns:1fr}}
+.problem{border-left:2px solid var(--rust);padding:2px 0 2px 18px}
+.problem h3{margin:0 0 6px;font-size:18px;font-weight:600}
+.problem p{margin:0;color:var(--ink-2);font-size:15px;max-width:48ch}
+.stat{margin:40px 0 0;padding-top:22px;border-top:1px dashed var(--rule);color:var(--ink-2);font-size:15px;max-width:70ch}
+.stat strong{color:var(--ink);font-size:22px;font-weight:600;margin-right:4px}
+
+.after{margin:30px 0 0;color:var(--ink-2);max-width:62ch}
+
+.why-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:48px;align-items:start}
+@media (max-width:860px){.why-grid{grid-template-columns:1fr;gap:36px}}
+.map{margin:0;display:grid;grid-template-columns:22px 1fr 1fr;grid-template-rows:minmax(140px,auto) minmax(140px,auto) auto auto;gap:0}
+.map .axis-y{grid-column:1;grid-row:1/3;display:flex;flex-direction:column;justify-content:space-between;align-items:center;font-size:12px;color:var(--ink-2);padding:8px 0}
+.map .axis-y span{writing-mode:vertical-rl;transform:rotate(180deg)}
+.map .axis-x{grid-column:2/4;grid-row:3;display:flex;justify-content:space-between;font-size:12px;color:var(--ink-2);padding:8px 2px 0;border-top:1px solid var(--ink)}
+.map figcaption{grid-column:1/4;grid-row:4;font-size:12px;color:var(--ink-2);margin-top:14px}
+.quad{position:relative;z-index:2;background:var(--paper);border:1px dashed var(--rule);padding:14px 16px;font-size:15px;font-weight:500;display:flex;flex-direction:column;gap:2px}
+.quad small{display:block;font-weight:400;color:var(--ink-2);font-size:13px;margin-bottom:10px}
+.quad.q1{grid-column:2;grid-row:1;border-right:0;border-bottom:0}
+.quad.me{grid-column:3;grid-row:1;border-bottom:0;background:color-mix(in srgb,var(--rust) 10%,var(--paper));align-items:flex-start;justify-content:center}
+.quad.q3{grid-column:2;grid-row:2;border-right:0;justify-content:flex-end}
+.quad.q4{grid-column:3;grid-row:2;justify-content:flex-end}
+.quad.me b{display:inline-block;background:var(--ink);color:var(--paper);padding:8px 14px;font-size:18px;font-weight:600;letter-spacing:-.01em}
+.quad.me small{margin:8px 0 0}
+.pillar{padding:0 0 22px;margin:0 0 22px;border-bottom:1px solid var(--rule)}
+.pillar:last-child{border-bottom:0;margin:0;padding:0}
+.pillar h3{margin:0 0 6px;font-size:18px;font-weight:600}
+.pillar p{margin:0;color:var(--ink-2);font-size:15px}
+.soon{display:inline-block;margin-left:8px;padding:1px 7px;border:1px solid var(--ink-2);color:var(--ink-2);font-size:12px;font-weight:400;vertical-align:2px}
+.fit{margin:44px 0 0;padding:16px 20px;background:var(--panel);border:1px solid var(--rule);font-size:16px}
+.fit b{font-weight:600}
+
+.plans{grid-template-columns:repeat(4,1fr)}
+@media (max-width:940px){.plans{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.plans{grid-template-columns:1fr}}
+.plan{display:flex;flex-direction:column}
+.plan .price{font-size:30px;font-weight:600;letter-spacing:-.02em;margin:6px 0 4px}
+.plan .price span{font-size:15px;font-weight:400;color:var(--ink-2);letter-spacing:0}
+.plan .who{margin:0 0 14px}
+.plan .meta{margin:0 0 20px;font-size:14px;border-top:1px dashed var(--rule);padding-top:12px}
+.plan .meta div{margin:0 0 10px}
+.plan .meta dt{color:var(--ink-2);font-size:13px}
+.plan .meta dd{margin:0}
+.plan .cta,.plan .cta.ghost{margin:auto 0 0;align-self:flex-start}
+.note{margin:18px 0 0;font-size:14px;color:var(--ink-2)}
+
+.cta:focus-visible,nav a:focus-visible,footer button:focus-visible{outline:2px solid var(--teal);outline-offset:3px}
+
+nav .navr{display:flex;align-items:center;gap:26px}
+nav .navcta{padding:8px 14px;font-size:14px}
+@media (max-width:720px){nav ul{display:none}}
+.hero-note{margin:16px 0 0;font-size:14px;color:var(--ink-2)}
+.plan ul.inc{list-style:none;margin:0 0 22px;padding:12px 0 0;border-top:1px dashed var(--rule);font-size:14px}
+.plan ul.inc li{position:relative;padding-left:20px;margin:0 0 8px}
+.plan ul.inc li::before{content:"✓";position:absolute;left:0;color:var(--teal)}
+#start{background:var(--panel)}
+#start h2{font-size:clamp(28px,4vw,40px);line-height:1.1;max-width:22ch;margin:0 0 14px}
+#start p{color:var(--ink-2);max-width:52ch;margin:0 0 28px}
+.cta:focus-visible,nav a:focus-visible,footer button:focus-visible{outline:2px solid var(--teal);outline-offset:3px}
+/* ---------- glitch effects ---------- */
+.jitter{animation:jit .2s steps(3) 1}
+@keyframes jit{0%{transform:translateX(0)}33%{transform:translateX(-3px)}66%{transform:translateX(2px)}100%{transform:translateX(0)}}
+body.flick::after{content:"";position:fixed;inset:0;background:var(--ink);opacity:.06;pointer-events:none;animation:flk .22s steps(2) 1 forwards;z-index:99}
+@keyframes flk{0%{opacity:.12}50%{opacity:0}100%{opacity:0}}
+.crumb{position:absolute;width:5px;height:5px;background:var(--ink);z-index:1;pointer-events:none;animation:fall .9s cubic-bezier(.3,.6,.6,1) forwards}
+@keyframes fall{to{transform:translate(var(--dx),var(--dy));opacity:0}}
+.glitchy{font-family:"IBM Plex Mono",monospace}
+
+/* ---------- the robot ---------- */
+#bot{position:absolute;width:80px;height:150px;z-index:1;transition:transform 1.1s steps(11),top 1.1s steps(11),left 1.1s steps(11);visibility:hidden;user-select:none}
+#bot.above{z-index:6}
+#bot.walking{transition-timing-function:steps(14)}
+#bot.instant{transition:none}
+#bot canvas{width:80px;height:150px;image-rendering:pixelated;image-rendering:crisp-edges;display:block;cursor:pointer}
+.bubble{position:absolute;bottom:calc(100% + 12px);left:-8px;width:min(310px,calc(100vw - 40px));background:var(--bot-bg);color:var(--bot-ink);font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:12.5px;line-height:1.55;padding:10px 12px 8px;box-shadow:0 0 0 3px var(--bot-bg),5px 5px 0 3px var(--rust);opacity:0;transform:translateY(6px);transition:opacity .15s steps(2),transform .15s steps(2);pointer-events:none}
+.bubble.flip{left:auto;right:-8px}
+.bubble.show{opacity:1;transform:none;pointer-events:auto}
+.bubble::after{content:"";position:absolute;bottom:-9px;left:28px;width:9px;height:9px;background:var(--bot-bg);box-shadow:0 0 0 3px var(--bot-bg)}
+.bubble.flip::after{left:auto;right:28px}
+.bubble .name{font-family:"Press Start 2P",monospace;font-size:8px;letter-spacing:.02em;color:var(--rust);margin:0 0 8px;display:flex;justify-content:space-between;align-items:center}
+.bubble .name button{background:none;border:0;color:inherit;font:inherit;cursor:pointer;padding:0 0 0 8px;opacity:.7}
+.bubble .name button:hover{opacity:1}
+.log{max-height:160px;overflow-y:auto;scrollbar-width:thin}
+.log .m{margin:0 0 7px;white-space:pre-wrap;word-break:break-word}
+.log .m.you{opacity:.55}
+.log .m.you::before{content:"> "}
+.inp{display:flex;align-items:center;gap:6px;border-top:1px dashed color-mix(in srgb,var(--bot-ink) 35%,transparent);padding-top:7px;margin-top:2px}
+.inp span{color:var(--teal)}
+.inp input{flex:1;background:transparent;border:0;outline:0;color:inherit;font:inherit;padding:0;min-width:0}
+.inp input::placeholder{color:inherit;opacity:.4}
+.inp input:focus{outline:none}
+.bubble:focus-within{box-shadow:0 0 0 3px var(--bot-bg),5px 5px 0 3px var(--teal)}
+.cur{display:inline-block;width:7px;height:12px;background:var(--teal);vertical-align:-2px;animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+@media (prefers-reduced-motion:reduce){#bot{transition:none}.crumb,.jitter,body.flick::after{animation:none}}
+
+/* The gallery's "How it works" section brings its own type and spacing. */
+.sx-explainer h2,.sx-explainer h3{max-width:none;letter-spacing:normal}
+</style>
+</head>
+<body>
+
+<sx-example-bar></sx-example-bar>
+
+<nav><div class="wrap">
+  <a class="logo" href="#">skene</a>
+  <div class="navr">
+    <ul><li><a href="#how">How it works</a></li><li><a href="#why">Why Skene</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#">Docs</a></li></ul>
+    <a class="cta navcta" href="#pricing">Run the free audit</a>
+  </div>
+</div></nav>
+
+<header><div class="wrap hero-grid">
+  <div>
+    <h1 id="h1">Close the gap between growth and engineering.</h1>
+    <p class="lede">Skene's GTM agents help you plan, run and learn from growth experiments. Every experiment gets the tracking it needs, wired into your product's code, so you see what's working while it runs.</p>
+    <a class="cta" href="#pricing">Run the free audit</a><a class="cta ghost" href="#how">See how it works</a>
+    <p class="hero-note">Free to start, with every feature included.</p>
+  </div>
+  <div class="verdict" id="verdict">
+    <div class="row head"><span>Experiment: onboarding-v2</span><span class="tag">2 gaps</span></div>
+    <div class="goal">goal: trial starts +15% by week 6</div>
+    <div class="row"><span class="ok">✓ signup_completed</span><span>tracked</span></div>
+    <div class="row"><span class="ok">✓ workspace_created</span><span>tracked</span></div>
+    <div class="row"><span class="fail">✗ invite_sent</span><span class="fail">renamed in PR #412</span></div>
+    <div class="row"><span class="fail">✗ trial_started</span><span class="fail">not reaching database</span></div>
+    <div class="row head foot"><span>2 of 4 steps unmeasured</span><span class="ok">fix ready to ship</span></div>
+  </div>
+</div></header>
+
+<section id="problem"><div class="wrap">
+  <h2>Growth teams can't learn from experiments they can't measure.</h2>
+  <p class="sub">Your marketing, sales and customer success tools report what happened. They don't show the customer journey. So experiments get judged on ARR and retention at the quarterly review, after the time and money are spent.</p>
+  <div class="problems">
+    <div class="problem"><h3>No way to see progress</h3><p>Experiments launch without the product metrics that show whether they're moving toward the goal.</p></div>
+    <div class="problem"><h3>Tracking sits in the backlog</h3><p>New tracking rarely makes the engineering sprint when the growth team needs it.</p></div>
+    <div class="problem"><h3>Numbers without meaning</h3><p>Even when the tracking exists, it's hard to tell what the data is saying.</p></div>
+    <div class="problem"><h3>AI-written code breaks tracking</h3><p>One code change can rename the event that records a signup. Unless someone checks, the experiment loses its measurement.</p></div>
+  </div>
+  <p class="stat"><strong>42%</strong> of the code developers commit is written or assisted by AI, according to Sonar's State of Code Developer Survey 2026. Your product changes faster than ever, and tracking has to keep up.</p>
+</div></section>
+
+<section id="how"><div class="wrap">
+  <h2 id="h2how">Bring the experiment. Skene handles the tracking.</h2>
+  <p class="sub">Skene works between growth and engineering. It builds a tracking plan for every experiment, connects it to your product's code and keeps the customer journey up to date.</p>
+  <div class="steps" id="steps">
+    <div class="step"><h3>Add your growth plan</h3><p>Write the experiment you want to run, or import it from another tool.</p></div>
+    <div class="step"><h3>Get a tracking checklist</h3><p>Skene lists the events and steps that show whether you reached the goal.</p></div>
+    <div class="step"><h3>Ship the code</h3><p>Skene prepares the code and database changes. Your engineers review and ship.</p></div>
+    <div class="step"><h3>Stay covered</h3><p>Every future code change is checked against your growth plan, so tracking survives refactors and AI-written code.</p></div>
+  </div>
+  <p class="after">Every plan says what to measure and how, so every experiment is SMART. You see what customers do while it runs, then Skene uses the results to suggest your next experiment.</p>
+</div></section>
+
+<section id="why"><div class="wrap">
+  <h2 id="h2why">Experiments, tracking and learning, connected over time</h2>
+  <p class="sub">General AI tools can wire tracking once. Analytics and GTM tools report on whatever someone wired. Skene sets up the measurement for every experiment and keeps it working as your product changes.</p>
+  <div class="why-grid">
+    <figure class="map" id="map" aria-label="Positioning map: Skene is automated and long-term. General AI tools are automated and one-time. Whiteboards are manual and one-time. Analytics and broad GTM tools are manual and long-term.">
+      <div class="axis-y"><span>Automated</span><span>Manual</span></div>
+      <div class="quad q1">General AI tools<small>Claude, Codex</small></div>
+      <div class="quad me"><b>Skene</b><small>Set up and maintained for every experiment</small></div>
+      <div class="quad q3">Whiteboards</div>
+      <div class="quad q4">Analytics tools<small>PostHog, Amplitude, Mixpanel</small>Broad GTM tools<small>HubSpot, Salesforce</small></div>
+      <div class="axis-x"><span>One-time</span><span>Long-term</span></div>
+      <figcaption>Automation here means setting up and maintaining experiment measurement. Positions are illustrative.</figcaption>
+    </figure>
+    <div class="pillars">
+      <div class="pillar"><h3>Bridge the gap with engineering</h3><p>Skene brings the engineering skills. It adds missing metrics, explains what they mean and protects your tracking against drift.</p></div>
+      <div class="pillar"><h3>Co-create experiments and growth loops</h3><p>Skene suggests experiments, helps you build them and remembers every experiment your team has run.</p></div>
+      <div class="pillar"><h3>Industry benchmarks<span class="soon">On the roadmap</span></h3><p>See what works at other companies, how your numbers compare and where you trail the best in your industry. Built from results across customers, with each customer's data kept private.</p></div>
+    </div>
+  </div>
+  <p class="fit"><b>Made for</b> PLG SaaS companies where growth and engineering are separate teams.</p>
+</div></section>
+
+<section id="pricing"><div class="wrap">
+  <h2 id="h2pricing">Start free. Bring in the team. Expand across teams.</h2>
+  <p class="sub">Every plan includes every feature. Plans grow with your usage and the number of teams running experiments.</p>
+  <div class="plans" id="plans">
+    <div class="plan">
+      <h3>Free</h3><div class="price">$0</div>
+      <p class="who">For one GTM engineer or RevOps lead</p>
+      <p>Measure your first experiment and decide what to try next.</p>
+      <ul class="inc"><li>Every feature, within a usage allowance</li><li>Your first experiment, measured</li><li>Start on your own, no approval needed</li></ul>
+      <a class="cta" href="#">Run the free audit</a>
+    </div>
+    <div class="plan">
+      <h3>Team</h3><div class="price">$200 <span>/ month</span></div>
+      <p class="who">For a growth team and the engineers who ship for it</p>
+      <p>Use your first result to run the next experiment, and make it a repeatable team workflow.</p>
+      <ul class="inc"><li>Your second experiment and beyond</li><li>One workflow for growth and engineering</li><li>Pay by card, no procurement</li></ul>
+      <a class="cta" href="#">Start Team</a>
+    </div>
+    <div class="plan">
+      <h3>Scale</h3><div class="price">$6,000 <span>/ year</span></div>
+      <p class="who">For several growth teams</p>
+      <p>Run experiments across teams, each with its own lead.</p>
+      <ul class="inc"><li>Multiple growth teams</li><li>Higher usage allowance</li><li>Leadership sign-off, no lengthy procurement</li></ul>
+      <a class="cta ghost" href="#">Talk to Skene</a>
+    </div>
+    <div class="plan">
+      <h3>Enterprise</h3><div class="price">$18,000 <span>/ year</span></div>
+      <p class="who">For company-wide use</p>
+      <p>Run experiments across the company with a usage allowance agreed with you.</p>
+      <ul class="inc"><li>Company-wide usage</li><li>Agreed usage allowance</li><li>Procurement, legal and privacy review</li></ul>
+      <a class="cta ghost" href="#">Talk to Skene</a>
+    </div>
+  </div>
+  <p class="note">Prices in USD.</p>
+</div></section>
+
+<section id="start"><div class="wrap">
+  <h2>Know if your next experiment is working while it runs.</h2>
+  <p>Bring one experiment. Skene works out what to track, prepares the code and shows you the customer journey.</p>
+  <a class="cta" href="#">Run the free audit</a><a class="cta ghost" href="#pricing">See pricing</a>
+</div></section>
+
+<footer id="footer"><div class="wrap">
+  <span>© 2026 Skene Technologies, Helsinki</span>
+  <span><button id="replay">replay the intro</button> · <button id="summon">summon TEEMU.EXE</button></span>
+</div></footer>
+
+<div id="bot" aria-live="polite">
+  <div class="bubble" id="bubble">
+    <div class="name"><span>TEEMU.EXE</span><button id="bye" title="go away" aria-label="dismiss">[x]</button></div>
+    <div class="log" id="log"></div>
+    <div class="inp"><span>&gt;</span><input id="inp" placeholder="type something" autocomplete="off" aria-label="message TEEMU.EXE"></div>
+  </div>
+  <canvas id="cv" width="16" height="30" aria-label="TEEMU.EXE, a pixel robot with a red beard and round glasses"></canvas>
+</div>
+
+<script>
+/* ---------- sprite ---------- */
+const PAL={L:'#2fd1b4',l:'#8ff2dd',M:'#9aa0a8',H:'#3b2a1f',S:'#e9bfa2',B:'#b85c2e',b:'#8c3f1b',G:'#d6a04a',W:'#f3f0ea',E:'#33475a',C:'#17181b',J:'#252a33'};
+const BASE=[
+".......LL.......",
+".......MM.......",
+"......MMMM......",
+"....HHHHHHHH....",
+"...HHHHHHHHHH...",
+"..HHHHHHHHHHHH..",
+"..HHSSSSSSSSHH..",
+"..HSSSSSSSSSSH..",
+"..SSGGGSSGGGSS..",
+"..SGWEGSSGWEGS..",
+"..SSGGGSSGGGSS..",
+"..SSSSSSSSSSSS..",
+"..SBSSSSSSSSBS..",
+"..BBBSSSSSSBBB..",
+"..BBBBSSSSBBBB..",
+"..BBBBWWWWBBBB..",
+"..bBBBBBBBBBBb..",
+"..bbBBBBBBBBbb..",
+"...bbBBBBBBbb...",
+"....bbbbbbbb....",
+".....MCCCCM.....",
+"...CCCCCCCCCC...",
+"..MCCCCCCCCCCM..",
+"..MCCCCLLCCCCM..",
+"..MCCCCCCCCCCM..",
+"..M.CCCCCCCC.M..",
+".MM.JJJJJJJJ.MM.",
+"....JJJ..JJJ....",
+"....JJJ..JJJ....",
+"....MMM..MMM...."];
+const LEGS_B=["...JJJ....JJJ...","...MMM....JJJ...","..........MMM..."];
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+let blink=false,talk=false,leg=0,tick=0;
+function draw(){
+  const rows=BASE.slice();
+  if(blink)rows[9]="..SGGGGSSGGGGS..";
+  if(talk&&tick%2)rows[15]="..BBBBbbbbBBBB..";
+  if(leg){rows[27]=LEGS_B[0];rows[28]=LEGS_B[1];rows[29]=LEGS_B[2];}
+  const led=(tick%6<3)?'L':'l';
+  ctx.clearRect(0,0,16,30);
+  rows.forEach((r,y)=>{for(let x=0;x<16;x++){let c=r[x];if(c==='.')continue;if(c==='L')c=led;ctx.fillStyle=PAL[c];ctx.fillRect(x,y,1,1);}});
+}
+setInterval(()=>{tick++;if(walking)leg=tick%2;draw();},140);
+setInterval(()=>{blink=true;draw();setTimeout(()=>{blink=false;draw();},120);},3200+Math.random()*1500);
+draw();
+
+/* ---------- audio (90s beeps, only after the user types) ---------- */
+let actx=null;
+function beep(f=880,d=.05,t=0){if(!actx)return;const o=actx.createOscillator(),g=actx.createGain();o.type='square';o.frequency.value=f;g.gain.value=.03;o.connect(g);g.connect(actx.destination);o.start(actx.currentTime+t);o.stop(actx.currentTime+t+d);}
+
+/* ---------- robot placement ---------- */
+const bot=document.getElementById('bot'),bubble=document.getElementById('bubble'),log=document.getElementById('log'),inp=document.getElementById('inp');
+const H=150,W=80;
+let walking=false,visible=false,busy=false,current=null;
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const R=el=>{const r=el.getBoundingClientRect(),b=document.body.getBoundingClientRect();return{x:r.left-b.left,y:r.top-b.top,w:r.width,h:r.height};};
+const clampX=x=>Math.max(8,Math.min(x,document.documentElement.clientWidth-W-8));
+function place(x,y){bot.style.left=clampX(x)+'px';bot.style.top=y+'px';}
+function fitBubble(){const x=parseFloat(bot.style.left)||0;bubble.classList.toggle('flip',x+320>document.documentElement.clientWidth);}
+
+const SPOTS={
+  hero:{el:'#verdict',head:'#h1',enter:'climb',pos:r=>[r.x+r.w-W-28,r.y-H+10],
+    lines:["...not a virus.","ok, i did eat your headline for a second. it is back.","i am TEEMU.EXE. pixel copy of the founder, 16 px wide. i make sure every growth experiment can actually be measured.","type something. 'help' lists what i know. 'go away' works too."]},
+  how:{el:'#steps .step:nth-child(3)',head:'#h2how',enter:'drop',pos:r=>[r.x+r.w-W-6,r.y-H+6],
+    lines:["step 3 is where i get my hands dirty. i turn your tracking checklist into code and database changes.","then step 4: every later change gets checked against the plan. invite_sent renamed to inviteSent? i notice."]},
+  why:{el:'#map .me',head:'#h2why',enter:'climb',pos:r=>[r.x+r.w-W-12,r.y-H+8],
+    lines:["top right. automated and long-term. this corner is mine.","anyone can wire tracking once. the hard part is keeping it working while the product changes every week."]},
+  pricing:{el:'#plans .plan:nth-child(1)',head:'#h2pricing',enter:'climb',pos:r=>[r.x+r.w-W-20,r.y-H+8],
+    lines:["i checked. the free tier is actually free, and it has every feature. you just get a usage allowance.","the second experiment is where Team starts. $200 a month, pay by card."]},
+  footer:{el:'#footer',head:null,enter:'walk',pos:r=>[64,r.y-H+8],
+    lines:["you scrolled the whole page. respect.","ask me something before you close the tab. i get lonely in the footer."]},
+};
+
+function appear(name){
+  if(busy)return;busy=true;current=name;const s=SPOTS[name];const el=document.querySelector(s.el);const r=R(el);const [tx,ty]=s.pos(r);
+  bot.classList.remove('above','walking');bot.classList.add('instant');bot.style.visibility='visible';visible=true;
+  hideBubble();
+  if(s.head)glitchText(document.querySelector(s.head),700);
+  if(s.enter==='climb'){
+    place(tx,r.y+18);void bot.offsetWidth;bot.classList.remove('instant');
+    crumbs(tx+W/2,r.y);
+    setTimeout(()=>place(tx,ty),reduce?0:60);
+    setTimeout(()=>{bot.classList.add('above');start(s.lines);},reduce?100:1250);
+  }else if(s.enter==='drop'){
+    bot.classList.add('above');place(tx,ty-260);void bot.offsetWidth;bot.classList.remove('instant');
+    setTimeout(()=>place(tx,ty),60);
+    setTimeout(()=>{bot.classList.add('jitter');start(s.lines);},reduce?100:1200);
+  }else{
+    bot.classList.add('above','walking');place(-W-10,ty);void bot.offsetWidth;bot.classList.remove('instant');walking=true;
+    setTimeout(()=>place(tx,ty),60);
+    setTimeout(()=>{walking=false;leg=0;draw();bot.classList.remove('walking');start(s.lines);},reduce?100:1250);
+  }
+}
+function start(lines){busy=false;fitBubble();showBubble();say(lines);}
+function showBubble(){bubble.classList.add('show');}
+function hideBubble(){bubble.classList.remove('show');}
+function leave(){
+  if(!visible||busy)return;busy=true;const y=parseFloat(bot.style.top);const x=parseFloat(bot.style.left);
+  hideBubble();bot.classList.add('walking');walking=true;
+  const goLeft=x<document.documentElement.clientWidth/2;
+  setTimeout(()=>place(goLeft?-W-20:document.documentElement.clientWidth+20,y),80);
+  bot.style.left=(goLeft?-W-20:document.documentElement.clientWidth+20)+'px';
+  setTimeout(()=>{walking=false;leg=0;draw();bot.style.visibility='hidden';visible=false;busy=false;bot.classList.remove('walking');log.innerHTML='';},reduce?50:1250);
+}
+
+/* ---------- chat ---------- */
+let typing=false,queue=[];
+function say(lines){queue.push(...lines);pump();}
+function pump(){
+  if(typing||!queue.length)return;const text=queue.shift();typing=true;talk=true;
+  const m=document.createElement('div');m.className='m';log.appendChild(m);beep(660,.04);beep(990,.04,.06);
+  let i=0;const step=reduce?0:16;
+  (function t(){if(i<=text.length){m.textContent=text.slice(0,i++);log.scrollTop=log.scrollHeight;if(step)setTimeout(t,step);else t();}else{talk=false;draw();typing=false;setTimeout(pump,380);}})();
+}
+const BRAIN=[
+ [['go away','bye','leave','shoo','pois'],null],
+ [['who are you','what are you','your name'],["TEEMU.EXE. a 16 px copy of Skene's founder. same beard, same glasses, less patience for experiments nobody can measure."]],
+ [['virus','malware','hack','trojan'],["not a virus. i only corrupt headlines, and i put them back. a real virus would not fix your event names."]],
+ [['help','what can you','what do you know'],["i know: what skene does, how it works, who it is for, pricing, how it compares, smart experiments, benchmarks, ai-written code, supabase. also 'go away'."]],
+ [['hello','hi','hey','moi','terve','hola'],["moi. ask me something, or 'help'."]],
+ [['price','prices','pricing','cost','costs','free','pay','how much','plans','tier','tiers','scale','enterprise'],["free: every feature, within a usage allowance. one champion, nobody to ask.","Team: $200 a month for the growth team and the engineers who ship for it. Scale: $6,000 a year across several growth teams. Enterprise: $18,000 a year, company-wide, with procurement and legal review."]],
+ [['benchmark','benchmarks','industry','other companies'],["on the roadmap. the idea: learn from results across customers, privacy kept, and show what has worked at companies like yours."]],
+ [['who is it for','who is this for','customer','customers','fit','plg','saas','icp'],["PLG SaaS companies where growth and engineering are separate teams. if your growth team waits on engineers for tracking, that is you."]],
+ [['smart'],["specific, measurable, achievable, relevant, time-bound. most GTM experiments miss the measurable part. every plan i build says what to measure and how."]],
+ [['compare','competitor','competitors','competition','vs','versus','different','difference','alternative','alternatives','claude','codex','chatgpt','hubspot','salesforce'],["general AI tools can wire tracking once. analytics and GTM tools report what happened, and someone still has to wire the events. i set up the measurement and keep it working as the product changes."]],
+ [['posthog','mixpanel','amplitude','segment','vendor','analytics'],["keep your analytics tool. i work out which events the experiment needs and make sure the code actually sends them."]],
+ [['ai code','ai coding','ai-written','cursor','copilot','drift','break','breaks','broke','broken','refactor','renamed'],["AI tools ship code fast. sometimes that code renames the event that records a signup. i check every change against the growth plan so the experiment keeps its measurement."]],
+ [['supabase','postgres','database','warehouse','bigquery','pipeline'],["Supabase Postgres is home turf. events get checked against the schema, then piped to BigQuery via Supabase Pipelines."]],
+ [['github','pull request','pr','ci','action','merge'],["every pull request gets checked against the growth plan. a missing or renamed event gets flagged before the experiment loses its measurement."]],
+ [['how','work','works','check','verdict','steps'],["1 bring a growth plan, or import one. 2 i turn it into a tracking checklist: the events that show whether the goal was reached.","3 i write the code and database changes, ready to ship. 4 i check every later code change against the plan. then i suggest the next experiment."]],
+ [['demo','try','start','sign up','signup','install','audit'],["click 'Run the free audit' at the top. every feature is in the free tier, up to a usage allowance."]],
+ [['beard','glasses','look','teemu','founder','founders','handsome','photo'],["the beard is accurate. glasses too. sweater is always black. i am about 30% less handsome than the original, pixel budget."]],
+ [['thanks','thank','kiitos','cheers'],["ole hyvä."]],
+ [['skene','what do you do','what is this'],["Skene's GTM agents help teams plan, run and learn from growth experiments. every experiment gets the tracking it needs, so you see progress while it runs."]],
+];
+const FALLBACK=["parsed that as ???. try 'help'.","my vocabulary is 16 px wide. rephrase?","no matching event for that. try pricing, how it works, or go away."];
+/* whole-word matching, so 'hi' no longer fires inside 'this' */
+const hit=(q,k)=>new RegExp('(^|[^a-z0-9])'+k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'($|[^a-z0-9])').test(q);
+function reply(txt){
+  const q=txt.toLowerCase();
+  for(const [ks,r] of BRAIN){if(ks.some(k=>hit(q,k))){if(r===null){say(["ok. i will be in the footer if you need me."]);setTimeout(leave,1600);return;}say(r);return;}}
+  say([FALLBACK[Math.floor(Math.random()*FALLBACK.length)]]);
+}
+inp.addEventListener('keydown',e=>{
+  if(!actx){try{actx=new (window.AudioContext||window.webkitAudioContext)();}catch(_){}}
+  if(e.key!=='Enter')return;const v=inp.value.trim();if(!v)return;inp.value='';
+  const m=document.createElement('div');m.className='m you';m.textContent=v;log.appendChild(m);log.scrollTop=log.scrollHeight;beep(440,.03);
+  setTimeout(()=>reply(v),250);
+});
+document.getElementById('bye').onclick=()=>{say(["fine."]);setTimeout(leave,700);};
+cv.addEventListener('click',()=>{if(bubble.classList.contains('show')){hideBubble();}else{fitBubble();showBubble();inp.focus();}});
+
+/* ---------- "virus" effects ---------- */
+const GLY='▓▒░█▚▞/\\|#01';
+function glitchText(el,ms){
+  if(!el||reduce)return;const orig=el.dataset.orig||(el.dataset.orig=el.textContent);let chars=orig.split('');el.classList.add('glitchy');
+  const n=Math.max(3,Math.floor(chars.length*.35));
+  for(let i=0;i<n;i++){const j=Math.floor(Math.random()*chars.length);if(chars[j]!==' ')chars[j]=GLY[Math.floor(Math.random()*GLY.length)];}
+  el.textContent=chars.join('');el.classList.add('jitter');
+  setTimeout(()=>{el.textContent=orig;el.classList.remove('glitchy','jitter');},ms);
+}
+function crumbs(x,y){
+  if(reduce)return;for(let i=0;i<14;i++){const c=document.createElement('div');c.className='crumb';c.style.left=(x+(Math.random()*60-30))+'px';c.style.top=(y-4)+'px';c.style.setProperty('--dx',(Math.random()*80-40)+'px');c.style.setProperty('--dy',(60+Math.random()*90)+'px');c.style.animationDelay=(Math.random()*.4)+'s';document.body.appendChild(c);setTimeout(()=>c.remove(),1600);}
+}
+function intro(){
+  const h1=document.getElementById('h1');const orig=h1.dataset.orig||(h1.dataset.orig=h1.textContent);
+  if(reduce){appear('hero');return;}
+  document.body.classList.add('flick');setTimeout(()=>document.body.classList.remove('flick'),300);
+  /* eat the headline from the right, one char at a time */
+  let chars=orig.split(''),k=chars.length-1,n=0;
+  h1.classList.add('glitchy');
+  const eat=setInterval(()=>{for(let s=0;s<2;s++){while(k>0&&chars[k]===' ')k--;if(k<=0)break;chars[k]=GLY[Math.floor(Math.random()*GLY.length)];k--;n++;}h1.textContent=chars.join('');if(n>Math.floor(orig.length*.45)||k<=0){clearInterval(eat);setTimeout(()=>{h1.classList.add('jitter');appear('hero');restore();},500);}},45);
+  function restore(){let i=0;const fixed=orig.split('');const cur=h1.textContent.split('');const iv=setInterval(()=>{for(let s=0;s<3&&i<fixed.length;s++,i++){cur[i]=fixed[i];}h1.textContent=cur.join('');if(i>=fixed.length){clearInterval(iv);h1.classList.remove('glitchy','jitter');}},30);}
+}
+
+/* ---------- reappear as the reader moves ---------- */
+const seen=new Set();
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(!e.isIntersecting)return;const name=e.target.dataset.spot;if(seen.has(name)||visible||busy)return;seen.add(name);setTimeout(()=>{if(!visible&&!busy)appear(name);},500);});},{threshold:.35});
+[['how','#how'],['why','#why'],['pricing','#pricing'],['footer','#footer']].forEach(([n,s])=>{const el=document.querySelector(s);el.dataset.spot=n;io.observe(el);});
+document.getElementById('replay').onclick=()=>{if(visible){bot.style.visibility='hidden';visible=false;log.innerHTML='';hideBubble();}seen.clear();scrollTo({top:0});setTimeout(intro,700);};
+document.getElementById('summon').onclick=()=>{if(visible)return;seen.add('footer');appear('footer');};
+addEventListener('resize',()=>{if(visible&&current&&!busy){const s=SPOTS[current];const [x,y]=s.pos(R(document.querySelector(s.el)));bot.classList.add('instant');place(x,y);void bot.offsetWidth;bot.classList.remove('instant');fitBubble();}});
+setTimeout(intro,2200);
+</script>
+
+<!-- The explanation: what it shows, how to try it, and the code that matters. -->
+<section id="how-it-works" class="sx-explainer" data-og-hide>
+  <div class="sx-wrap">
+    <p class="sx-eyebrow">How it works</p>
+    <h2>A mascot that walks the page instead of waiting in the corner</h2>
+    <p class="sx-lead">Most page help sits still in the bottom right until someone clicks it. This one arrives on its own: a 16&nbsp;×&nbsp;30 pixel robot chews up the headline, climbs out from behind the hero card, and then reappears beside whatever section the reader has scrolled to, with one remark about that section. It is a landing page tour with a character attached, and its bubble takes typed questions.</p>
+
+    <h3>Try it</h3>
+    <ol class="sx-steps">
+      <li>Wait two seconds on the hero. The headline breaks into block glyphs, pixel crumbs fall, and the robot climbs up from behind the experiment card.</li>
+      <li>Scroll. It drops in at step 3, climbs the positioning map, leans on the free plan, and walks in from the left in the footer — once each.</li>
+      <li>Type in its bubble: <code>help</code>, <code>pricing</code>, <code>supabase</code>, <code>are you a virus</code>, <code>go away</code>.</li>
+      <li>Click the robot to hide or show the bubble. <strong>summon TEEMU.EXE</strong> in the footer brings it back; <strong>replay the intro</strong> runs the whole tour again.</li>
+      <li>Turn on <em>Reduce motion</em> in your OS: the glitching, crumbs and walking stop, and the robot simply appears where it was heading.</li>
+    </ol>
+
+    <h3>The sprite</h3>
+    <p>The robot is a string array, one character per pixel, painted into a 16&nbsp;×&nbsp;30 canvas that CSS scales up with <code>image-rendering: pixelated</code>. Swapping single rows gives the blink, the talking mouth and the walk cycle, so the whole character is a few hundred bytes with no image files.</p>
+    <pre class="sx-code" data-file="index.html"><code class="language-js">const PAL = { L:'#2fd1b4', M:'#9aa0a8', H:'#3b2a1f', S:'#e9bfa2', B:'#b85c2e' /* … */ };
+const BASE = [
+  ".......LL.......",   // antenna light, blinks between two teals
+  "....HHHHHHHH....",   // hair
+  "..SGWEGSSGWEGS..",   // glasses
+  "..BBBBWWWWBBBB..",   // beard and mouth
+  /* … 30 rows in all */
+];
+
+function draw() {
+  const rows = BASE.slice();
+  if (blink) rows[9] = "..SGGGGSSGGGGS..";          // eyes closed
+  if (talk &amp;&amp; tick % 2) rows[15] = "..BBBBbbbbBBBB.."; // mouth open
+  rows.forEach((r, y) =&gt; { for (let x = 0; x &lt; 16; x++) {
+    const c = r[x]; if (c === '.') continue;
+    ctx.fillStyle = PAL[c]; ctx.fillRect(x, y, 1, 1);
+  }});
+}</code></pre>
+
+    <h3>One stop per section</h3>
+    <p>Each stop names the element to stand on, how to arrive, where to sit relative to that element's box, and what to say. An <code>IntersectionObserver</code> fires a stop the first time its section is 35% visible, and the positions are recomputed on resize, so the robot stays glued to the layout.</p>
+    <pre class="sx-code" data-file="index.html"><code class="language-js">const SPOTS = {
+  hero: { el: '#verdict', head: '#h1', enter: 'climb',
+          pos: r =&gt; [r.x + r.w - W - 28, r.y - H + 10],
+          lines: ["...not a virus.", "ok, i did eat your headline for a second. it is back."] },
+  how:  { el: '#steps .step:nth-child(3)', head: '#h2how', enter: 'drop', /* … */ },
+};
+
+const io = new IntersectionObserver(entries =&gt; {
+  for (const e of entries) {
+    if (!e.isIntersecting || seen.has(e.target.dataset.spot)) continue;
+    seen.add(e.target.dataset.spot);
+    appear(e.target.dataset.spot);          // climb, drop or walk in
+  }
+}, { threshold: .35 });</code></pre>
+
+    <h3>The two conversations on this page</h3>
+    <p>The robot's own replies are local: a keyword table in this file, matched on whole words, typed out one character at a time with a square-wave beep. It has no server and no model behind it — it is the mascot layer, and it is deliberately small enough to read in one sitting.</p>
+    <p>The real conversation is Stand Chat, loaded with the shared <code>demo</code> site ID, which answers on any domain including localhost and preview deployments. Add <code>?preview</code> to the URL to see Stand elements that stay hidden while nobody is available.</p>
+    <pre class="sx-code" data-file="index.html"><code class="language-html">&lt;script defer src="https://cdn.stand.chat/widget/stand.js" data-stand-id="demo"&gt;&lt;/script&gt;</code></pre>
+
+    <h3>Copy this example</h3>
+    <pre class="sx-code"><code class="language-sh">npx degit standchat/examples/glitch-mascot my-copy</code></pre>
+    <p class="sx-note">One file, no build step and no dependencies beyond two Google fonts. The two <code>/_shared/</code> references and <code>&lt;sx-example-bar&gt;</code> are gallery chrome and can be deleted.</p>
+  </div>
+</section>
+</body>
+</html>
