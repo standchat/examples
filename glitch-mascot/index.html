@@ -19,7 +19,7 @@
 <script type="module" src="/_shared/example.js"></script>
 
 <!-- Stand Chat's shared demo site: answers on any domain, including localhost. -->
-<script defer src="https://cdn.stand.chat/widget/stand.js" data-stand-id="demo"></script>
+<script defer src="https://cdn.stand.chat/widget/stand.js" data-stand-id="demo" data-stand-hide-button="true"></script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -569,10 +569,10 @@ const io = new IntersectionObserver(entries =&gt; {
   }
 }, { threshold: .35 });</code></pre>
 
-    <h3>The two conversations on this page</h3>
+    <h3>The mascot and Stand Chat</h3>
     <p>The robot's own replies are local: a keyword table in this file, matched on whole words, typed out one character at a time with a square-wave beep. It has no server and no model behind it — it is the mascot layer, and it is deliberately small enough to read in one sitting.</p>
-    <p>The real conversation is Stand Chat, loaded with the shared <code>demo</code> site ID, which answers on any domain including localhost and preview deployments. Add <code>?preview</code> to the URL to see Stand elements that stay hidden while nobody is available.</p>
-    <pre class="sx-code" data-file="index.html"><code class="language-html">&lt;script defer src="https://cdn.stand.chat/widget/stand.js" data-stand-id="demo"&gt;&lt;/script&gt;</code></pre>
+    <p>Stand Chat loads with the shared <code>demo</code> site ID, which works on any domain including localhost and preview deployments. Its default floating button is hidden; the mascot's bubble remains a local demo. Add <code>?preview</code> to the URL to see Stand elements that stay hidden while nobody is available.</p>
+    <pre class="sx-code" data-file="index.html"><code class="language-html">&lt;script defer src="https://cdn.stand.chat/widget/stand.js" data-stand-id="demo" data-stand-hide-button="true"&gt;&lt;/script&gt;</code></pre>
 
     <h3>Copy this example</h3>
     <pre class="sx-code"><code class="language-sh">npx degit standchat/examples/glitch-mascot my-copy</code></pre>
