@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Game Room — Vintage Terminal</title>
+  <meta name="description" content="Three terminals. Three classics. Play Colossal Cave Adventure, Star Trek, and Hunt the Wumpus, reimagined with Stand Chat.">
+  <link rel="canonical" href="https://examples.stand.chat/vintage-terminal/gameroom.html">
+  <meta name="theme-color" content="#e9e6d4">
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&display=swap">
+  <link rel="stylesheet" href="gameroom.css">
+  <script type="importmap">
+    { "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.min.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
+    } }
+  </script>
+  <script type="module" src="gameroom.js"></script>
+  <script type="module" src="/_shared/analytics.js"></script>
+</head>
+<body>
+  <div id="room">
+    <header class="room-heading"><h1>=== GAME ROOM ===</h1><p>PLEASE SELECT A TERMINAL</p></header>
+    <main class="terminals" aria-label="Choose a game">
+      <button class="terminal" type="button" data-game="adventure" aria-haspopup="dialog" aria-expanded="false" aria-label="Play Colossal Cave Adventure" disabled>
+        <span class="fallback-monitor"><span>COLOSSAL CAVE<br>ADVENTURE<small>PRESS TO PLAY</small></span></span>
+        <span class="terminal-caption"><span class="caption-desktop">01 &nbsp; Explore the underground.</span><span class="caption-mobile">COLOSSAL CAVE<br>ADVENTURE</span></span>
+      </button>
+      <button class="terminal" type="button" data-game="startrek" aria-haspopup="dialog" aria-expanded="false" aria-label="Play Star Trek" disabled>
+        <span class="fallback-monitor"><span>STAR TREK<br>SPACE COMMAND<small>PRESS TO PLAY</small></span></span>
+        <span class="terminal-caption"><span class="caption-desktop">02 &nbsp; Take the captain’s chair.</span><span class="caption-mobile">STAR TREK</span></span>
+      </button>
+      <button class="terminal" type="button" data-game="wumpus" aria-haspopup="dialog" aria-expanded="false" aria-label="Play Hunt the Wumpus" disabled>
+        <span class="fallback-monitor"><span>HUNT THE<br>WUMPUS<small>PRESS TO PLAY</small></span></span>
+        <span class="terminal-caption"><span class="caption-desktop">03 &nbsp; Listen. Aim. Survive.</span><span class="caption-mobile">HUNT THE<br>WUMPUS</span></span>
+      </button>
+    </main>
+    <footer><a href="/vintage-terminal/">How this is done</a></footer>
+    <noscript><p class="load-notice">Please enable JavaScript to play.</p></noscript>
+  </div>
+  <p id="load-status" class="load-notice" role="status">WARMING UP THE TERMINALS...</p>
+  <div class="backdrop" hidden></div>
+  <section class="game-dialog" role="dialog" aria-modal="true" aria-labelledby="game-title" aria-describedby="input-help" hidden>
+    <h2 id="game-title" class="sr-only"></h2>
+    <p id="input-help" class="sr-only">Type a game command and press Enter. HELP lists commands. Use Page Up and Page Down to read earlier output. Escape returns to the game room. Each terminal keeps its own session.</p>
+    <div class="transcript sr-only" role="log" aria-live="polite" aria-relevant="additions text" tabindex="0" aria-label="Game transcript"></div>
+    <form class="command-form">
+      <label class="sr-only" for="command">Game command</label>
+      <textarea id="command" class="game-input" rows="1" maxlength="500" spellcheck="false" autocomplete="off" autocapitalize="off" enterkeyhint="send" aria-describedby="input-help"></textarea>
+      <div class="game-controls">
+        <button type="button" data-action="close">Game room <kbd>Esc</kbd></button>
+        <button type="submit" data-action="send">Send <kbd>↵</kbd></button>
+        <button type="button" data-action="retry" hidden>Reconnect</button>
+        <button type="button" data-action="new" hidden>New session</button>
+        <a class="powered" target="_blank" rel="noopener noreferrer" hidden>Powered by Stand</a>
+      </div>
+    </form>
+    <p class="connection-status" role="status"></p>
+  </section>
+</body>
+</html>
