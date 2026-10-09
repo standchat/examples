@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-09",
+  "tool": "Built-in image_gen",
+  "rating": "nc-17",
+  "transparentBackground": true,
+  "assets": [
+    {
+      "kind": "ghost",
+      "source": "exec-87f43ce2-7ca5-401e-a934-7da980c6f42e.png",
+      "prompt": "Use case: stylized-concept. Production asset: one original photoreal practical-effects Halloween apparition cutout for the MOST INTENSE of five website Halloween modes. This level must look like a genuinely frightening premium haunted-house animatronic or supernatural horror film creature, emphatically NOT a cartoon, not a mascot, not cute. Subject: full-body hovering ancient wraith, impossibly elongated skeletal torso swallowed in shredded coal-black burial cloth and grey cobweb gauze, sharply sculpted dessicated bone skull with deep black eye sockets and two very dim ember pinpoints, thin cracked bone cheekbones, slightly parted irregular teeth, one long skeletal clawed hand extended palm-up as an ominous host inviting you forward. Head tilted slightly. An elaborate tattered hood frames the realistically sculpted skull. Long torn cloth tails drift downward and curl inward, legs disappear into trailing cloth. Mood: severe cinematic dread; creature-shop masterpiece photographed as a real physical prop, aged latex, carved bone, fine gauze threads, tactile details. Lighting: strong softbox from upper-left reveals shape, subtle cold rim light; skull readable even when displayed small. Composition: square full isolated single creature centered with EVERY cloth tip and finger entirely inside frame, 82 percent frame height, generous transparent border. Groundless floating character, no floor, no scenery, no shadow rectangle. Actual transparent alpha background. No text, no logos, no other characters, no weapons, no blood or viscera. Original design, no existing franchise likeness. Do not make the face friendly or baby-like; the welcome is communicated only by the open palm.",
+      "destination": "nc-17/ghost.png"
+    },
+    {
+      "kind": "pumpkin",
+      "source": "exec-7700081c-1021-4caa-8ff1-927831d7bfad.png",
+      "prompt": "Use case: stylized-concept. Production asset: a single original extremely frightening Halloween pumpkin monster for the highest intensity website Halloween pack. Photoreal creature-shop practical-effects sculpture and premium haunted-house animatronic prop quality, not illustrated, not stylized cute or toy-like. A deeply asymmetrical gnarly near-black burnt-orange pumpkin creature, real aged ribbed gourd skin fissures and rough waxy texture, gnarled twisted dead woody stem like antlers, huge deeply recessed angular uneven eyes with molten amber light from within, a horrific wide carved grin of long jagged wooden splinter-like teeth and pitch-black mouth cavity lit at depth by red embers. Slight tilt gives sinister attitude. Blackened curling vine tendrils kept close to object. Aged realistic latex prop, dense sculptural relief, shape and face immediately readable at small sizes. Studio key light upper-left with dramatic side shadows and faint warm inner illumination. Square composition, isolated entire pumpkin with every stem tip fully inside frame, centered occupying82 percent width and height, transparent margin all sides. Actual transparent alpha background. No floor, no ground plane, no backdrop, no text, no scene, no people, no blood or viscera, no separate props. Original horror-film caliber design, not a copy of a specific brand or character.",
+      "destination": "nc-17/pumpkin.png"
+    },
+    {
+      "kind": "bat",
+      "source": "exec-1cc23869-db23-4f67-8e14-52e5a9a26fde.png",
+      "prompt": "Use case: stylized-concept. Production asset: one truly frightening original vampire bat demon photographed as a premium horror-film creature-shop practical effect, highest intensity Halloween website sprite. Not a cute animal, not cartoon, not flat illustration. Full creature in flight with its entire huge angular wingspan open, richly detailed torn dark burgundy and charcoal leathery translucent wing membranes, long anatomically coherent wing finger bones under skin, thick sinewy shoulder joints, gaunt shaggy dark-grey furred chest, long grotesque skull-like vampire bat face with pointed ears, recessed ember eyes, a small snarling mouth with very long irregular ivory fangs, thin curled talons hanging beneath chest. Asymmetrical torn trailing wing edges, dry scarred weathered textures, no blood or viscera. Genuine scary haunted-house prop, convincingly physical, dramatic film lighting from upper-left and subtle rim light make silhouette clear on light or dark website. Square composition single asset centered, complete wing tips and claws remain entirely within frame; spread wings occupy86 percent of width and about65 percent height. Transparent border all around, actual transparent alpha background. No background color, no fog cloud, no ground, no typography, no other objects. Original design without any franchise likeness.",
+      "destination": "nc-17/bat.png"
+    }
+  ]
+}

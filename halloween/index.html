@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4ead7">
+  <title>Halloween mode — Stand Chat</title>
+  <meta name="description" content="Give your website a little Halloween spirit. Five original character packs, a wandering friendly ghost, and real conversations. One free, configurable script for Stand Chat.">
+  <meta name="author" content="Stand Chat">
+  <link rel="author" href="https://stand.chat/">
+  <meta name="keywords" content="Halloween, seasonal, ghost, drop-in, animation, StandChat.openChat">
+  <meta property="og:title" content="Stand Chat Halloween mode">
+  <meta property="og:description" content="Your website has visitors. Give it a few spirits. Free Halloween mode, five styles, one script.">
+  <meta property="og:image" content="https://examples.stand.chat/halloween/og.png">
+  <meta property="og:url" content="https://examples.stand.chat/halloween/">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="/_shared/example.css">
+  <script type="module" src="/_shared/example.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./page.css?v=2.0.0">
+  <script defer src="https://cdn.stand.chat/widget/stand.js" data-stand-id="demo"></script>
+  <script defer src="./halloween.js?v=2.0.0" data-rating="pg" data-idle-delay="12000" data-preview="true" data-season="always" data-controls="false"></script>
+  <script defer src="./page.js?v=2.0.0"></script>
+</head>
+<body>
+  <sx-example-bar></sx-example-bar>
+  <nav data-halloween="none" class="masthead wrap" aria-label="Page navigation">
+    <a class="wordmark" href="https://stand.chat/" aria-label="Stand Chat home"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M4 5h20v14H13l-7 5v-5H4z" fill="currentColor"/><path d="M9 10h10M9 14h7" stroke="#f4ead7" stroke-width="2"/></svg> stand<span>chat</span></a>
+    <span class="season-label">A SEASONAL EXPERIMENT · NO. 031</span>
+    <a class="nav-link" href="#how-it-works">Put it on your site <span aria-hidden="true">↗</span></a>
+  </nav>
+
+  <main>
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="tiny-star" aria-hidden="true">✳</span> INTRODUCING HALLOWEEN MODE</p>
+        <h1 id="hero-title">Your website.<br>A little more<br><span>spirited.</span><svg class="title-spark" viewBox="0 0 60 60" aria-hidden="true"><path d="M31 2l3 19L51 9 41 26l18 4-20 5 11 18-17-13-5 20-4-21L6 51l11-19L0 27l21-3L10 6l16 14z" fill="currentColor"/></svg></h1>
+        <p class="hero-lede">A pumpkin drops in. A bat flies by.<br>A little ghost wonders if you need a hand.</p>
+        <p class="hero-description">Turn a passing visit into a conversation.<br>One free addition to your Stand Chat website.</p>
+        <div class="hero-actions" data-halloween="none"><a class="button primary" href="#how-it-works">Get Halloween mode <span aria-hidden="true">↗</span></a><button class="text-button" id="summon">Meet your ghost <span aria-hidden="true">↝</span></button></div>
+        <p class="microcopy">One script. Five personalities. Entirely your call.</p>
+      </div>
+
+      <div class="theatre" data-rating="pg" aria-label="Live Halloween character preview">
+        <span class="orbit orbit-one" aria-hidden="true"></span><span class="orbit orbit-two" aria-hidden="true"></span>
+        <span class="stage-star star-one" aria-hidden="true">✦</span><span class="stage-star star-two" aria-hidden="true">✧</span>
+        <div class="moon" aria-hidden="true"></div>
+        <div class="browser-card" data-halloween="perch peek hang">
+          <div class="browser-top"><span class="browser-dots" aria-hidden="true">● ● ●</span><span>your-website.com</span><span aria-hidden="true">↗</span></div>
+          <div class="shop-head"><span>AFTER HOURS<br><b>SUPPLY CO.</b></span><span>GOOD THINGS.<br>UNUSUAL HOURS.</span></div>
+          <div class="shop-content"><span class="shop-eyebrow">THE OCTOBER EDIT</span><h2>Come on in.<br>Stay a spell.</h2><div class="shop-rules" aria-hidden="true"><i></i><i></i></div><span class="shop-pill">Made for the everyday extraordinary ↗</span></div>
+          <div class="shop-foot"><span>OPEN TO THE UNEXPECTED</span><span>EST. 2026</span></div>
+        </div>
+        <button class="stage-character stage-bat" data-character="bat" aria-label="Chat with the Halloween bat"><img src="./assets/pg/bat.webp" alt="" width="200" height="200"></button>
+        <button class="stage-character stage-pumpkin" data-character="pumpkin" aria-label="Chat with the Halloween pumpkin"><img src="./assets/pg/pumpkin.webp" alt="" width="200" height="200"></button>
+        <button class="stage-character stage-ghost" data-character="ghost" aria-label="Chat with the friendly Halloween ghost"><img src="./assets/pg/ghost.webp" alt="" width="200" height="200"></button>
+        <button class="ghost-caption" id="stage-chat"><span id="stage-greeting">Just floating by.</span><br><strong>Need a hand? <span aria-hidden="true">↗</span></strong></button>
+        <div class="theatre-note"><span aria-hidden="true">↖</span> They’re friendly. Give one a tap.</div>
+        <span class="edition-seal" aria-hidden="true">OCT<br><b>31</b></span>
+      </div>
+    </section>
+
+    <section data-halloween="none" class="control-panel wrap" aria-labelledby="rating-heading">
+      <div class="control-intro"><p class="eyebrow">PICK YOUR KIND OF SPOOKY</p><h2 id="rating-heading">A little boo. <br>Or the whole haunted house.</h2></div>
+      <div class="rating-control">
+        <div class="rating-status"><span id="rating-name">PG · A little mischief</span><span class="live-indicator"><i></i> LIVE PREVIEW</span></div>
+        <label class="sr-only" for="rating">Halloween style</label>
+        <input id="rating" type="range" min="0" max="4" step="1" value="1" aria-valuetext="PG: A little mischief">
+        <div class="rating-labels" aria-label="Choose a Halloween style"><button type="button" data-rating-index="0">G</button><button type="button" data-rating-index="1" aria-pressed="true">PG</button><button type="button" data-rating-index="2">PG-13</button><button type="button" data-rating-index="3">R</button><button type="button" data-rating-index="4">NC-17</button></div>
+        <p id="rating-description">A handmade film set: a muslin ghost, candlelit pumpkin, and one mischievous little bat.</p>
+        <p class="rating-disclaimer">Movie-inspired style names, not official age ratings. All five are gore-free.</p>
+        <a class="cast-link" href="./cast.html">Compare all five casts <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+
+    <div class="mode-toolbar wrap" data-halloween="none"><span id="mode-status" role="status">The spirits are out. Tap any character to start a chat.</span><div class="mode-actions"><button id="pause-mode" class="quiet-button" aria-pressed="false"><span aria-hidden="true">Ⅱ</span> Pause motion</button><button id="stop-mode" class="quiet-button" aria-pressed="false">Turn mode off</button></div></div>
+
+    <section class="workshop wrap" id="workshop" aria-labelledby="workshop-heading">
+      <div class="workshop-heading" data-halloween="none"><div><p class="eyebrow">THE HALLOWEEN WORKSHOP</p><h2 id="workshop-heading">Your page. Your kind of mischief.</h2><p>Choose who drops by, how often, and where they make themselves at home.</p></div><button id="replay-mode" class="button primary" type="button">Preview a visit <span aria-hidden="true">↻</span></button></div>
+      <div class="workshop-grid">
+        <form id="mode-settings" class="workshop-settings" data-halloween="none">
+          <fieldset class="workshop-field"><legend><span class="field-number">01</span> Choose your guests</legend><div class="cast-picks">
+            <label><input type="checkbox" name="cast" value="ghost" checked><span>Ghost</span></label>
+            <label><input type="checkbox" name="cast" value="pumpkin" checked><span>Pumpkin</span></label>
+            <label><input type="checkbox" name="cast" value="bat" checked><span>Bat</span></label>
+          </div><p class="field-note" id="cast-note">Three guests. Each with their own way of saying hello.</p></fieldset>
+          <fieldset class="workshop-field"><legend><span class="field-number">02</span> Set the pace</legend><div class="option-segments">
+            <label><input type="radio" name="activity" value="calm"><span>Calm</span></label>
+            <label><input type="radio" name="activity" value="lively" checked><span>Lively</span></label>
+            <label><input type="radio" name="activity" value="haunted"><span>Haunted</span></label>
+          </div><p class="field-note" id="activity-note">An occasional visitor. A little company for your page.</p></fieldset>
+          <fieldset class="workshop-field"><legend><span class="field-number">03</span> Give them somewhere to land</legend><div class="option-segments">
+            <label><input type="radio" name="placement" value="auto" checked><span>Explore the page</span></label>
+            <label><input type="radio" name="placement" value="marked"><span>Chosen spots</span></label>
+            <label><input type="radio" name="placement" value="edges"><span>Edges only</span></label>
+          </div><p class="field-note" id="placement-note">They find a quiet edge of a card or heading, then make it their own.</p></fieldset>
+          <details class="workshop-more"><summary>The little details <span>Greeting, timing & season +</span></summary><div class="workshop-details">
+            <div class="workshop-field"><label for="ghost-greeting">Your own welcome (optional)</label><input id="ghost-greeting" name="greeting" type="text" maxlength="160" autocomplete="off" placeholder="Just floating by. Need a hand?"><p class="field-note">Use one custom line for every guest, or leave it blank for their own personalities.</p></div>
+            <div class="workshop-field"><div class="field-label-row"><label for="idle-delay">A hello after a quiet moment</label><output id="idle-value" for="idle-delay">12 seconds</output></div><input id="idle-delay" name="idle" type="range" min="3" max="60" value="12" step="1"><p class="field-note">The idle ghost visits once per tab session. Preview it any time.</p></div>
+            <fieldset class="workshop-field"><legend>Character size</legend><div class="option-segments"><label><input type="radio" name="size" value="0.75"><span>Small</span></label><label><input type="radio" name="size" value="1" checked><span>Just right</span></label><label><input type="radio" name="size" value="1.35"><span>Big entrance</span></label></div></fieldset>
+            <div class="workshop-field"><label for="season">When to come out</label><select id="season" name="season"><option value="10-01/11-01">October 1 – November 1, every year</option><option value="10-24/11-01">Halloween week: October 24 – November 1</option><option value="always">All year, for the Halloween faithful</option></select><p class="field-note">Your website follows this schedule. This preview stays open all year.</p></div>
+          </div></details>
+          <div class="workshop-bottom"><a href="#how-it-works">Get your installation code <span aria-hidden="true">↗</span></a><button type="button" id="reset-settings" class="quiet-button">Reset settings</button></div>
+        </form>
+        <div class="guest-preview" aria-label="Meet the selected cast">
+          <div class="guest-preview-top"><p class="eyebrow">ON THE GUEST LIST</p><span id="guest-rating">PG · A little mischief</span></div>
+          <article class="guest-card" data-guest="ghost"><div class="guest-art" data-halloween="perch peek"><img src="./assets/pg/ghost.webp" alt="The selected Halloween ghost" width="160" height="160"></div><div class="guest-copy"><h3>The welcoming committee.</h3><p>Drifts over when the page gets quiet. Has a soft spot for questions.</p><button type="button" data-summon="ghost">Invite the ghost <span aria-hidden="true">↗</span></button></div></article>
+          <article class="guest-card" data-guest="pumpkin"><div class="guest-art" data-halloween="perch peek"><img src="./assets/pg/pumpkin.webp" alt="The selected Halloween pumpkin" width="160" height="160"></div><div class="guest-copy"><h3>A familiar face. Carved.</h3><p>Peeks over a ledge, settles in, and lights up a conversation.</p><button type="button" data-summon="pumpkin">Invite the pumpkin <span aria-hidden="true">↗</span></button></div></article>
+          <article class="guest-card" data-guest="bat"><div class="guest-art" data-halloween="hang"><img src="./assets/pg/bat.webp" alt="The selected Halloween bat" width="160" height="160"></div><div class="guest-copy"><h3>Just hanging around.</h3><p>Swoops in, takes a breather, then heads back into the night.</p><button type="button" data-summon="bat">Invite the bat <span aria-hidden="true">↗</span></button></div></article>
+          <div class="workshop-share" data-halloween="none"><button id="share-settings" type="button">Share this look <span aria-hidden="true">↗</span></button><p id="share-status" role="status">Share the style and settings. Your custom greeting stays private.</p></div>
+        </div>
+      </div>
+      <p class="workshop-footnote" data-halloween="none"><span aria-hidden="true">✳</span> Tap a visiting character to open real Stand Chat. Pause freezes the visit; turning the mode off clears the page.</p>
+    </section>
+
+    <section class="story-strip" aria-label="How Halloween mode feels"><div class="wrap story-grid">
+      <article data-halloween="perch peek hang"><span class="step-number">01 / A LITTLE SURPRISE</span><h3>The page comes alive.</h3><p>A pumpkin peeks over a card. A bat finds a place to hang. Your page becomes part of the scene.</p></article>
+      <article data-halloween="perch peek hang"><span class="step-number">02 / A WARM WELCOME</span><h3>Someone says boo. Softly.</h3><p>When a visitor goes quiet, a friendly ghost wanders over with an invitation to chat.</p></article>
+      <article data-halloween="perch peek hang"><span class="step-number">03 / A REAL CONVERSATION</span><h3>Curiosity opens the door.</h3><p>A tap opens your existing Stand Chat. Your knowledge, your team, a seasonal hello.</p></article>
+    </div></section>
+
+    <section data-halloween="none" id="how-it-works" class="installation wrap" aria-labelledby="install-heading">
+      <div class="install-heading"><p class="eyebrow">INVITE THEM OVER</p><h2 id="install-heading">A small script.<br>A spirited entrance.</h2><p>Already using Stand Chat? Add one script to your page.<br>Your current chat setup takes it from there.</p><a class="download-link" href="./halloween-mode.zip" download>Download JS + all five asset packs <span aria-hidden="true">↓</span></a></div>
+      <div class="install-content"><fieldset class="install-source"><legend>Where will the files live?</legend><div class="option-segments"><label><input type="radio" name="source" value="hosted" checked><span>Use our hosted files</span></label><label><input type="radio" name="source" value="self"><span>Host them yourself</span></label></div></fieldset>
+        <div class="code-header"><span>PASTE BEFORE &lt;/BODY&gt;</span><button id="copy-code" class="copy-button">Copy code</button></div>
+        <pre class="install-code"><code id="install-snippet">&lt;script defer
+  src="https://examples.stand.chat/halloween/halloween.js"
+  data-rating="pg"
+  data-idle-delay="12000"
+  data-greeting="Just floating by. Need a hand?"&gt;
+&lt;/script&gt;</code></pre>
+        <p class="snippet-note" id="copy-status" role="status">Your snippet follows every workshop setting. Assets load beside the script.</p>
+        <div class="install-steps"><div><b>1.</b><p><strong>Connect Stand Chat.</strong> Use the installation snippet from <a href="https://stand.chat/">Sites in Stand</a>. This example uses Stand’s shared demo site.</p></div><div><b>2.</b><p><strong>Add Halloween mode.</strong> Paste the script above, or download the folder and host <code>halloween.js</code> beside <code>assets/</code>.</p></div><div><b>3.</b><p><strong>Make it yours.</strong> The workshop writes your exact configuration. The season ends automatically; your normal chat stays available.</p></div></div>
+      </div>
+    </section>
+
+    <section data-halloween="none" class="details-section wrap" aria-label="Configuration and behavior">
+      <details><summary>Set the mood <span>Configuration ↗</span></summary><div class="details-body"><p>Set these attributes on the Halloween script. Timings are in milliseconds.</p><div class="table-scroll"><table><thead><tr><th>Attribute</th><th>Default</th><th>What it does</th></tr></thead><tbody><tr><td><code>data-rating</code></td><td><code>pg</code></td><td><code>g</code>, <code>pg</code>, <code>pg-13</code>, <code>r</code>, or <code>nc-17</code></td></tr><tr><td><code>data-cast</code></td><td><code>ghost,pumpkin,bat</code></td><td>Which characters can visit; <code>none</code> for an empty guest list</td></tr><tr><td><code>data-activity</code></td><td><code>lively</code></td><td><code>calm</code>, <code>lively</code>, or <code>haunted</code></td></tr><tr><td><code>data-placement</code></td><td><code>auto</code></td><td><code>auto</code>, <code>marked</code>, or <code>edges</code></td></tr><tr><td><code>data-size</code></td><td><code>1</code></td><td>Character scale from <code>0.75</code> to <code>1.35</code></td></tr><tr><td><code>data-season</code></td><td><code>10-01/11-01</code></td><td>Annual inclusive date range, or <code>always</code></td></tr><tr><td><code>data-idle-delay</code></td><td><code>12000</code></td><td>Quiet time before the friendly ghost arrives</td></tr><tr><td><code>data-arrival-interval</code></td><td><code>14000</code></td><td>Time between passing characters</td></tr><tr><td><code>data-greeting</code></td><td>Different for each character</td><td>Override every character’s invitation and opening greeting; leave blank for their own voices</td></tr><tr><td><code>data-auto-start</code></td><td><code>true</code></td><td>Set to <code>false</code> to start it yourself</td></tr><tr><td><code>data-asset-base</code></td><td><code>./assets/runtime/</code></td><td>Custom asset URL containing the rating folders, relative to the script</td></tr></tbody></table></div><p>For more control, configure it in JavaScript:</p><pre><code>window.StandHalloween.configure({
+  rating: 'pg-13',
+  greeting: 'A little lost? I know my way around.',
+  idleDelay: 15000,
+  activity: 'calm',
+  placement: 'auto',
+  season: '10-01/11-01'
+});
+
+StandHalloween.parade();  // Preview your selected cast
+StandHalloween.pause();   // Freeze motion
+StandHalloween.stop();    // Clear the page
+StandHalloween.start();   // Let them roam again
+StandHalloween.summon();  // Invite the ghost now
+StandHalloween.destroy(); // Remove everything</code></pre><p>Set <code>window.StandHalloweenConfig</code> before the script loads to supply the same options at startup. See the <a href="./README.md">full configuration reference</a>.</p></div></details>
+      <details><summary>Give the spirits a place to land <span>Page placement ↗</span></summary><div class="details-body"><p><strong>Explore the page</strong> finds suitable cards and headings automatically. <strong>Chosen spots</strong> uses only elements you mark. <strong>Edges only</strong> keeps characters at the window edges.</p><pre><code>&lt;article data-halloween="perch peek"&gt;…&lt;/article&gt;
+&lt;div data-halloween="hang"&gt;…&lt;/div&gt;
+&lt;section data-halloween="none"&gt;Keep this area clear.&lt;/section&gt;</code></pre><p>Mark a card with <code>peek</code> for a ghost or pumpkin, <code>hang</code> for a bat, or <code>perch</code> for a suitable landing spot. Add <code>none</code> to areas such as checkout, pricing controls, and navigation. If there is no suitable space, a character waits for another visit.</p><p>Characters use a separate layer. Your markup, layout, and click handlers stay intact. Use <code>StandHalloween.destroy()</code> to remove the layer when your page unmounts.</p></div></details>
+      <details><summary>Good house guests <span>Behavior & accessibility ↗</span></summary><div class="details-body"><p>The animation layer leaves the page clickable. Characters pause when hovered or focused, work with a keyboard, and respect reduced motion. No sound, flashing lights, or automatic chat opening.</p><p>Escape dismisses the current visitors. On your site, a small pause control freezes motion. This demo also has a separate off switch that removes the visitors. Characters stop appearing while the tab is hidden or the visitor is typing in a form. The idle greeting is limited to once per session by default.</p><p>Chat still depends on your Stand setup and availability. If Stand is unavailable, the character explains that and offers another try. Halloween mode adds no separate tracking or cookies; its chat handoff identifies the character through Stand’s normal integration.</p></div></details>
+      <details><summary>Pick your cast <span>Five original asset packs ↗</span></summary><div class="details-body"><div class="cast-list"><div><b>G</b><p><strong>Little boos</strong> · Soft plush, rounded felt, and warm preschool faces.</p></div><div><b>PG</b><p><strong>A little mischief</strong> · Handmade stop-motion props and playful carved smiles.</p></div><div><b>PG-13</b><p><strong>After dark</strong> · Eerie gauze apparitions and cinematic creature textures.</p></div><div><b>R</b><p><strong>Gothic hours</strong> · Realistic skulls, distressed cloth, and vampire fangs.</p></div><div><b>NC-17</b><p><strong>Full haunt</strong> · Towering wraiths and monstrous haunted-house props.</p></div></div><p>Each pack contains an original image-generated ghost, pumpkin, and bat with a transparent background. <a href="./cast.html">See all 15 characters together.</a> The names describe the visual mood; they aren’t film certifications or age checks.</p></div></details>
+    </section>
+
+    <aside class="inspiration wrap"><span class="inspiration-mark" aria-hidden="true">✳</span><div><p class="eyebrow">GOOD IDEAS ARE CONTAGIOUS</p><h2>Inspired by a car.<br>Made for your corner of the internet.</h2><p>Rivian’s 2026 Halloween mode turns an everyday product into something worth exploring. That’s the part we loved: a familiar place, a little surprise, and a reason to play.</p><a href="https://rivian.com/stories/new-software-halloween-ghostbusters-2026" target="_blank" rel="noopener">See the Rivian update that inspired this <span aria-hidden="true">↗</span></a><small>An independent Stand Chat experiment. Original characters; no affiliation with Rivian.</small></div></aside>
+  </main>
+
+  <footer class="footer wrap"><a class="wordmark" href="https://stand.chat/">stand<span>chat</span></a><p>Make a little room for the unexpected.</p><a href="./marketing/">Creative kit ↗</a><a href="https://github.com/standchat/examples/tree/main/halloween">View source ↗</a></footer>
+</body>
+</html>
