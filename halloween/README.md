@@ -6,19 +6,26 @@ A seasonal layer for any page using Stand Chat. A pumpkin peeks over a card. A b
 
 ## Put it on your site
 
-Keep your normal Stand installation snippet from **Sites in Stand**, then add one script:
+Copy this before `</body>`. It loads Halloween mode, its assets, and Stand Chat in one step:
 
 ```html
 <script defer
-  src="https://examples.stand.chat/halloween/halloween.js"
+  src="https://cdn.jsdelivr.net/gh/standchat/examples@5e17ca71d6b84b7713e722abb3c86af8725c5fdc/halloween/halloween.js"
+  data-stand-id="demo"
   data-rating="pg"
-  data-activity="calm">
+  data-season="always">
 </script>
 ```
 
-The hosted URL becomes available when this example is deployed. The mode runs October 1 through November 1, inclusive, in the visitor's local time. It stays out of the way for the rest of the year. Choose **Always** in the configurator or use `data-season="always"` to run it year-round.
+**Connect your own chat:** in [Stand → Sites → your site → Installation snippet](https://app.stand.chat/sites), copy the `data-stand-id` value and replace `demo` above.
 
-To self-host, unpack `halloween-mode.zip` into your site and change `src` to `/halloween/halloween.js`. Keep this structure:
+The code works immediately with Stand's demo assistant. Your own site ID connects your responders and site settings; use it on the website registered in Stand. If Stand is already installed, Halloween mode keeps that installation. There is no download or separate Stand script to add.
+
+The copied code includes your workshop settings and starts immediately by default. Choose a season in the workshop to limit visits to an annual date range. The underlying runtime defaults to October 1 through November 1 when `data-season` is omitted.
+
+### Optional: host the files yourself
+
+The copy-and-paste installation uses a pinned, public CDN version so it works even from a preview of the example. To host the same files yourself, unpack `halloween-mode.zip` and change only the snippet's `src` to `/halloween/halloween.js`. Keep this structure:
 
 ```text
 /halloween/
@@ -33,9 +40,9 @@ To self-host, unpack `halloween-mode.zip` into your site and change `src` to `/h
     nc-17/  ghost.webp, pumpkin.webp, bat.webp
 ```
 
-There is no package install, framework, external animation library, or build step. The script discovers its assets relative to its own URL. The ZIP contains the runtime and fifteen transparent, 384-pixel WebP sprites. Full-resolution artwork, generated PNG originals, fonts, page chrome, and campaign images are not needed for an installation. Characters load as they appear.
+No package install, framework, or build step is required. Assets resolve relative to the script URL and load as characters appear. The download contains the runtime and fifteen transparent, 384-pixel WebP sprites. The full-resolution artwork, fonts, and example page are not required.
 
-The mode and original assets are free under this repository's Unlicense. Your site still needs a configured Stand Chat installation and an available responder; this mode does not change your Stand Chat plan. The example uses `data-stand-id="demo"`; use your own Stand snippet on your site.
+The mode and original assets are free under this repository's Unlicense. A real site uses your normal Stand availability and plan; demo chat does not connect to your account.
 
 ## Five styles, one cast
 
@@ -59,6 +66,7 @@ Script attributes override `window.StandHalloweenConfig` at startup. JavaScript 
 
 | JavaScript key | Default | Meaning |
 | --- | --- | --- |
+| `data-stand-id` (script attribute only) | Omitted | Set `demo` or your site ID to load Stand automatically if absent. Existing Stand installations are preserved. Without this attribute, use your existing Stand installation. |
 | `rating` | `'pg'` | `g`, `pg`, `pg-13`, `r`, or `nc-17` |
 | `cast` | All three | Array or comma-separated list of `ghost`, `pumpkin`, and `bat` |
 | `activity` | `'lively'` | `calm` (28-second interval, one visitor at a time), `lively` (14 seconds, two), or `haunted` (8 seconds, three) |
@@ -161,7 +169,9 @@ Manual checks:
 
 - [ ] Move through all five styles; check the artwork, character greetings, slider labels, and exported snippet.
 - [ ] Try one character, a smaller cast, and a parade; confirm the selected cast and visitor limits are respected.
-- [ ] Change pace, placement, size, season, and greeting; paste the snippet onto a separate host page with Stand installed.
+- [ ] Copy the code onto an otherwise blank page with no Stand installation; verify characters and demo chat work.
+- [ ] Replace `demo` with your site ID on its registered domain; confirm your own chat opens.
+- [ ] Change pace, placement, size, season, and greeting; confirm the copied settings apply.
 - [ ] Test automatic, marked, and edge placement while scrolling and resizing. Confirm forms and links remain usable.
 - [ ] Tap a staged or passing character and confirm Stand opens with the intended greeting.
 - [ ] On a fresh tab session, wait without input and confirm one idle ghost invitation appears. Exclude the ghost and confirm it does not appear.

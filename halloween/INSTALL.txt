@@ -1,22 +1,31 @@
 STAND CHAT HALLOWEEN MODE
 
-1. Install Stand Chat using your own snippet from Sites in Stand.
-2. Upload this folder to your website. Keep halloween.js beside assets/.
-3. Add this before </body>, adjusting the path to match your upload:
+The example page's Copy installation code button is the simplest installation:
+paste that code before </body>. No download or separate Stand snippet is needed.
+
+If you downloaded this package to host the files yourself:
+1. Upload this folder, keeping halloween.js beside assets/.
+2. Paste the following before </body>, adjusting src to your uploaded file:
 
    <script defer
      src="/halloween/halloween.js"
+     data-stand-id="demo"
      data-rating="pg"
-     data-activity="calm">
+     data-season="always">
    </script>
 
-No build step or package install is needed. The script loads characters from
-assets/runtime/{rating}/ as they appear. Keep all fifteen WebP files in place.
+Connect your own chat: in Stand > Sites > your site > Installation snippet,
+copy the data-stand-id value and replace demo above. Open Sites at:
+https://app.stand.chat/sites
 
-By default the mode runs October 1 through November 1, inclusive, in each
-visitor's local time. Use data-season="always" to run it all year, or supply an
-annual range such as data-season="10-24/10-31". The example site's live preview
-bypasses the schedule; the copied installation snippet respects it.
+It works immediately with demo chat. An existing Stand installation is reused.
+The script loads Stand automatically when data-stand-id is present and no Stand
+installation exists; assets load from assets/runtime/{rating}/ beside the script.
+Keep all fifteen WebP files in place. No build step or package install is needed.
+
+This snippet starts immediately. To schedule it, use data-season="10-01/11-01"
+or another inclusive annual MM-DD/MM-DD range in each visitor's local time.
+The runtime defaults to October 1 through November 1 if data-season is omitted.
 
 FIVE STYLES
 
@@ -33,6 +42,7 @@ CONFIGURATION
 
 Use the example's live configurator to create a snippet, or add attributes:
 
+  data-stand-id="demo"            Auto-load Stand; replace demo with your site ID
   data-cast="ghost,pumpkin,bat"    Select the visiting characters
   data-activity="calm"             calm, lively (default), or haunted
   data-placement="auto"            auto (default), marked, or edges

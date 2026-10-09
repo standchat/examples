@@ -49,25 +49,30 @@
     for (const [key, value, defaultValue] of [
       ['activity', settings.activity, 'lively'], ['placement', settings.placement, 'auto'],
       ['cast', settings.cast.join(',') || 'none', kinds.join(',')], ['size', String(settings.size), '1'],
-      ['idle', String(settings.idleDelay / 1000), '12'], ['season', settings.season, '10-01/11-01']
+      ['idle', String(settings.idleDelay / 1000), '12'], ['season', settings.season, 'always']
     ]) if (value !== defaultValue) url.searchParams.set(key, value);
     return url;
   }
 
+  // Pin the public release so copied installations work independently of this preview.
+  const installationSource = 'https://cdn.jsdelivr.net/gh/standchat/examples@5e17ca71d6b84b7713e722abb3c86af8725c5fdc/halloween/halloween.js';
   function renderSnippet(settings) {
-    const selfHosted = document.querySelector('input[name="source"]:checked').value === 'self';
     const attributes = [
-      ['src', selfHosted ? './halloween.js' : 'https://examples.stand.chat/halloween/halloween.js'],
-      ['data-rating', settings.rating], ['data-cast', settings.cast.join(',') || 'none'],
-      ['data-activity', settings.activity], ['data-placement', settings.placement],
-      ['data-size', settings.size], ['data-idle-delay', settings.idleDelay],
-      ['data-greeting', settings.greeting], ['data-season', settings.season]
+      ['src', installationSource], ['data-stand-id', 'demo'], ['data-rating', settings.rating],
+      ['data-season', settings.season]
     ];
+    // Keep the first paste small; include every setting that differs from the runtime defaults.
+    for (const [key, value, fallback] of [
+      ['cast', settings.cast.join(',') || 'none', kinds.join(',')],
+      ['activity', settings.activity, 'lively'], ['placement', settings.placement, 'auto'],
+      ['size', settings.size, 1], ['idle-delay', settings.idleDelay, 12000],
+      ['greeting', settings.greeting, '']
+    ]) if (value !== fallback) attributes.push(['data-' + key, value]);
     snippet.textContent = `<script defer\n${attributes.map(([key, value]) => `  ${key}="${attribute(value)}"`).join('\n')}>\n<\/script>`;
-    byId('copy-status').textContent = selfHosted
-      ? 'Unzip the download next to this page. Keep halloween.js and assets/ together; adjust the script path if needed.'
-      : 'All your workshop settings, ready to paste after Stand’s installation. Your site follows the selected season.';
-    byId('copy-code').textContent = 'Copy code';
+    byId('copy-status').textContent = settings.season === 'always'
+      ? 'Works right away with demo chat. Your chosen characters and settings are included.'
+      : 'Your chosen characters and settings are included. Visits follow the schedule you selected above.';
+    byId('copy-code').textContent = 'Copy installation code';
   }
 
   function applySettings(updateURL = true) {
@@ -169,7 +174,6 @@
   });
   document.querySelectorAll('[data-character]').forEach(button => button.addEventListener('click', () => api()?.openChat(button.dataset.character)));
   byId('stage-chat').addEventListener('click', () => api()?.openChat('ghost'));
-  document.querySelectorAll('input[name="source"]').forEach(input => input.addEventListener('change', () => renderSnippet(readSettings())));
   window.addEventListener('stand-halloween:error', () => { status.textContent = 'Chat is unavailable right now. Try a character again in a moment.'; });
   window.addEventListener('stand-halloween:chat', () => { status.textContent = 'Chat requested. The spirits step aside for your conversation.'; });
   window.addEventListener('stand-halloween:state', event => syncState(event.detail));
@@ -178,9 +182,9 @@
     clearTimeout(copyTimer);
     try {
       await navigator.clipboard.writeText(snippet.textContent);
-      byId('copy-status').textContent = `Copied your ${modes[selected].label} setup. Paste it after your existing Stand Chat installation.`;
+      byId('copy-status').textContent = `Copied. Paste before </body> on your page. Replace demo with your site ID to connect your own chat.`;
       byId('copy-code').textContent = 'Copied ✓';
-      copyTimer = setTimeout(() => { byId('copy-code').textContent = 'Copy code'; }, 2000);
+      copyTimer = setTimeout(() => { byId('copy-code').textContent = 'Copy installation code'; }, 2000);
     } catch {
       const range = document.createRange(); range.selectNodeContents(snippet);
       const selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range);

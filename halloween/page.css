@@ -27,3 +27,6 @@
 @media(max-width:600px){.stage-pumpkin{left:-16px}.stage-ghost,.theatre:is([data-rating=pg-13],[data-rating=r],[data-rating=nc-17]) .stage-ghost{right:-10px}}
 
 @media(min-width:601px) and (max-width:1100px){.stage-ghost,.theatre:is([data-rating=pg-13],[data-rating=r],[data-rating=nc-17]) .stage-ghost{right:-9px}}
+
+/* One complete installation, then one site-ID instruction. */
+.installation .install-heading code{font-size:.9em}.installation .install-reassurance{font-size:12px;color:var(--ink);font-weight:600;margin-top:21px}.install-code{white-space:pre-wrap;overflow-wrap:anywhere}.site-id-instruction{margin-top:24px;padding-top:23px;border-top:1px solid var(--line)}.site-id-instruction h3{font:600 25px/1.1 'Barlow Condensed','Arial Narrow',sans-serif;margin:0 0 10px}.site-id-instruction p{font-size:13px;line-height:1.75;margin:0}.site-id-instruction .snippet-note{margin-top:13px;font-size:11px}.code-header{gap:12px}.copy-button{white-space:nowrap}@media(max-width:600px){.code-header{letter-spacing:.8px;font-size:9px}.copy-button{font-size:10px}.site-id-instruction p{font-size:12px}}
