@@ -51,6 +51,7 @@
   const listeners = [];
   const readinessCancels = new Set();
   const observedApis = new WeakSet();
+  const hiddenLauncherApis = new WeakSet();
   const media = window.matchMedia('(prefers-reduced-motion: reduce)');
   const boolean = value => value !== false && value !== 'false' && value !== '0';
   const clamp = (value, min, max, fallback) => Number.isFinite(Number(value)) ? Math.max(min, Math.min(max, Number(value))) : fallback;
@@ -257,6 +258,7 @@
     sdk.src = 'https://cdn.stand.chat/widget/stand.js';
     sdk.async = true;
     sdk.setAttribute('data-stand-id', standId);
+    if (inSeason() && config.cast.length) sdk.setAttribute('data-stand-hide-button', 'true');
     sdk.addEventListener('error', () => {
       // Remove only our failed request so an explicit chat retry can load it again.
       sdk.remove();
@@ -267,6 +269,12 @@
   function checkStand() {
     if (destroyed) return false;
     const stand = window.StandChat;
+    // Characters are the entry points. Hide once, then let an opened conversation
+    // keep Stand's normal controls. Outside the season the usual launcher stays.
+    if (stand && inSeason() && config.cast.length && !hiddenLauncherApis.has(stand) && typeof stand.initiallyHideChatButton === 'function') {
+      stand.initiallyHideChatButton();
+      hiddenLauncherApis.add(stand);
+    }
     if (stand && typeof stand.whenAvailable === 'function' && !observedApis.has(stand)) {
       observedApis.add(stand);
       try { const unsubscribe = stand.whenAvailable(() => { if (!destroyed) { refreshAvailable(); schedule(); } }); if (typeof unsubscribe === 'function') listeners.push(unsubscribe); } catch (_) { /* Polling also checks availability. */ }
@@ -682,7 +690,7 @@
     changed();
     if (window.StandHalloween === api) delete window.StandHalloween;
   }
-  const api = Object.freeze({ version: '2.1.0', configure, start, pause, stop, summon, parade, openChat, destroy, get state() { return state(); } });
+  const api = Object.freeze({ version: '2.1.1', configure, start, pause, stop, summon, parade, openChat, destroy, get state() { return state(); } });
   config = normalize(initial);
   storageRead();
   window.StandHalloween = api;

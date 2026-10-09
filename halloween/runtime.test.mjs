@@ -6,7 +6,7 @@ import vm from 'node:vm';
 const source = readFileSync(new URL('./halloween.js', import.meta.url), 'utf8');
 function fixture(date = '2026-10-09T12:00:00', config = {}, installation = {}) {
   const listeners = new Map(), timers = new Map(), calls = [];
-  let serial = 0, unsubscribed = 0;
+  let serial = 0, unsubscribed = 0, hiddenLauncher = 0;
   const events = () => ({ addEventListener(name, callback) { const list = listeners.get(name) || []; list.push(callback); listeners.set(name, list); }, removeEventListener(name, callback) { listeners.set(name, (listeners.get(name) || []).filter(item => item !== callback)); }, dispatchEvent() {} });
   const scriptNode = (src, attributes = {}) => {
     const callbacks = new Map();
@@ -27,7 +27,7 @@ function fixture(date = '2026-10-09T12:00:00', config = {}, installation = {}) {
     createElement(tag) { assert.equal(tag, 'script'); return scriptNode(''); },
     head: { appendChild(node) { scripts.push(node); } },
   };
-  const window = { ...events(), StandHalloweenConfig: { autoStart: false, ...config }, StandChat: { whenAvailable(callback) { callback(); return () => unsubscribed++; }, isAvailable: () => true, openChat: (...args) => calls.push(args) } };
+  const window = { ...events(), StandHalloweenConfig: { autoStart: false, ...config }, StandChat: { initiallyHideChatButton() { hiddenLauncher++; }, whenAvailable(callback) { callback(); return () => unsubscribed++; }, isAvailable: () => true, openChat: (...args) => calls.push(args) } };
   if (installation.noApi) delete window.StandChat;
   if (installation.globalConfig) window.StandChatConfig = installation.globalConfig;
   const context = { window, document, innerWidth: 1280, innerHeight: 900, URL, queueMicrotask, console,
@@ -39,7 +39,7 @@ function fixture(date = '2026-10-09T12:00:00', config = {}, installation = {}) {
   };
   window.matchMedia = () => ({ ...events(), matches: false });
   vm.runInNewContext(source, context);
-  return { api: window.StandHalloween, window, scripts, calls, timers, listeners, unsubscribed: () => unsubscribed,
+  return { api: window.StandHalloween, window, scripts, calls, timers, listeners, unsubscribed: () => unsubscribed, hiddenLauncher: () => hiddenLauncher,
     boot() { for (const callback of listeners.get('DOMContentLoaded') || []) callback(); },
     rerun() { vm.runInNewContext(source, context); },
   };
@@ -89,6 +89,7 @@ for (const standId of ['demo', 'example-site-id']) {
   const sdk = f.scripts.at(-1);
   assert.equal(sdk.src, 'https://cdn.stand.chat/widget/stand.js');
   assert.equal(sdk.attributes['data-stand-id'], standId);
+  assert.equal(sdk.attributes['data-stand-hide-button'], 'true');
   assert.equal(sdk.async, true);
   f.boot(); f.rerun();
   assert.equal(f.scripts.length, 2, 'one SDK request across repeated boot and duplicate Halloween script');
@@ -121,5 +122,17 @@ for (const existing of [
 for (const standId of [undefined, '', '   ']) {
   const f = fixture(undefined, {}, { standId, noApi: true });
   f.boot(); assert.equal(f.scripts.length, 1, 'without a Site ID the legacy add-on does not load Stand');
+}
+{
+  const f = fixture(); f.boot(); f.api.start();
+  assert.equal(f.hiddenLauncher(), 1, 'existing SDK launcher hidden once');
+  await f.api.openChat('ghost'); f.api.start();
+  assert.equal(f.hiddenLauncher(), 1, 'do not rehide after an explicit conversation');
+}
+for (const [date, config] of [['2026-06-01T12:00:00', {}], ['2026-10-09T12:00:00', { cast: [] }]]) {
+  const existing = fixture(date, config); existing.boot(); existing.api.start();
+  assert.equal(existing.hiddenLauncher(), 0, 'keep normal launcher when no Halloween entry point is active');
+  const fresh = fixture(date, config, { standId: 'demo', noApi: true }); fresh.boot();
+  assert.equal(fresh.scripts.at(-1).attributes['data-stand-hide-button'], undefined);
 }
 console.log('Passed: seasons, configuration, lifecycle, greetings, public chat options, optional SDK loading, Site ID forwarding, duplicate prevention, existing installation/config preservation, and failed-load retry.');
