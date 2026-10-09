@@ -24,7 +24,7 @@ Opening a conversation restores normal conversation controls. Outside the
 season, a newly loaded page keeps the normal launcher.
 The script loads Stand automatically when data-stand-id is present and no Stand
 installation exists; assets load from assets/runtime/{rating}/ beside the script.
-Keep all fifteen WebP files in place. No build step or package install is needed.
+Keep all twenty-five WebP files in place. No build step or package install is needed.
 
 This snippet starts immediately. To schedule it, use data-season="10-01/11-01"
 or another inclusive annual MM-DD/MM-DD range in each visitor's local time.
@@ -46,7 +46,7 @@ CONFIGURATION
 Use the example's live configurator to create a snippet, or add attributes:
 
   data-stand-id="demo"            Auto-load Stand; replace demo with your site ID
-  data-cast="ghost,pumpkin,bat"    Select the visiting characters
+  data-cast="ghost,pumpkin,bat,spider,hand"  Select the visiting characters
   data-activity="calm"             calm, lively (default), or haunted
   data-placement="auto"            auto (default), marked, or edges
   data-size="1"                    Character scale, 0.75 to 1.35
@@ -60,7 +60,7 @@ Use the example's live configurator to create a snippet, or add attributes:
 
 Leave greeting unset or empty to use the chosen character's own line.
 The default idle delay is 12000 milliseconds; the default cast includes all
-three characters. Removing the ghost also disables its automatic invitation.
+five characters. Removing the ghost also disables its automatic invitation.
 
 For JavaScript configuration, define window.StandHalloweenConfig before the
 script loads. Use camelCase keys such as idleDelay and assetBase. Attributes
@@ -73,12 +73,14 @@ The mode can find suitable page features automatically. You can also mark them:
 
   <h2 data-halloween="hang">The October edit</h2>
   <article data-halloween="perch peek">...</article>
+  <div data-halloween="ground">A floor for a reaching hand</div>
   <form data-halloween="none">...</form>
 
 Use data-placement="marked" to consider only marked features before falling
 back to an edge. Use data-placement="edges" to keep visitors at viewport edges.
 The none marker excludes an element and its descendants. Visitors avoid page
 controls. perch and peek use an element's top edge; hang uses its lower edge.
+ground marks a top edge where a hand can emerge.
 
 JAVASCRIPT API
 
@@ -86,6 +88,7 @@ After the script loads:
 
   StandHalloween.configure({ rating: 'pg-13', activity: 'calm' });
   StandHalloween.summon('ghost'); // Invite one character; static if paused
+  StandHalloween.summon('pumpkin', { anchor: document.querySelector('.preview') });
   StandHalloween.parade();        // Resume and briefly invite the selected cast
   StandHalloween.pause();         // Freeze visitors and stop arrivals
   StandHalloween.stop();          // Remove visitors and stop arrivals
@@ -93,12 +96,22 @@ After the script loads:
   StandHalloween.state;           // Read state, including seasonActive
   StandHalloween.destroy();       // Remove everything for SPA cleanup
 
+An optional anchor element places a manual invitation near that element. Add
+data-halloween-preview to the element to use it as a dedicated preview stage.
+The character and greeting appear together once the image has loaded. A new
+manual invitation replaces the previous manual preview. summon returns a Promise
+that resolves true after the entrance, or false if the visit cannot appear.
+
 Summon preserves a paused state; start resumes that visitor's motion. Parade
 resumes the mode. Both respect the seasonal schedule. Destroy the instance
 when unmounting an SPA page, then load the script again to initialize it.
 Duplicate script loads are otherwise harmless.
 
 VISITOR EXPERIENCE
+
+Bats fly in flocks, pumpkins rest on surfaces, ghosts drift, spiders descend
+on silk, and skeletal hands rise from the bottom edge. A flock counts as one
+encounter.
 
 The mode never opens chat automatically. Tapping a character opens your existing
 Stand Chat with its greeting. Stand must be available; otherwise a retry notice
@@ -116,7 +129,7 @@ Policies need to permit the script, image assets, and runtime stylesheet.
 
 ASSETS AND LICENSE
 
-All fifteen characters were made with the image-generation model. This package
+All twenty-five characters were made with the image-generation model. This package
 uses transparent 384-pixel WebP files. Full-size artwork and prompts are in the
 source repository; they are not needed for installation.
 

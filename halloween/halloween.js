@@ -6,7 +6,7 @@
   const script = document.currentScript;
   const source = script && script.src ? script.src : document.baseURI;
   const ratings = ['g', 'pg', 'pg-13', 'r', 'nc-17'];
-  const kinds = ['ghost', 'pumpkin', 'bat'];
+  const kinds = ['ghost', 'pumpkin', 'bat', 'spider', 'hand'];
   const activities = {
     calm: { interval: 28000, max: 1 }, lively: { interval: 14000, max: 2 }, haunted: { interval: 8000, max: 3 },
   };
@@ -17,6 +17,11 @@
     r: { ghost: 'Don’t be a stranger. What brings you here?', pumpkin: 'A face only October could love. What can I help with?', bat: 'Something on your mind? I’m all ears.' },
     'nc-17': { ghost: 'Come closer. Even the undead can be helpful.', pumpkin: 'The last light in the haunted house. What are you looking for?', bat: 'A creature of the night. A surprisingly good listener. Ask away.' },
   };
+  Object.assign(voices.g, { spider: 'Eight little waves. Hello!', hand: 'A helping hand. What can I find for you?' });
+  Object.assign(voices.pg, { spider: 'Just dropping in. Need a hand?', hand: 'Could you use a hand?' });
+  Object.assign(voices['pg-13'], { spider: 'Hanging by a thread? Let’s untangle that.', hand: 'Help is closer than you think. What are you looking for?' });
+  Object.assign(voices.r, { spider: 'Weaving a little welcome. What brings you here?', hand: 'Back from the beyond. Still happy to help.' });
+  Object.assign(voices['nc-17'], { spider: 'You’ve wandered into my web. Let’s find you a way through.', hand: 'Something brought you here. May I lend a hand?' });
   const accents = { g: '#adf7ce', pg: '#ffbe78', 'pg-13': '#c6adff', r: '#ff8c6b', 'nc-17': '#d0f184' };
   const defaults = {
     rating: 'pg', idleDelay: 12000, arrivalInterval: 14000, duration: 11000,
@@ -126,7 +131,7 @@
       rating: config.rating, available, opening, reducedMotion: media.matches, seasonActive: inSeason(),
       cast: [...config.cast], activity: config.activity, placement: config.placement, size: config.size,
       arrivalInterval: config.arrivalInterval, maxItems: config.maxItems,
-      activeItems: actors.size, greetingSuppressed: suppressed || (config.idleOnce && sessionGreeted) });
+      activeItems: [...actors].filter(actor => actor.ready).length, pendingItems: [...actors].filter(actor => !actor.ready).length, greetingSuppressed: suppressed || (config.idleOnce && sessionGreeted) });
   }
   function changed() { emit('state', state()); }
   function listen(target, name, callback, options) {
@@ -161,14 +166,19 @@
       :host{all:initial;position:fixed;inset:0;z-index:2147400000;pointer-events:none;contain:layout style;--accent:#ffbe78;color-scheme:dark}
       *,*:before,*:after{box-sizing:border-box}button{font:inherit}button:focus-visible{outline:3px solid var(--accent);outline-offset:5px}
       .layer{position:absolute;inset:0;overflow:hidden;pointer-events:none}
-      .actor{position:absolute;pointer-events:none;will-change:transform,opacity}.art-window{position:absolute;inset:0;overflow:visible;pointer-events:none}.perched .art-window{overflow:hidden}.sprite{width:100%;pointer-events:none}
+      .actor{position:absolute;pointer-events:none;will-change:transform,opacity}.art-window{position:absolute;inset:0;overflow:visible;pointer-events:none}.ground .art-window{overflow:hidden}.sprite{width:100%;pointer-events:none}
       .visitor{position:relative;display:block;width:100%;height:100%;padding:0;border:0;background:none;cursor:pointer;pointer-events:auto;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
       .visitor:disabled{cursor:default;pointer-events:none}.visitor:focus-visible{border-radius:30px}
       .art{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 8px 18px #0003);animation:var(--float-animation,float) var(--float-speed,3.6s) ease-in-out infinite;pointer-events:none}
-      .actor[data-kind="pumpkin"]{--float-animation:none}.actor[data-kind="bat"]{--float-animation:flutter;--float-speed:1.8s}
+      .actor[data-kind="pumpkin"],.actor[data-kind="hand"],.actor[data-kind="spider"]{--float-animation:none}.actor[data-kind="bat"]{--float-animation:flutter;--float-speed:.34s}.actor[data-kind="pumpkin"] .art,.actor[data-kind="hand"] .art{object-position:center bottom}
       .fallback{display:block;font:74px/124px sans-serif}.fallback[hidden]{display:none}
       .bubble{position:absolute;left:calc(100% - 12px);bottom:60%;width:max-content;max-width:215px;padding:13px 17px;background:#fffaf1;color:#24211d;border:1px solid #24211d18;border-radius:18px 18px 18px 3px;box-shadow:0 5px 24px #0002;font:600 14px/1.4 system-ui,sans-serif;text-align:left;pointer-events:none}
       .actor.right .bubble{left:auto;right:calc(100% - 12px);border-radius:18px 18px 3px 18px}
+      .preview .bubble{left:50%;right:auto;bottom:0;transform:translateX(-50%);padding:5px 8px;border-radius:20px;max-width:100%;white-space:nowrap;font-size:11px}
+      .preview .art-window{bottom:30px}.silk{position:absolute;left:50%;bottom:calc(100% - 14px);width:1px;height:var(--silk-length,80px);background:linear-gradient(#7775,#666a);pointer-events:none}
+      .flock{position:absolute;inset:0}.flock-bat{position:absolute;object-fit:contain;filter:drop-shadow(0 3px 6px #0002);animation:wingbeat .3s ease-in-out infinite alternate;pointer-events:none}.flock-bat:nth-child(2n){animation-delay:-.15s;animation-duration:.38s}.frozen .flock-bat{animation-play-state:paused}
+      .ground:after{content:"";position:absolute;left:14%;right:14%;bottom:0;height:3px;border-radius:50%;background:#241e2155;box-shadow:0 2px 9px #241e2133;pointer-events:none}.preview.ground:after{bottom:30px}.preview.perched:after{content:"";position:absolute;left:5%;right:5%;bottom:30px;height:2px;background:#514a4140;pointer-events:none}
+      @keyframes wingbeat{from{transform:scaleY(.7) rotate(-5deg)}to{transform:scaleY(1) rotate(4deg)}}
       .dismiss{position:absolute;top:-8px;right:-3px;width:28px;height:28px;border:1px solid #ffffff30;border-radius:50%;background:#24211de8;color:#fff;font:20px/1 system-ui,sans-serif;cursor:pointer;pointer-events:auto;opacity:.75}
       .dismiss:hover,.dismiss:focus-visible{opacity:1}.visitor:disabled~.dismiss{opacity:1}
       .control{position:absolute;bottom:max(12px,env(safe-area-inset-bottom));left:max(12px,env(safe-area-inset-left));pointer-events:auto;border:1px solid #ffffff30;border-radius:30px;padding:9px 13px;background:#211d2bef;color:#fff7e8;box-shadow:0 3px 15px #0002;font:500 11px/1.3 system-ui,sans-serif;cursor:pointer;touch-action:manipulation}
@@ -180,7 +190,7 @@
       @media(max-width:600px){.bubble{max-width:min(185px,calc(100vw - 118px));font-size:12px;padding:11px 13px}.dismiss{width:28px;height:28px;right:-3px;top:-10px}.fallback{font-size:58px}}
 
       @media print{:host{display:none}}
-      @media(prefers-reduced-motion:reduce){.art{animation:none}.actor{will-change:auto}}
+      @media(prefers-reduced-motion:reduce){.art,.flock-bat{animation:none}.actor{will-change:auto}}
     `;
     layer = element('div', 'layer');
     control = button('control', 'Pause Halloween');
@@ -218,29 +228,44 @@
   }
   function removeActor(actor) {
     if (!actors.delete(actor)) return;
-    if (actor.motion) actor.motion.cancel();
+    actor.animations.forEach(animation => animation.cancel());
     actor.node.getAnimations({ subtree: true }).forEach(animation => animation.cancel());
-    clearTimeout(actor.expiry);
+    clearTimeout(actor.expiry); clearTimeout(actor.loadTimeout);
+    actor.resolve(false);
     actor.node.remove();
+    if (actor.ready) emit('departure', { kind: actor.kind, manual: actor.manual, anchor: actor.previewAnchor || null });
     changed();
   }
   function clearActors() { [...actors].forEach(removeActor); }
   function freezeActor(actor) {
-    if (!actors.has(actor)) return;
+    if (!actors.has(actor) || !actor.ready) return;
     const frozen = !running || document.hidden || formBusy || actor.hover || actor.focus;
     actor.node.classList.toggle('frozen', frozen);
-    if (actor.motion) frozen ? actor.motion.pause() : actor.motion.play();
-    if (!actor.motion) {
-      if (frozen && actor.expiry) {
-        clearTimeout(actor.expiry); actor.expiry = null;
-        actor.remaining = Math.max(0, actor.remaining - (Date.now() - actor.started));
-      } else if (!frozen && !actor.expiry) {
-        actor.started = Date.now();
-        actor.expiry = setTimeout(() => removeActor(actor), actor.remaining);
-      }
+    // A hover during an entrance must never freeze a half-visible chat target.
+    if (frozen && !actor.settled) for (const animation of actor.intros) if (animation.playState !== 'finished') animation.finish();
+    for (const animation of actor.animations) {
+      if (animation === actor.entrance || animation.playState === 'finished') continue;
+      frozen ? animation.pause() : animation.play();
+    }
+    if (frozen && actor.expiry) {
+      clearTimeout(actor.expiry); actor.expiry = null;
+      actor.remaining = Math.max(0, actor.remaining - (Date.now() - actor.started));
+    } else if (!frozen && !actor.expiry) {
+      actor.started = Date.now();
+      actor.expiry = setTimeout(() => depart(actor), actor.remaining);
     }
   }
   function freezeAll() { actors.forEach(freezeActor); }
+  function depart(actor) {
+    if (!actors.has(actor)) return;
+    if (media.matches || !running || typeof actor.button.animate !== 'function') return removeActor(actor);
+    const target = actor.kind === 'hand' || actor.kind === 'spider' ? actor.sprite : actor.button;
+    const exit = actor.kind === 'hand' ? { transform: 'translateY(100%)' } : actor.kind === 'spider' ? { transform: `translateY(${-actor.silkLength}px)`, opacity: 0 } : actor.kind === 'pumpkin' ? { opacity: 0 } : { opacity: 0, transform: 'translateY(-12px)' };
+    if (actor.bubble && ['hand', 'spider'].includes(actor.kind)) actor.bubble.style.opacity = '0';
+    const motion = target.animate([{ opacity: 1, transform: 'none' }, exit], { duration: 360, easing: 'ease-in', fill: 'forwards' });
+    actor.animations.push(motion);
+    motion.finished.then(() => removeActor(actor)).catch(() => {});
+  }
   function loadStand() {
     if (!standId || destroyed || window.StandChat) return;
     const installed = [...document.querySelectorAll('script[src]')].some(node => {
@@ -289,7 +314,7 @@
       available = next;
       actors.forEach(actor => {
         actor.button.disabled = opening;
-        if (actor.bubble) actor.bubble.textContent = available ? actor.greeting : 'Chat is getting ready…';
+        if (actor.bubble && !actor.previewAnchor) actor.bubble.textContent = available ? actor.greeting : 'Chat is getting ready…';
       });
       changed();
     }
@@ -354,13 +379,19 @@
   const markerHas = (node, token) => (node.getAttribute('data-halloween') || '').split(/\s+/).includes(token);
   const rect = (left, top, width, height) => ({ left, top, right: left + width, bottom: top + height, width, height });
   const intersects = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+  function isRendered(node) {
+    const closed = node.closest('details:not([open])');
+    if (closed && !closed.querySelector(':scope > summary')?.contains(node)) return false;
+    if (typeof node.checkVisibility === 'function' && !node.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true })) return false;
+    return getComputedStyle(node).visibility !== 'hidden';
+  }
   function geometry() {
     if (geometryCache && Date.now() - geometryCache.time < 1600) return geometryCache;
     const width = document.documentElement.clientWidth || innerWidth, height = innerHeight;
     const blocked = [];
     for (const node of [...document.querySelectorAll(protectedSelector)].slice(0, 400)) {
       const box = node.getBoundingClientRect();
-      if (box.width && box.height && box.bottom > 0 && box.top < height && getComputedStyle(node).visibility !== 'hidden') blocked.push(rect(box.left - 5, box.top - 5, box.width + 10, box.height + 10));
+      if (box.width && box.height && box.bottom > 0 && box.top < height && isRendered(node)) blocked.push(Object.assign(rect(box.left - 5, box.top - 5, box.width + 10, box.height + 10), { node }));
     }
     // Reserve the usual launcher corner without reaching into Stand's private DOM.
     blocked.push(rect(width - 180, height - 172, 180, 172));
@@ -374,8 +405,8 @@
         const box = node.getBoundingClientRect();
         if (box.width < 100 || box.height < 12 || box.bottom < 0 || box.top > height || box.width > width * .98 && box.height > height * .7) continue;
         const style = getComputedStyle(node);
-        if (style.visibility === 'hidden' || Number(style.opacity) < .3) continue;
-        const explicit = ['peek', 'perch', 'hang'].some(token => markerHas(node, token));
+        if (!isRendered(node) || Number(style.opacity) < .3) continue;
+        const explicit = ['peek', 'perch', 'hang', 'ground'].some(token => markerHas(node, token));
         const painted = /^(IMG|FIGURE|HEADER|NAV|H2|H3)$/.test(node.tagName) || style.boxShadow !== 'none' || parseFloat(style.borderTopWidth) > 0 || style.backgroundImage !== 'none';
         if (explicit || config.placement === 'auto' && painted) surfaces.push({ node, box, explicit });
       }
@@ -384,45 +415,71 @@
     return geometryCache = { time: Date.now(), width, height, blocked, surfaces };
   }
   function boxesAt(actor, x, y, right = actor.right) {
-    const boxes = [rect(x - 6, y - 6, actor.width + 12, actor.height + 12)];
-    if (actor.bubble) boxes.push(rect(right ? x + 12 - actor.bubbleWidth : x + actor.width - 12,
+    const boxes = [rect(x - 3, y - 3, actor.width + 6, actor.height + 6)];
+    if (actor.bubble && !actor.previewAnchor) boxes.push(rect(right ? x + 12 - actor.bubbleWidth : x + actor.width - 12,
       y + actor.height * .4 - actor.bubbleHeight, actor.bubbleWidth, actor.bubbleHeight));
     return boxes;
   }
   function blockedAt(actor, x, y, right, enforceBounds = true) {
     const g = geometry();
     const boxes = boxesAt(actor, x, y, right);
-    if (enforceBounds && boxes.some(box => box.left < 8 || box.right > g.width - 8 || box.top < 12 || box.bottom > g.height - 12)) return true;
-    if (boxes.some(box => g.blocked.some(block => intersects(box, block)))) return true;
-    return [...actors].some(other => other !== actor && boxes.some(box => boxesAt(other, other.left, other.top).some(otherBox => intersects(box, otherBox))));
+    const bottomMargin = actor.kind === 'hand' || actor.kind === 'pumpkin' ? -4 : 4;
+    if (enforceBounds && boxes.some(box => box.left < 4 || box.right > g.width - 4 || box.top < 4 || box.bottom > g.height - bottomMargin)) return true;
+    if (boxes.some(box => g.blocked.some(block => block.node !== actor.previewAnchor && intersects(box, block)))) return true;
+    return [...actors].some(other => other !== actor && other.ready && boxes.some(box => boxesAt(other, other.left, other.top).some(otherBox => intersects(box, otherBox))));
   }
   function placeActor(actor) {
     const g = geometry();
-    if (!media.matches) {
+    if (actor.previewAnchor) {
+      if (!actor.previewAnchor.isConnected) return null;
+      const box = actor.previewAnchor.getBoundingClientRect();
+      const left = box.left + (box.width - actor.width) / 2;
+      const top = ['pumpkin', 'hand'].includes(actor.kind) ? box.bottom - actor.height - 8 : box.top + (box.height - actor.height) / 2;
+      actor.anchor = { node: actor.previewAnchor, preview: true };
+      actor.silkLength = Math.max(12, top - box.top + 12);
+      // Explicit preview slots may replace their own static art, but never cover a control.
+      if (!blockedAt(actor, left, top, false)) return { left, top, right: false, placement: actor.kind === 'hand' ? 'ground' : actor.kind === 'pumpkin' ? 'perch' : actor.kind === 'spider' ? 'hang' : 'preview' };
+      return null;
+    }
+    if (['pumpkin', 'spider', 'hand'].includes(actor.kind)) {
       for (const surface of g.surfaces) {
-        const token = actor.kind === 'bat' ? 'hang' : 'peek';
-        if (surface.explicit && !markerHas(surface.node, token) && !(token === 'peek' && markerHas(surface.node, 'perch'))) continue;
-        const height = actor.kind === 'bat' ? actor.fullHeight : actor.fullHeight * .82;
-        actor.height = height;
-        const y = actor.kind === 'bat' ? surface.box.bottom + 5 : surface.box.top - height;
-        for (const fraction of [.24, .76, .5]) {
+        const token = actor.kind === 'spider' ? 'hang' : actor.kind === 'hand' ? 'ground' : 'perch';
+        if (surface.explicit && !markerHas(surface.node, token) && !(token === 'perch' && markerHas(surface.node, 'peek'))) continue;
+        // Hands need a deliberate ground; automatic cards never become trapdoors.
+        if (actor.kind === 'hand' && !markerHas(surface.node, 'ground')) continue;
+        const silk = actor.kind === 'spider' ? 42 : 0;
+        const y = actor.kind === 'spider' ? surface.box.bottom + silk : surface.box.top - actor.height;
+        for (const fraction of [.76, .24, .5]) {
           const x = surface.box.left + surface.box.width * fraction - actor.width / 2;
           if (x < surface.box.left || x + actor.width > surface.box.right) continue;
           for (const right of [x > g.width * .55, x <= g.width * .55]) {
             if (blockedAt(actor, x, y, right)) continue;
-            actor.anchor = { node: surface.node, fraction, side: actor.kind === 'bat' ? 'bottom' : 'top' };
-            return { left: x, top: y, right, placement: actor.kind === 'bat' ? 'hang' : 'peek' };
+            actor.anchor = { node: surface.node, fraction, side: actor.kind === 'spider' ? 'bottom' : 'top', silk };
+            actor.silkLength = silk + 14;
+            return { left: x, top: y, right, placement: token };
           }
         }
       }
     }
-    actor.height = actor.fullHeight;
-    // Empty margins are preferred to the reading column. Safe positions are checked with the full bubble.
-    const xs = [24, g.width - actor.width - 24];
+    if (actor.origin && ['ghost', 'bat'].includes(actor.kind)) {
+      const origin = actor.origin.getBoundingClientRect();
+      for (const x of [origin.right + 20, origin.left - actor.width - 20, origin.left + (origin.width - actor.width) / 2]) for (const y of [origin.top - actor.height - 20, origin.bottom + 20, origin.top]) for (const right of [false, true]) {
+        if (!blockedAt(actor, x, y, right)) return { left: x, top: y, right, placement: 'nearby' };
+      }
+    }
+    const xs = [24, g.width - actor.width - 24, g.width * .5 - actor.width / 2];
     if (actorSequence % 2) xs.reverse();
-    const ys = actor.bubble ? [g.height - actor.height - 118, g.height * .46, g.height * .2] : [g.height * .24, g.height * .52, g.height - actor.height - 92, 38];
+    const ys = ['hand', 'pumpkin'].includes(actor.kind) ? [g.height - actor.height] : actor.kind === 'spider' ? [54, 100, 150] : [g.height * .24, g.height * .5, g.height - actor.height - 92, 38];
     for (const x of xs) for (const y of ys) for (const right of [x > g.width * .5, x <= g.width * .5]) {
-      if (!blockedAt(actor, x, y, right)) return { left: x, top: y, right, placement: 'edge' };
+      if (!blockedAt(actor, x, y, right)) {
+        actor.silkLength = y + 14;
+        return { left: x, top: y, right, placement: actor.kind === 'hand' ? 'ground' : actor.kind === 'pumpkin' ? 'perch' : actor.kind === 'spider' ? 'hang' : 'edge' };
+      }
+    }
+    // On narrow screens a friendly hover label can replace a full speech bubble.
+    if (actor.bubble) {
+      actor.bubble.remove(); actor.bubble = null;
+      return placeActor(actor);
     }
     return null;
   }
@@ -432,12 +489,13 @@
     geometryFrame = requestAnimationFrame(() => {
       geometryFrame = 0;
       for (const actor of [...actors]) {
+        if (!actor.ready) continue;
         let x = actor.left, y = actor.top;
         if (actor.anchor) {
           if (!actor.anchor.node.isConnected) { removeActor(actor); continue; }
           const box = actor.anchor.node.getBoundingClientRect();
-          x = box.left + box.width * actor.anchor.fraction - actor.width / 2;
-          y = actor.anchor.side === 'bottom' ? box.bottom + 5 : box.top - actor.height;
+          x = actor.anchor.preview ? box.left + (box.width - actor.width) / 2 : box.left + box.width * actor.anchor.fraction - actor.width / 2;
+          y = actor.anchor.preview ? (['pumpkin', 'hand'].includes(actor.kind) ? box.bottom - actor.height - 8 : box.top + (box.height - actor.height) / 2) : actor.anchor.side === 'bottom' ? box.bottom + actor.anchor.silk : box.top - actor.height;
         }
         if (blockedAt(actor, x, y, actor.right)) { removeActor(actor); continue; }
         actor.left = x; actor.top = y;
@@ -468,55 +526,58 @@
       animation.finished.catch(() => {}).finally(() => { particle.remove(); particles.delete(particle); });
     }
   }
-  function animateActor(actor) {
-    if (media.matches || typeof actor.node.animate !== 'function') return;
-    const duration = actor.remaining;
-    if (actor.placement === 'peek') {
-      const lift = config.rating === 'g' ? -7 : config.rating === 'nc-17' ? -2 : -4;
-      actor.motion = actor.sprite.animate([
-        { transform: `translateY(${actor.height}px)`, opacity: 0, offset: 0 },
-        { transform: `translateY(${lift}px)`, opacity: 1, offset: .12 },
-        { transform: 'translateY(0)', opacity: 1, offset: .2 },
-        { transform: 'translateY(0)', opacity: 1, offset: .83 },
-        { transform: `translateY(${actor.height}px)`, opacity: 0, offset: 1 },
-      ], { duration, easing: 'ease-in-out', fill: 'both' });
-    } else {
-      const sign = actor.right ? 1 : -1;
-      const inward = -sign;
-      let drift = 0, rise = 0;
-      const desired = (actor.kind === 'ghost' ? 74 : 40) * config.size;
-      for (let d = 8; d <= desired; d += 8) {
-        const r = actor.kind === 'pumpkin' ? 0 : Math.min(20, d / 3);
-        if (blockedAt(actor, actor.left + inward * d, actor.top - r, actor.right)) break;
-        drift = inward * d; rise = r;
-      }
-      let entry = sign * (actor.width + 35);
-      for (let t = 0; t <= 1; t += .1) if (blockedAt(actor, actor.left + entry * t, actor.top, actor.right, false)) { entry = 0; break; }
-      const dark = ['r', 'nc-17'].includes(actor.rating);
-      const restingRotation = actor.placement === 'hang' ? 180 : 0;
-      const transform = (x, y, rotation) => `translate(${x}px,${y}px) rotate(${rotation}deg)`;
-      const frames = actor.kind === 'pumpkin' ? [
-        { opacity: 0, transform: transform(entry, 0, dark ? 0 : sign * 45), offset: 0 },
-        { opacity: 1, transform: transform(0, 0, dark ? 0 : -sign * 6), offset: .14 },
-        { opacity: 1, transform: transform(0, 0, 0), offset: .22 },
-        { opacity: 1, transform: transform(0, 0, 0), offset: .82 },
-        { opacity: 0, transform: transform(entry, 0, dark ? 0 : sign * 55), offset: 1 },
-      ] : [
-        { opacity: 0, transform: transform(entry, 0, 0), offset: 0 },
-        { opacity: 1, transform: transform(0, 0, restingRotation), offset: .13 },
-        { opacity: 1, transform: transform(actor.anchor ? 0 : drift, actor.anchor ? 0 : -rise, restingRotation + (dark ? 0 : -3)), offset: .48 },
-        { opacity: 1, transform: transform(actor.anchor ? 0 : drift * .4, actor.anchor ? 0 : -rise * .35, restingRotation), offset: .78 },
-        { opacity: 1, transform: transform(0, 0, restingRotation), offset: .87 },
-        { opacity: 0, transform: transform(entry, 0, restingRotation + (dark ? 0 : 12 * sign)), offset: 1 },
-      ];
-      // Hanging sprites rotate inside a stationary, adequately sized hit target.
-      actor.motion = (actor.placement === 'hang' ? actor.sprite : actor.node).animate(frames, { duration, easing: 'ease-in-out', fill: 'both' });
-    }
-    actor.motion.finished.then(() => removeActor(actor)).catch(() => {});
+  function addMotion(actor, target, frames, options) {
+    const animation = target.animate(frames, options);
+    actor.animations.push(animation);
+    return animation;
   }
-  function arrive(kind, greeting, manual) {
+  function animateActor(actor) {
+    if (media.matches || typeof actor.node.animate !== 'function') { actor.resolve(true); return; }
+    const entranceDuration = actor.kind === 'hand' ? 420 : 320;
+    const from = actor.kind === 'spider' ? 'none' : actor.kind === 'pumpkin' ? 'translateY(-12px) scale(.94)' : 'translateY(8px) scale(.96)';
+    // Speech and artwork enter together. Entrance speed never depends on visit duration.
+    if (running) {
+      actor.entrance = addMotion(actor, actor.button, [{ opacity: 0, transform: from }, { opacity: 1, transform: 'none' }], { duration: entranceDuration, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'both' });
+      actor.intros.push(actor.entrance);
+      actor.entrance.finished.then(() => { actor.settled = true; if (actors.has(actor)) actor.resolve(true); }).catch(() => {});
+    } else { actor.settled = true; actor.resolve(true); }
+    if (actor.kind === 'hand') {
+      if (running) actor.intros.push(addMotion(actor, actor.sprite, [{ transform: 'translateY(100%)' }, { transform: 'translateY(0)' }], { duration: 420, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'both' }));
+      return;
+    }
+    if (actor.kind === 'pumpkin') return; // Its base stays seated after the short landing.
+    if (actor.kind === 'spider') {
+      if (running) {
+        const drop = Math.min(24, actor.silkLength - 8);
+        actor.intros.push(addMotion(actor, actor.sprite, [{ transform: `translateY(${-drop}px)` }, { transform: 'translateY(0)' }], { duration: 320, easing: 'ease-out', fill: 'both' }));
+        actor.intros.push(addMotion(actor, actor.silk, [{ height: actor.silkLength - drop + 'px', bottom: `calc(100% - ${14 - drop}px)` }, { height: actor.silkLength + 'px', bottom: 'calc(100% - 14px)' }], { duration: 320, easing: 'ease-out', fill: 'both' }));
+      }
+      actor.node.style.transformOrigin = `50% ${-actor.silkLength + 14}px`;
+      addMotion(actor, actor.node, [{ transform: 'rotate(-2deg)' }, { transform: 'rotate(2deg)' }, { transform: 'rotate(-2deg)' }], { duration: 5800, iterations: Infinity, easing: 'ease-in-out' });
+      return;
+    }
+    const preview = actor.previewAnchor?.getBoundingClientRect();
+    let horizontal = preview ? Math.max(0, (preview.width - actor.width) / 2 - 7) : actor.kind === 'bat' ? 240 : 64;
+    let vertical = preview ? (actor.kind === 'bat' ? Math.min(32, (preview.height - actor.height) / 2 - 8) : 10) : actor.kind === 'bat' ? 38 : 22;
+    if (!preview && actor.left > geometry().width / 2) horizontal *= -1;
+    const points = actor.kind === 'bat' ? (preview ? [[0, 0], [1, -.7], [.6, -1], [-.8, -.5], [-1, .6], [0, 1], [1, .4], [0, 0]] : [[0, 0], [.42, -1], [1, .3], [.54, 1], [0, 0]]) : [[0, 0], [1, -1], [.36, .3], [0, 0]];
+    // Test the complete swept route, including the return leg and its speech bubble.
+    for (let scale = 1; scale >= 0; scale -= .125) {
+      let safe = true;
+      for (let i = 1; i < points.length && safe; i++) for (let t = 0; t <= 1; t += .25) {
+        const x = actor.left + (points[i - 1][0] * (1 - t) + points[i][0] * t) * horizontal * scale;
+        const y = actor.top + (points[i - 1][1] * (1 - t) + points[i][1] * t) * vertical * scale;
+        if (blockedAt(actor, x, y, actor.right) || preview && (x < preview.left + 3 || x + actor.width > preview.right - 3 || y < preview.top + 3 || y + actor.height > preview.bottom - 3)) { safe = false; break; }
+      }
+      if (safe || scale === 0) { horizontal *= scale; vertical *= scale; break; }
+    }
+    const frames = points.map(([x, y], index) => ({ transform: `translate(${x * horizontal}px,${y * vertical}px)${actor.kind === 'bat' ? ` rotate(${[-3, 5, -4, -6, -3, 4, 3, -3][index]}deg)` : ''}` }));
+    addMotion(actor, actor.node, frames, { duration: actor.kind === 'bat' ? 6400 : 14000, iterations: Infinity, easing: 'ease-in-out' });
+  }
+  function arrive(kind, greeting, manual, options = {}) {
     mount();
     if (!layer || destroyed || (!running && !manual) || !inSeason() || opening || formBusy || document.hidden || !config.cast.includes(kind)) return null;
+    if (manual && !options.parade) for (const previous of [...actors]) if (previous.manual && !previous.focus) removeActor(previous);
     const mobile = innerWidth <= 600;
     const limit = mobile ? 1 : config.maxItems;
     if (actors.size >= limit) {
@@ -525,58 +586,96 @@
       if (!removable) return null;
       removeActor(removable);
     }
-    const factor = config.size * (mobile ? .72 : 1);
-    const [baseWidth, baseHeight] = kind === 'ghost' ? [118, 142] : kind === 'bat' ? [142, 108] : [122, 122];
+    const origin = options.anchor && typeof options.anchor.getBoundingClientRect === 'function' ? options.anchor : null;
+    const previewAnchor = origin?.hasAttribute('data-halloween-preview') ? origin : null;
+    const previewBox = previewAnchor?.getBoundingClientRect();
+    let factor = config.size * (mobile ? .78 : 1);
+    const [baseWidth, baseHeight] = { ghost: [118, 150], pumpkin: [124, 124], bat: [184, 112], spider: [114, 114], hand: [112, 144] }[kind];
+    if (previewBox) factor = Math.min(factor, (kind === 'bat' ? previewBox.width * .66 : previewBox.width - 18) / baseWidth, (previewBox.height - 42) / baseHeight);
+    if (!(factor > .2)) return null;
     const node = element('div', 'actor');
     node.dataset.kind = kind; node.dataset.rating = config.rating;
+    node.classList.toggle('preview', !!previewAnchor);
     const target = button('visitor');
-    target.setAttribute('aria-label', (kind === 'ghost' ? 'Halloween ghost' : kind === 'pumpkin' ? 'Halloween pumpkin' : 'Halloween bat') + '. Open chat');
+    target.setAttribute('aria-label', `Halloween ${kind === 'bat' ? 'bat flock' : kind === 'hand' ? 'skeleton hand' : kind}. Open chat`);
     const artWindow = element('span', 'art-window');
     const sprite = element('span', 'sprite');
     sprite.style.display = 'block'; sprite.style.height = baseHeight * factor + 'px';
     const art = element('img', 'art');
     art.alt = ''; art.draggable = false; art.decoding = 'async';
     art.src = new URL(config.rating + '/' + kind + '.webp', config.assetBase).href;
-    const fallback = element('span', 'fallback', { ghost: '👻', pumpkin: '🎃', bat: '🦇' }[kind]);
-    fallback.setAttribute('aria-hidden', 'true'); fallback.hidden = true;
-    art.addEventListener('error', () => { art.hidden = true; art.style.display = 'none'; fallback.hidden = false; }, { once: true });
-    sprite.append(art, fallback); artWindow.append(sprite); target.append(artWindow);
-    let bubble;
+    sprite.append(art); artWindow.append(sprite); target.append(artWindow);
+    if (kind === 'bat') {
+      art.style.visibility = 'hidden';
+      const flock = element('span', 'flock');
+      for (const [index, [x, y, size]] of [[38, 32, 46], [5, 12, 31], [67, 2, 29], [1, 64, 26], [73, 66, 25]].entries()) {
+        const bat = element('img', 'flock-bat'); bat.alt = ''; bat.draggable = false; bat.src = art.src;
+        Object.assign(bat.style, { left: x + '%', top: y * .65 + '%', width: size + '%', height: size * 1.35 + '%', animationDelay: `${index * -.07}s` });
+        flock.append(bat);
+      }
+      sprite.append(flock);
+    }
     const actorGreeting = greetingFor(kind);
+    let bubble;
     if (greeting) {
-      bubble = element('span', 'bubble', available ? actorGreeting : 'Chat is getting ready…');
+      bubble = element('span', 'bubble', previewAnchor ? 'Tap to chat ↗' : available ? actorGreeting : 'Chat is getting ready…');
       target.append(bubble);
     } else {
       const hint = element('span', 'hint', 'Say hello ↗'); hint.setAttribute('aria-hidden', 'true'); target.append(hint);
     }
     node.append(target);
-    const actor = { kind, rating: config.rating, greeting: actorGreeting, node, button: target, bubble, sprite, art,
-      width: baseWidth * factor, height: baseHeight * factor, fullHeight: baseHeight * factor,
-      motion: null, expiry: null, remaining: greeting ? 22000 : config.duration, started: 0, hover: false, focus: false, right: false };
-    node.style.width = actor.width + 'px'; node.style.height = actor.height + 'px';
-    node.style.visibility = 'hidden'; layer.append(node);
-    actor.bubbleWidth = bubble?.getBoundingClientRect().width || 0;
-    actor.bubbleHeight = bubble?.getBoundingClientRect().height || 0;
-    const position = placeActor(actor);
-    if (!position) { node.remove(); return null; }
-    Object.assign(actor, position);
-    actorSequence++;
-    node.classList.toggle('right', position.right);
-    node.classList.toggle('perched', position.placement === 'peek');
-    node.style.height = actor.height + 'px';
-    node.style.left = position.left + 'px'; node.style.top = position.top + 'px';
-    node.style.visibility = '';
-    if (['r', 'nc-17'].includes(config.rating)) node.style.setProperty('--float-speed', '5.8s');
-    actors.add(actor);
+    let resolveVisit;
+    const promise = new Promise(resolve => { resolveVisit = resolve; });
+    const actor = { kind, rating: config.rating, greeting: actorGreeting, node, button: target, bubble, sprite, art, previewAnchor, origin, manual: !!manual,
+      width: baseWidth * factor, height: baseHeight * factor + (previewAnchor ? 30 : 0), fullHeight: baseHeight * factor,
+      animations: [], intros: [], settled: false, expiry: null, remaining: greeting ? 22000 : config.duration, started: 0, hover: false, focus: false, right: false, ready: false,
+      promise, resolve(value) { resolveVisit(value); } };
+    Object.assign(node.style, { width: actor.width + 'px', height: actor.height + 'px', visibility: 'hidden' });
+    layer.append(node); actors.add(actor); changed();
     target.addEventListener('click', () => { celebrate(actor); openChat(kind); });
     node.addEventListener('pointerenter', () => { actor.hover = true; freezeActor(actor); });
     node.addEventListener('pointerleave', () => { actor.hover = false; freezeActor(actor); });
     node.addEventListener('focusin', () => { actor.focus = true; freezeActor(actor); });
     node.addEventListener('focusout', () => { queueMicrotask(() => { actor.focus = node.contains(root?.activeElement); freezeActor(actor); }); });
-    if (running) animateActor(actor);
-    freezeActor(actor);
-    emit('arrival', { kind, greeting: !!greeting, manual: !!manual, placement: position.placement });
-    changed();
+    const fail = reason => {
+      if (!actors.has(actor)) return;
+      removeActor(actor);
+      emit('arrival-error', { kind, manual: !!manual, anchor: previewAnchor, reason });
+    };
+    const reveal = () => {
+      if (!actors.has(actor) || destroyed || !inSeason()) return;
+      if (document.hidden || formBusy) return fail('interrupted');
+      clearTimeout(actor.loadTimeout);
+      geometryCache = null; // Decode or scrolling may have changed layout since the invite.
+      actor.bubbleWidth = bubble?.getBoundingClientRect().width || 0;
+      actor.bubbleHeight = bubble?.getBoundingClientRect().height || 0;
+      const position = placeActor(actor);
+      if (!position) return fail('no-space');
+      Object.assign(actor, position); actorSequence++;
+      node.classList.toggle('right', position.right);
+      node.classList.toggle('perched', kind === 'pumpkin');
+      node.classList.toggle('ground', kind === 'hand');
+      if (kind === 'spider') {
+        const silk = element('span', 'silk'); silk.setAttribute('aria-hidden', 'true');
+        node.style.setProperty('--silk-length', actor.silkLength + 'px');
+        target.append(silk); actor.silk = silk;
+      }
+      if (kind === 'pumpkin' || kind === 'hand') {
+        const padding = (kind === 'pumpkin' ? { g: .08073, pg: .04167, 'pg-13': .046875, r: .03646, 'nc-17': .02604 } : { g: .026042, pg: .010417, 'pg-13': .010417, r: .018229, 'nc-17': .007813 })[actor.rating];
+        // Align painted pixels, accounting for transparent padding in the original square assets.
+        art.style.transform = `translateY(${Math.min(actor.width, actor.fullHeight) * padding}px)`;
+      }
+      Object.assign(node.style, { left: position.left + 'px', top: position.top + 'px', visibility: '' });
+      actor.ready = true;
+      animateActor(actor); freezeActor(actor);
+      emit('arrival', { kind, greeting: !!greeting, manual: !!manual, anchor: previewAnchor, placement: position.placement });
+      changed();
+    };
+    actor.loadTimeout = setTimeout(() => fail('asset-timeout'), 12000);
+    // decode() waits for actual pixels, including a cached image. A canceled visit can never reappear.
+    if (typeof art.decode === 'function') art.decode().then(reveal, () => fail('asset-unavailable'));
+    else if (art.complete && art.naturalWidth) reveal();
+    else { art.addEventListener('load', reveal, { once: true }); art.addEventListener('error', () => fail('asset-unavailable'), { once: true }); }
     return actor;
   }
 
@@ -588,7 +687,8 @@
     const now = Date.now();
     if (!formBusy && !opening && available) {
       if (config.cast.includes('ghost') && !suppressed && !(config.idleOnce && sessionGreeted) && now - lastActivity >= config.idleDelay && ![...actors].some(actor => actor.kind === 'ghost' && actor.bubble)) {
-        if (arrive('ghost', true, false)) { markGreeted(); lastActivity = now; nextArrival = now + Math.max(25000, config.arrivalInterval); }
+        const ghost = arrive('ghost', true, false);
+        if (ghost) { ghost.promise.then(shown => { if (shown) markGreeted(); }); lastActivity = now; nextArrival = now + Math.max(25000, config.arrivalInterval); }
       } else if (now >= nextArrival) {
         const present = new Set([...actors].map(actor => actor.kind));
         const options = config.cast.filter(kind => !present.has(kind));
@@ -630,26 +730,26 @@
     applyConfig(); changed();
     return state();
   }
-  function summon(kind = 'ghost') {
-    if (destroyed || !inSeason() || !config.cast.includes(kind)) return state();
+  function summon(kind = 'ghost', options = {}) {
+    if (destroyed || !inSeason() || !config.cast.includes(kind)) return Promise.resolve(false);
     // An explicit summon while paused is visible and still, never frozen at an invisible first frame.
     if (stopped) stopped = false;
     checkStand();
-    const actor = arrive(kind, true, true);
-    if (actor) { markGreeted(); nextArrival = Date.now() + Math.max(25000, config.arrivalInterval); }
+    const actor = arrive(kind, true, true, options);
+    if (actor) { actor.promise.then(shown => { if (shown) markGreeted(); }); nextArrival = Date.now() + Math.max(25000, config.arrivalInterval); }
     changed();
-    return state();
+    return actor ? actor.promise : Promise.resolve(false);
   }
   function parade() {
     if (destroyed || !inSeason()) return state();
     cancelParade();
     if (!running) start();
     const sequence = paradeSequence;
-    const cast = config.cast.slice(0, 3);
+    const cast = [...config.cast];
     cast.forEach((kind, index) => {
       const handle = setTimeout(() => {
         paradeTimers.delete(handle);
-        if (!destroyed && running && sequence === paradeSequence) arrive(kind, kind === 'ghost', true);
+        if (!destroyed && running && sequence === paradeSequence) arrive(kind, kind === 'ghost', true, { parade: true });
       }, index * (innerWidth <= 600 || config.maxItems === 1 ? 4200 : 2300));
       paradeTimers.add(handle);
     });
@@ -690,7 +790,7 @@
     changed();
     if (window.StandHalloween === api) delete window.StandHalloween;
   }
-  const api = Object.freeze({ version: '2.1.1', configure, start, pause, stop, summon, parade, openChat, destroy, get state() { return state(); } });
+  const api = Object.freeze({ version: '2.2.0', configure, start, pause, stop, summon, parade, openChat, destroy, get state() { return state(); } });
   config = normalize(initial);
   storageRead();
   window.StandHalloween = api;
