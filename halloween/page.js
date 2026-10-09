@@ -2,7 +2,7 @@
   'use strict';
   const modes = [
     { rating: 'g', label: 'G', name: 'Little boos', hello: 'Boo. Hello, you.', description: 'Soft felt, plush little wings, and pumpkin smiles. A preschool kind of Halloween.' },
-    { rating: 'pg', label: 'PG', name: 'A little mischief', hello: 'Just floating by.', description: 'A handmade film set: a muslin ghost, candlelit pumpkin, and one mischievous little bat.' },
+    { rating: 'pg', label: 'PG', name: 'A little mischief', hello: 'Just floating by.', description: 'A handmade film set: a muslin ghost, candlelit pumpkin, and a whole little flock of mischief.' },
     { rating: 'pg-13', label: 'PG-13', name: 'After dark', hello: 'A little lost?', description: 'Uncanny apparitions, weathered gourds, and real leathery wings. The lights are getting lower.' },
     { rating: 'r', label: 'R', name: 'Gothic hours', hello: 'Don’t be a stranger.', description: 'Skeletal faces, distressed gauze, and deep-set fangs. Straight from a horror-film prop room.' },
     { rating: 'nc-17', label: 'NC-17', name: 'Full haunt', hello: 'Come closer.', description: 'A towering wraith, splinter-toothed pumpkin, and snarling winged creature. The full haunted house.' }
@@ -14,14 +14,15 @@
   const pause = byId('pause-mode');
   const stop = byId('stop-mode');
   const snippet = byId('install-snippet');
-  const kinds = ['ghost', 'pumpkin', 'bat'];
+  const kinds = ['ghost', 'pumpkin', 'bat', 'spider', 'hand'];
+  const guestNames = { ghost: 'ghost', pumpkin: 'pumpkin', bat: 'flock', spider: 'spider', hand: 'hand' };
   const activityNotes = {
     calm: 'An unhurried hello. One visitor at a time, with plenty of breathing room.',
     lively: 'An occasional visitor. A little company for your page.',
     haunted: 'A busier house, with a few more entrances. Still room to read and explore.'
   };
   const placementNotes = {
-    auto: 'They find a quiet edge of a card or heading, then make it their own.',
+    auto: 'Pumpkins sit on ledges. Spiders hang from them. Ghosts and bats take the scenic route.',
     marked: 'Only surfaces marked with data-halloween. This page has a few ready for them.',
     edges: 'A little company at the window edges. No exploring your cards.'
   };
@@ -29,6 +30,7 @@
   let off = false;
   let lastState = {};
   let copyTimer;
+  let inviteRequest = 0;
   const api = () => window.StandHalloween;
   const chosen = name => form.querySelector(`input[name="${name}"]:checked`)?.value;
   const readSettings = () => ({
@@ -55,7 +57,7 @@
   }
 
   // Pin the public release so copied installations work independently of this preview.
-  const installationSource = 'https://cdn.jsdelivr.net/gh/standchat/examples@c0472d6173d90c487822ccb263659ffc94a70780/halloween/halloween.js';
+  const installationSource = 'https://cdn.jsdelivr.net/gh/standchat/examples@d80c1e8598a3571f66396c1260c574fba3c09848/halloween/halloween.js';
   function renderSnippet(settings) {
     const attributes = [
       ['src', installationSource], ['data-stand-id', 'demo'], ['data-rating', settings.rating],
@@ -75,7 +77,14 @@
     byId('copy-code').textContent = 'Copy installation code';
   }
 
+  function clearInviteFeedback() {
+    inviteRequest += 1;
+    document.querySelectorAll('[data-summon], #summon').forEach(button => button.removeAttribute('aria-busy'));
+    document.querySelectorAll('.invite-status').forEach(message => { message.textContent = ''; });
+  }
+
   function applySettings(updateURL = true) {
+    clearInviteFeedback();
     const settings = readSettings();
     api()?.configure({ ...settings, preview: true, controls: false });
     byId('idle-value').textContent = `${settings.idleDelay / 1000} seconds`;
@@ -89,7 +98,7 @@
       const included = settings.cast.includes(card.dataset.guest);
       card.classList.toggle('guest-away', !included);
       const button = card.querySelector('[data-summon]');
-      button.firstChild.textContent = `${included ? 'Invite' : 'Add & invite'} the ${card.dataset.guest} `;
+      button.firstChild.textContent = `${included ? 'Invite' : 'Add & invite'} the ${guestNames[card.dataset.guest]} `;
     });
     byId('ghost-greeting').placeholder = `${modes[selected].hello} Need a hand?`;
     byId('stage-greeting').textContent = byId('ghost-greeting').value.trim() || modes[selected].hello;
@@ -111,7 +120,7 @@
     document.querySelector('.guest-preview').dataset.rating = mode.rating;
     document.querySelectorAll('[data-rating-index]').forEach(button => button.setAttribute('aria-pressed', String(Number(button.dataset.ratingIndex) === selected)));
     document.querySelectorAll('[data-character] img').forEach(img => { img.src = `./assets/${mode.rating}/${img.parentElement.dataset.character}.webp`; });
-    document.querySelectorAll('[data-guest] img').forEach(img => { img.src = `./assets/${mode.rating}/${img.closest('[data-guest]').dataset.guest}.webp`; });
+    document.querySelectorAll('[data-guest] img').forEach(img => { img.src = `./assets/runtime/${mode.rating}/${img.closest('[data-guest]').dataset.guest}.webp`; });
     document.querySelector('.theatre-note').innerHTML = selected < 2 ? '<span aria-hidden="true">↖</span> They’re friendly. Give one a tap.' : '<span aria-hidden="true">↖</span> Looks scary. Still here to help.';
     applySettings(preview);
     if (preview) {
@@ -141,21 +150,64 @@
     syncState(api()?.state);
   }
 
-  function invite(kind) {
+  async function invite(kind, button) {
     const checkbox = form.querySelector(`input[name="cast"][value="${kind}"]`);
     if (!checkbox.checked) { checkbox.checked = true; applySettings(); }
     if (off) begin();
-    api()?.summon(kind);
-    status.textContent = `The ${kind} is visiting. Tap it to open Stand Chat.`;
+    clearInviteFeedback();
+    const request = inviteRequest;
+    const card = button?.closest('[data-guest]');
+    const anchor = card?.querySelector('[data-halloween-preview]') || button;
+    const message = card?.querySelector('.invite-status');
+    button?.setAttribute('aria-busy', 'true');
+    if (message) message.textContent = 'Getting ready…';
+    if (anchor?.hasAttribute('data-halloween-preview')) {
+      const box = anchor.getBoundingClientRect();
+      if (box.top < 12 || box.bottom > window.innerHeight - 12) anchor.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'instant' });
+    }
+    let arrived = false;
+    try { arrived = await api()?.summon(kind, { anchor }); } catch { /* The invitation can be retried. */ }
+    if (request !== inviteRequest) return;
+    button?.removeAttribute('aria-busy');
+    const behavior = {
+      ghost: 'Your ghost is drifting by.', pumpkin: 'Your pumpkin has found its ledge.',
+      bat: 'The flock is in flight.', spider: 'Your spider has dropped in.', hand: 'A helping hand has surfaced.'
+    };
+    const still = api()?.state.paused || api()?.state.reducedMotion;
+    const feedback = arrived
+      ? `${still ? `Your ${guestNames[kind]} is here.` : behavior[kind]} Tap ${kind === 'bat' ? 'a bat' : 'it'} to chat.`
+      : 'This visit couldn’t start. Try inviting them again.';
+    if (message) message.textContent = feedback;
+    status.textContent = feedback;
   }
+
+  document.querySelectorAll('[data-guest]').forEach(card => {
+    const message = document.createElement('p');
+    message.className = 'invite-status';
+    message.setAttribute('role', 'status');
+    message.setAttribute('aria-live', 'polite');
+    card.querySelector('.guest-copy').append(message);
+  });
+  window.addEventListener('stand-halloween:arrival', event => {
+    const anchor = event.detail?.anchor;
+    if (anchor?.matches?.('[data-halloween-preview]')) anchor.classList.add('guest-live');
+  });
+  window.addEventListener('stand-halloween:departure', event => {
+    const anchor = event.detail?.anchor;
+    if (!anchor?.matches?.('[data-halloween-preview]')) return;
+    anchor.classList.remove('guest-live');
+    const message = anchor.closest('[data-guest]')?.querySelector('.invite-status');
+    if (message) message.textContent = '';
+  });
 
   slider.addEventListener('input', () => renderMode(slider.value));
   document.querySelectorAll('[data-rating-index]').forEach(button => button.addEventListener('click', () => renderMode(button.dataset.ratingIndex)));
   form.addEventListener('submit', event => event.preventDefault());
   form.addEventListener('input', () => applySettings());
-  byId('summon').addEventListener('click', () => invite('ghost'));
-  document.querySelectorAll('[data-summon]').forEach(button => button.addEventListener('click', () => invite(button.dataset.summon)));
+  byId('summon').addEventListener('click', event => invite('ghost', event.currentTarget));
+  document.querySelectorAll('[data-summon]').forEach(button => button.addEventListener('click', () => invite(button.dataset.summon, button)));
   byId('replay-mode').addEventListener('click', () => {
+    clearInviteFeedback();
     begin();
     api()?.parade();
     status.textContent = 'A visit is on its way. Watch the page edges and the cards around you.';
@@ -167,6 +219,7 @@
     status.textContent = willPause ? 'Motion paused. Turn the mode off to clear the visitors.' : 'The spirits are moving again. Tap one to open chat.';
   });
   stop.addEventListener('click', () => {
+    clearInviteFeedback();
     off = !off;
     api()?.[off ? 'stop' : 'start']();
     syncState(api()?.state);
@@ -175,7 +228,8 @@
   document.querySelectorAll('[data-character]').forEach(button => button.addEventListener('click', () => api()?.openChat(button.dataset.character)));
   byId('stage-chat').addEventListener('click', () => api()?.openChat('ghost'));
   window.addEventListener('stand-halloween:error', () => { status.textContent = 'Chat is unavailable right now. Try a character again in a moment.'; });
-  window.addEventListener('stand-halloween:chat', () => { status.textContent = 'Chat requested. The spirits step aside for your conversation.'; });
+  window.addEventListener('stand-halloween:chat', () => { clearInviteFeedback(); status.textContent = 'Chat requested. The spirits step aside for your conversation.'; });
+  window.addEventListener('stand-halloween:dismiss', () => { clearInviteFeedback(); status.textContent = 'The visitors have drifted away. Invite one back any time.'; });
   window.addEventListener('stand-halloween:state', event => syncState(event.detail));
 
   byId('copy-code').addEventListener('click', async () => {

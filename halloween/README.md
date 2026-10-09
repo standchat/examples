@@ -1,6 +1,6 @@
 # Stand Chat Halloween mode
 
-A seasonal layer for any page using Stand Chat. A pumpkin peeks over a card. A bat finds a perch. A friendly ghost wanders in after a quiet moment. Tap a character to open your existing chat. Five generated casts range from soft preschool plush to theatrical haunted-house creatures.
+A seasonal layer for any page using Stand Chat. Pumpkins settle on ledges, bats fly in flocks, ghosts drift, spiders descend on silk, and skeletal hands emerge from below. Tap a character to open your existing chat. Five generated casts range from soft preschool plush to theatrical haunted-house creatures.
 
 [Example and configurator](https://examples.stand.chat/halloween/) · [Compare every character](cast.html) · [Creative kit](marketing/) · [Download the portable package](halloween-mode.zip)
 
@@ -10,7 +10,7 @@ Copy this before `</body>`. It loads Halloween mode, its assets, and Stand Chat 
 
 ```html
 <script defer
-  src="https://cdn.jsdelivr.net/gh/standchat/examples@c0472d6173d90c487822ccb263659ffc94a70780/halloween/halloween.js"
+  src="https://cdn.jsdelivr.net/gh/standchat/examples@d80c1e8598a3571f66396c1260c574fba3c09848/halloween/halloween.js"
   data-stand-id="demo"
   data-rating="pg"
   data-season="always">
@@ -33,14 +33,14 @@ The copy-and-paste installation uses a pinned, public CDN version so it works ev
   INSTALL.txt
   LICENSE
   assets/runtime/
-    g/      ghost.webp, pumpkin.webp, bat.webp
-    pg/     ghost.webp, pumpkin.webp, bat.webp
-    pg-13/  ghost.webp, pumpkin.webp, bat.webp
-    r/      ghost.webp, pumpkin.webp, bat.webp
-    nc-17/  ghost.webp, pumpkin.webp, bat.webp
+    g/      ghost.webp, pumpkin.webp, bat.webp, spider.webp, hand.webp
+    pg/     ghost.webp, pumpkin.webp, bat.webp, spider.webp, hand.webp
+    pg-13/  ghost.webp, pumpkin.webp, bat.webp, spider.webp, hand.webp
+    r/      ghost.webp, pumpkin.webp, bat.webp, spider.webp, hand.webp
+    nc-17/  ghost.webp, pumpkin.webp, bat.webp, spider.webp, hand.webp
 ```
 
-No package install, framework, or build step is required. Assets resolve relative to the script URL and load as characters appear. The download contains the runtime and fifteen transparent, 384-pixel WebP sprites. The full-resolution artwork, fonts, and example page are not required.
+No package install, framework, or build step is required. Assets resolve relative to the script URL and load as characters appear. The download contains the runtime and twenty-five transparent, 384-pixel WebP sprites. The full-resolution artwork, fonts, and example page are not required.
 
 The mode and original assets are free under this repository's Unlicense. A real site uses your normal Stand availability and plan; demo chat does not connect to your account.
 
@@ -54,7 +54,7 @@ The mode and original assets are free under this repository's Unlicense. A real 
 | `r` | Gothic hours | Horror-film practical effects: skeletal wraith, distressed cloth, long vampire fangs |
 | `nc-17` | Full haunt | Towering reaper, splinter-toothed pumpkin monster, snarling winged creature |
 
-Each style changes the materials, anatomy, and mood. All fifteen characters were individually generated and reviewed on light and dark backgrounds. The higher levels draw on horror-film practical effects and theatrical Halloween props. Prompts and source provenance are in [assets/README.md](assets/README.md).
+Each style changes the materials, anatomy, and mood. All twenty-five characters were individually generated and reviewed on light and dark backgrounds. The higher levels draw on horror-film practical effects and theatrical Halloween props. Prompts and source provenance are in [assets/README.md](assets/README.md).
 
 The labels borrow the movie-rating vocabulary to describe visual intensity. They are not official film ratings, content certifications, or age gates. No style includes gore or explicit imagery. No Rivian or licensed movie characters are included.
 
@@ -68,7 +68,7 @@ Script attributes override `window.StandHalloweenConfig` at startup. JavaScript 
 | --- | --- | --- |
 | `data-stand-id` (script attribute only) | Omitted | Set `demo` or your site ID to load Stand automatically if absent. Existing Stand installations are preserved. Without this attribute, use your existing Stand installation. |
 | `rating` | `'pg'` | `g`, `pg`, `pg-13`, `r`, or `nc-17` |
-| `cast` | All three | Array or comma-separated list of `ghost`, `pumpkin`, and `bat` |
+| `cast` | All five | Array or comma-separated list of `ghost`, `pumpkin`, `bat`, `spider`, and `hand` |
 | `activity` | `'lively'` | `calm` (28-second interval, one visitor at a time), `lively` (14 seconds, two), or `haunted` (8 seconds, three) |
 | `placement` | `'auto'` | Discover page features; `marked` uses your markers, `edges` keeps visitors at the viewport edges |
 | `size` | `1` | Character scale, bounded to `0.75`–`1.35` |
@@ -113,10 +113,11 @@ Automatic placement looks for suitable page features and falls back to the edges
 ```html
 <h2 data-halloween="hang">The October edit</h2>
 <article data-halloween="perch peek">…</article>
+<div data-halloween="ground">A floor for a reaching hand</div>
 <form data-halloween="none">…</form>
 ```
 
-`perch` and `peek` offer the top edge of an element; `hang` offers its lower edge. Combine tokens with spaces. `none` excludes an element and its descendants from placement. With `placement: 'marked'`, the mode only considers your marked features before falling back to an edge. Use `placement: 'edges'` to skip page features entirely.
+`perch` and `peek` offer the top edge of an element for a fully visible pumpkin; `hang` offers its lower edge for a spider’s thread. `ground` offers its top edge as the floor a skeletal hand rises through. Combine tokens with spaces. `none` excludes an element and its descendants from placement. With `placement: 'marked'`, the mode only considers your marked features before falling back to an edge. Use `placement: 'edges'` to skip page features entirely.
 
 The placement checks account for the character and its invitation, avoid page controls, and update when the page scrolls. Marked features are suggestions, not a request to cover their contents.
 
@@ -130,11 +131,14 @@ StandHalloween.start();          // Resume animation and automatic arrivals
 StandHalloween.pause();          // Freeze current visitors and stop arrivals
 StandHalloween.stop();           // Remove visitors and stop arrivals
 StandHalloween.summon('ghost');  // Invite one character; static if paused
+StandHalloween.summon('pumpkin', { anchor: document.querySelector('.preview') });
 StandHalloween.parade();         // Resume and invite the selected cast in sequence
 await StandHalloween.openChat('ghost'); // Open chat from your own control
 StandHalloween.state;            // Read-only snapshot, including seasonActive
 StandHalloween.destroy();        // Remove the layer, listeners, timers, and API
 ```
+
+Pass an optional `{ anchor: element }` to invite a character near a visible control. For a dedicated stage, give that element `data-halloween-preview`; the character stays inside it. Reserve room for its artwork and greeting (the workshop uses 180 × 220 pixel stages). `summon()` returns a Promise: `true` once the entrance finishes, or `false` when the visit is canceled or cannot appear. A new manual invitation replaces the previous manual preview. The image loads before the character and greeting appear together.
 
 An explicit summon bypasses the once-per-session idle greeting limit. `summon()` preserves a paused state and shows a static visitor until `start()` is called. `parade()` resumes the mode for a bounded cast sequence. Both respect the seasonal schedule; use `preview: true` only when deliberately testing outside it.
 
@@ -142,7 +146,8 @@ For an SPA, call `destroy()` when unmounting the page. Loading the script again 
 
 ## Visitor experience
 
-- Characters enter, settle into the page, and leave. Their surrounding layer lets pointer events pass through.
+- Each species has its own movement: bats travel as a flock, pumpkins sit upright on a surface, ghosts float slowly, spiders hang from a silk thread, and hands rise through a ground edge. A flock counts as one encounter. Their surrounding layer lets pointer events pass through.
+- Inviting a character uses a short entrance after its image is ready. The greeting travels with its character; it cannot appear alone while the artwork is still loading.
 - Pointer movement, taps, keypresses, and scrolling reset the idle clock. The automatic ghost appears only when chat is available and the ghost is in the selected cast.
 - Chat opens only after explicit interaction. The mode calls `StandChat.openChat()` with a greeting; it does not submit a visitor message or simulate an answer.
 - Unavailable chat or a failed handoff produces a retryable notice. Opening chat or dismissing a visitor suppresses further automatic idle invitations.
@@ -150,7 +155,7 @@ For an SPA, call `destroy()` when unmounting the page. Loading the script again 
 - Typing in a text field hides and pauses visitors. Hidden tabs pause work. Reduced-motion preferences produce static characters.
 - There is no audio, flashing, or jump scare. The runtime adds no separate tracking or cookies. The normal Stand chat handoff identifies the selected rating and character through an activation ID. One optional session-storage flag limits idle invitations; blocked storage does not break the mode.
 
-Events are dispatched on `window`: `stand-halloween:state`, `:arrival`, `:chat`, `:error`, and `:dismiss`. For example:
+Events are dispatched on `window`: `stand-halloween:state`, `:arrival`, `:departure`, `:arrival-error`, `:chat`, `:error`, and `:dismiss`. For example:
 
 ```js
 window.addEventListener('stand-halloween:chat', ({ detail }) => {
@@ -168,7 +173,10 @@ From the repository root, run `npm start` and open `/halloween/`. The site build
 Manual checks:
 
 - [ ] Move through all five styles; check the artwork, character greetings, slider labels, and exported snippet.
-- [ ] Try one character, a smaller cast, and a parade; confirm the selected cast and visitor limits are respected.
+- [ ] Invite all five species from their cards. Confirm the greeting and artwork appear together at that card, and a new invite replaces the previous preview.
+- [ ] Watch a bat flock fly, a pumpkin sit fully above its ledge, a ghost drift, a spider descend on silk, and a hand emerge from below.
+- [ ] Try a smaller cast and a parade; confirm the selected cast and encounter limits are respected.
+- [ ] Delay or block character images; confirm no detached greeting appears, an error can be retried, and changing styles cancels stale arrivals.
 - [ ] Copy the code onto an otherwise blank page with no Stand installation; verify characters and demo chat work.
 - [ ] Replace `demo` with your site ID on its registered domain; confirm your own chat opens.
 - [ ] Change pace, placement, size, season, and greeting; confirm the copied settings apply.

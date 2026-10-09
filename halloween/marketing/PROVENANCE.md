@@ -4,16 +4,17 @@ All Halloween artwork described below was generated for this project with the bu
 
 ## Updated character packs
 
-The fifteen runtime characters were generated as separate transparent images, replacing the earlier code-drawn SVG illustrations. Each pack has an original ghost, pumpkin and bat. Full prompts, original generated file paths and destinations are recorded in these files:
+The original fifteen ghost, pumpkin, and bat sprites were generated as separate transparent images, replacing the earlier code-drawn SVG illustrations. Ten additional spider and skeletal-hand sprites extend the same five styles. Full prompts, original generated file paths and destinations are recorded in these files:
 
 - [G and PG prompts](../assets/provenance-g-pg.json): soft preschool and playful storybook styles.
 - [PG-13 prompts](../assets/provenance-pg-13.json): gauze apparition, weathered carved gourd, realistic leathery bat.
 - [R prompts](../assets/provenance-r.json): creature-feature practical effects.
 - [NC-17 prompts](../assets/provenance-nc-17.json): theatrical haunted-house monsters.
+- [Spiders and hands](../assets/provenance-spiders-hands.json): ten new sprites matching all five styles.
 
-The original generated PNGs are preserved in the workspace. The page and marketing use full-size WebP copies; the downloadable runtime uses separately resized 384 × 384 WebPs from `assets/runtime/`. Both preserve alpha. The character art is displayed without recoloring or programmatic redrawing.
+The original generated PNGs are preserved in the workspace. The hero, gallery, and marketing use full-size WebP copies; workshop previews reuse the runtime sprites; the downloadable runtime uses separately resized 384 × 384 WebPs from `assets/runtime/`. Both preserve alpha. The character art is displayed without recoloring or programmatic redrawing.
 
-`linkedin-01-familiar.png` uses the actual updated PG characters. `linkedin-03-choice.png` compares the actual five updated ghosts. Both are browser-rendered compositions from [`source.html`](source.html). [`../cast.html`](../cast.html) shows the complete fifteen-character set with selectable light and dark backgrounds.
+`linkedin-01-familiar.png` uses the actual updated PG characters. `linkedin-03-choice.png` compares the actual five updated ghosts. Both are browser-rendered compositions from [`source.html`](source.html). [`../cast.html`](../cast.html) shows the complete twenty-five-character set with selectable light and dark backgrounds.
 
 ## Original paper-theatre campaign art
 

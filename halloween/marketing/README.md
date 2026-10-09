@@ -13,8 +13,8 @@ Original artwork and editable campaign layouts for Stand Chat Halloween mode. Th
 | [`linkedin-02-moment.png`](linkedin-02-moment.png) | 1200 × 1500 | Editorial companion: the product moment is worth sharing. |
 | [`linkedin-03-choice.png`](linkedin-03-choice.png) | 1200 × 1500 | Editorial companion: give people control over the intensity. |
 | [`../assets/hero-art.png`](../assets/hero-art.png) | 1536 × 1024 | Original paper-theatre key art. |
-| [`../cast.html`](../cast.html) | Responsive | Complete cast comparison: all fifteen generated characters, with light/dark backdrop control. |
-| [`../assets/cast-preview.png`](../assets/cast-preview.png) | 1600 × 1300 | Browser-rendered view of the complete cast. |
+| [`../cast.html`](../cast.html) | Responsive | Complete cast comparison: all twenty-five generated characters, with light/dark backdrop control. |
+| [`../assets/cast-preview.png`](../assets/cast-preview.png) | 1600 × 1820 | Browser-rendered view of the complete cast. |
 
 ## Reddit ad
 
@@ -44,7 +44,7 @@ The third image uses mood descriptions rather than movie rating marks. G, PG, PG
 
 The source for the seasonal product-experience inspiration is [Rivian's 2026 Halloween update](https://rivian.com/stories/new-software-halloween-ghostbusters-2026), published October 8, 2026. The creative lesson used here is to transform a familiar surface and make the discovery itself enjoyable. This is an independent Stand Chat example, not a Rivian collaboration or endorsement. No Rivian, Ghostbusters, or other franchise artwork is used.
 
-See [`PROVENANCE.md`](PROVENANCE.md) for generation prompts and saved sources. The fifteen character sprites were individually generated with the built-in OpenAI image generation tool and retain transparent backgrounds. The PG-13, R and NC-17 packs use progressively stronger cinematic practical-effects styling; the G and PG packs stay welcoming. The familiar/dial companions show these actual updated assets.
+See [`PROVENANCE.md`](PROVENANCE.md) for generation prompts and saved sources. The twenty-five character sprites were individually generated with the built-in OpenAI image generation tool and retain transparent backgrounds. The PG-13, R and NC-17 packs use progressively stronger cinematic practical-effects styling; the G and PG packs stay welcoming. The familiar/dial companions show these actual updated assets.
 
 The original paper-theatre key art remains in the OG image, both Reddit ads, and the second LinkedIn companion. It is a deliberately gentle campaign illustration, not a depiction of the higher-intensity packs. Typography, diagrams, and final layouts are editable HTML/CSS in [`source.html`](source.html).
 

@@ -30,3 +30,17 @@
 
 /* One complete installation, then one site-ID instruction. */
 .installation .install-heading code{font-size:.9em}.installation .install-reassurance{font-size:12px;color:var(--ink);font-weight:600;margin-top:21px}.install-code{white-space:pre-wrap;overflow-wrap:anywhere}.site-id-instruction{margin-top:24px;padding-top:23px;border-top:1px solid var(--line)}.site-id-instruction h3{font:600 25px/1.1 'Barlow Condensed','Arial Narrow',sans-serif;margin:0 0 10px}.site-id-instruction p{font-size:13px;line-height:1.75;margin:0}.site-id-instruction .snippet-note{margin-top:13px;font-size:11px}.code-header{gap:12px}.copy-button{white-space:nowrap}@media(max-width:600px){.code-header{letter-spacing:.8px;font-size:9px}.copy-button{font-size:10px}.site-id-instruction p{font-size:12px}}
+
+/* Five distinct guests, with enough room for their names. */
+.workshop-settings{align-self:start}.cast-picks{grid-template-columns:repeat(3,minmax(0,1fr))}.guest-copy button[aria-busy=true]{color:var(--muted);cursor:progress}.guest-copy .invite-status{font-size:10px;line-height:1.5;min-height:15px;margin:9px 0 0;max-width:36ch}.guest-copy .invite-status:empty{display:none}
+
+/* An invited guest takes the place of its own portrait, never a random overlay. */
+.workshop-grid{grid-template-columns:.9fr 1.2fr}.guest-card{grid-template-columns:180px minmax(0,1fr);gap:25px;padding-block:20px;min-height:260px}.guest-art{height:220px;isolation:isolate}.guest-art img{width:176px;height:194px;margin:0;transition:opacity .15s,filter .2s}.guest-art.guest-live>img{opacity:0}.guest-art.guest-live::before{border-color:#24282040}.guest-copy p{max-width:32ch}.guest-copy button{min-height:40px}.guest-copy button[aria-busy=true]::after{content:' ···';color:var(--orange)}
+@media(max-width:1100px){.workshop-grid{gap:28px}.guest-card{grid-template-columns:160px minmax(0,1fr);gap:20px}.guest-art img{width:158px;height:190px}.guest-copy h3{font-size:25px}}
+@media(max-width:950px){.workshop-grid{grid-template-columns:1fr;gap:32px}.workshop-settings{padding:28px 30px 0}.guest-card{grid-template-columns:180px minmax(0,1fr);gap:30px}.guest-art img{width:176px;height:194px}.guest-copy h3{font-size:32px}.guest-copy p{font-size:13px;max-width:42ch}.guest-copy button{font-size:13px}.cast-picks{grid-template-columns:repeat(5,minmax(0,1fr))}.cast-picks label{font-size:12px}.option-segments span{font-size:12px}.guest-preview-top .eyebrow{font-size:10px}.guest-preview-top>span{font-size:12px}}
+@media(max-width:650px){.workshop-settings{padding:25px 22px 0}.cast-picks{grid-template-columns:repeat(3,minmax(0,1fr))}.guest-card{grid-template-columns:136px minmax(0,1fr);gap:20px;min-height:240px}.guest-art{height:200px}.guest-art img{width:134px;height:177px}.guest-copy h3{font-size:27px}.guest-copy p{font-size:11px}.guest-copy button{font-size:12px}.guest-copy .invite-status{font-size:10px}.option-segments span{font-size:11px}}
+@media(max-width:360px){.workshop-settings{padding-inline:15px}.guest-card{grid-template-columns:116px minmax(0,1fr);gap:15px}.guest-art{height:196px}.guest-art img{width:114px;height:174px}.guest-copy h3{font-size:24px}.guest-copy button{font-size:11px}}
+
+@media(min-width:951px) and (min-height:800px){.workshop-settings:not(:has(details[open])){position:sticky;top:24px}}
+
+.guest-art[data-halloween-preview]{scroll-margin-block:20px}

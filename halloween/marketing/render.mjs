@@ -15,7 +15,7 @@ const designs = {
   familiar: ['linkedin-01-familiar.png', 1200, 1500],
   moment: ['linkedin-02-moment.png', 1200, 1500],
   dial: ['linkedin-03-choice.png', 1200, 1500],
-  cast: ['../assets/cast-preview.png', 1600, 1300, '../cast.html'],
+  cast: ['../assets/cast-preview.png', 1600, 1820, '../cast.html'],
 };
 const chrome = [process.env.CHROME_PATH,
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
