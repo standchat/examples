@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title>Lifelike 3D product host</title>
+  <meta name="description" content="Ada, an Epic MetaHuman brought to the web with the Bitmagic GDK, stands on a product page and explains it. She walks over to what she's talking about, answers in a speech bubble with lip-synced words, and offers dialogue choices, adventure-game style. Stand Chat runs the conversation.">
+  <meta name="author" content="Stand Chat">
+  <link rel="author" href="https://stand.chat/">
+  <meta name="keywords" content="custom chat UI, visitor API, Bitmagic GDK, MetaHuman, three.js, WebGPU, lip sync">
+  <meta property="og:title" content="Lifelike 3D product host">
+  <meta property="og:description" content="Ada, a MetaHuman brought to the web with the Bitmagic GDK, stands on a product page, walks over to what she's talking about, and answers through Stand Chat in a speech bubble.">
+  <meta property="og:image" content="https://examples.stand.chat/lifelike-host/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- three.js for the host. The import map must come before every module script. -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+        "three/webgpu": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.webgpu.js",
+        "three/tsl": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.tsl.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
+      }
+    }
+  </script>
+
+  <!-- Site chrome: the top bar and "How it works" styles. The demo works without them. -->
+  <link rel="stylesheet" href="/_shared/example.css">
+  <script type="module" src="/_shared/example.js"></script>
+
+  <!-- Hollin, the made-up company Ada works for, and Ada herself. The conversation uses
+       Stand's Visitor API through stand-client.js, so there is no stand.js on this page. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Instrument+Serif:ital@0;1&display=swap">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="site.js"></script>
+  <script type="module" src="host.js"></script>
+</head>
+<body>
+  <sx-example-bar></sx-example-bar>
+
+  <div class="hl-site">
+      <header class="hl-nav">
+        <a class="hl-logo" href="#top" aria-label="Hollin, home">
+          <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15" class="hl-logo-disc"/><path class="hl-logo-wave" d="M7 19c3-4 6-4 9 0s6 4 9 0M7 13c3-4 6-4 9 0s6 4 9 0"/></svg>
+          <span>hollin</span>
+        </a>
+        <nav class="hl-links" aria-label="Hollin">
+          <a href="#how">How it works</a>
+          <a href="#savings">Savings</a>
+          <a href="#models">Models</a>
+          <a href="#install">Installation</a>
+          <a href="#faq">FAQ</a>
+        </nav>
+        <a class="hl-btn hl-btn-quiet hl-nav-cta" href="#install">Book a survey</a>
+      </header>
+
+      <main>
+        <section class="hl-hero" id="top" data-host-section="Overview">
+          <div class="hl-hero-copy">
+            <p class="hl-eyebrow">Hollin Air · air-to-water heat pump</p>
+            <h1>Warm rooms.<br><em>Quiet winters.</em></h1>
+            <p class="hl-lede">Hollin Air heats your radiators, floors and hot water with heat from the outdoor air, down to −25 °C, for about a third of what oil costs. Ada knows every part of it, so ask her anything.</p>
+            <div class="hl-ctas">
+              <button class="hl-btn hl-btn-primary" type="button" data-ask="Give me the quick tour of Hollin Air.">Ask Ada for a tour</button>
+              <a class="hl-btn hl-btn-ghost" href="#savings">See your savings</a>
+            </div>
+            <ul class="hl-facts" aria-label="Key facts">
+              <li><strong>−25 °C</strong><span>full heat outdoors</span></li>
+              <li><strong>35 dB(A)</strong><span>at 3 m, library-quiet</span></li>
+              <li><strong>5.1</strong><span>seasonal efficiency</span></li>
+            </ul>
+          </div>
+          <figure class="hl-hero-art" aria-label="The Hollin Air outdoor unit beside a house wall in snow">
+            <svg viewBox="0 0 520 460" role="img" aria-hidden="true">
+              <defs>
+                <linearGradient id="hl-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dfe7ea"/><stop offset="1" stop-color="#f3efe9"/></linearGradient>
+                <linearGradient id="hl-unit" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbfaf7"/><stop offset="1" stop-color="#e3ded6"/></linearGradient>
+                <radialGradient id="hl-fan" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#3a4643"/><stop offset=".72" stop-color="#253230"/><stop offset="1" stop-color="#1b2523"/></radialGradient>
+                <linearGradient id="hl-wall" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c9a589"/><stop offset="1" stop-color="#b98f72"/></linearGradient>
+              </defs>
+              <rect width="520" height="460" rx="28" fill="url(#hl-sky)"/>
+              <rect x="300" y="40" width="190" height="330" fill="url(#hl-wall)"/>
+              <g stroke="#a67d61" stroke-width="2" opacity=".55">
+                <path d="M300 82h190M300 124h190M300 166h190M300 208h190M300 250h190M300 292h190M300 334h190"/>
+              </g>
+              <rect x="352" y="96" width="88" height="112" rx="4" fill="#f7f1e8"/>
+              <rect x="358" y="102" width="76" height="100" fill="#ffd9a3" opacity=".75"/>
+              <path d="M396 102v100M358 152h76" stroke="#f7f1e8" stroke-width="5"/>
+              <path d="M0 372c90-16 190-18 300-6s170 8 220-2v96H0z" fill="#ffffff"/>
+              <ellipse cx="200" cy="378" rx="168" ry="14" fill="#2b3634" opacity=".12"/>
+              <g class="hl-unit-body">
+                <rect x="58" y="196" width="284" height="178" rx="16" fill="url(#hl-unit)" stroke="#d5cec3"/>
+                <circle cx="166" cy="285" r="66" fill="url(#hl-fan)"/>
+                <g class="hl-fan-blades" stroke="#516461" stroke-width="7" stroke-linecap="round" fill="none">
+                  <path d="M166 285c-6-22 8-40 26-46M166 285c22-6 40 8 46 26M166 285c6 22-8 40-26 46M166 285c-22 6-40-8-46-26"/>
+                </g>
+                <circle cx="166" cy="285" r="9" fill="#9fb2ad"/>
+                <g stroke="#cfc7bb" stroke-width="3"><path d="M246 226v118M262 226v118M278 226v118M294 226v118M310 226v118"/></g>
+                <rect x="70" y="208" width="58" height="8" rx="4" fill="#2f5d50"/>
+                <path d="M342 238h18c10 0 14-6 14-16v-24" stroke="#8a8f8b" stroke-width="7" fill="none" stroke-linecap="round"/>
+                <path d="M342 258h28c10 0 16-6 16-16v-42" stroke="#c27a4a" stroke-width="7" fill="none" stroke-linecap="round"/>
+              </g>
+              <g fill="#ffffff" opacity=".9">
+                <circle cx="40" cy="70" r="3"/><circle cx="120" cy="40" r="2.5"/><circle cx="210" cy="90" r="3"/><circle cx="260" cy="30" r="2"/>
+                <circle cx="80" cy="140" r="2"/><circle cx="170" cy="150" r="2.5"/><circle cx="250" cy="160" r="2"/><circle cx="30" cy="200" r="2.5"/>
+              </g>
+              <g class="hl-warmth" fill="none" stroke="#c27a4a" stroke-width="3" stroke-linecap="round" opacity=".7">
+                <path d="M398 232c-6-8 6-14 0-22"/><path d="M414 232c-6-8 6-14 0-22"/><path d="M382 232c-6-8 6-14 0-22"/>
+              </g>
+            </svg>
+            <figcaption>Hollin Air 9 · 104 × 72 × 38 cm · natural refrigerant R290</figcaption>
+          </figure>
+        </section>
+
+        <section class="hl-section" id="how" data-host-section="How it works" aria-labelledby="how-title">
+          <p class="hl-eyebrow">How it works</p>
+          <h2 id="how-title">Outdoor air holds more heat than you think</h2>
+          <p class="hl-intro">Even at −25 °C, air carries usable heat. Hollin Air gathers it, concentrates it and hands it to the water in your radiators, floors and hot-water tank. For every unit of electricity, you get about five units of heat.</p>
+          <ol class="hl-steps">
+            <li>
+              <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="22" class="hl-ico-ring"/><path d="M20 30c4-5 8-5 12 0s8 5 12 0M20 38c4-5 8-5 12 0s8 5 12 0" class="hl-ico-line"/></svg>
+              <h3>Gather</h3>
+              <p>A slow, quiet fan draws outdoor air across a coil filled with natural refrigerant, which boils even in deep frost.</p>
+            </li>
+            <li>
+              <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="22" class="hl-ico-ring"/><path d="M32 44V22M24 30l8-8 8 8" class="hl-ico-line"/></svg>
+              <h3>Lift</h3>
+              <p>A variable-speed compressor squeezes the vapour, raising its temperature to as much as 65 °C, using only as much power as the day needs.</p>
+            </li>
+            <li>
+              <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="22" class="hl-ico-ring"/><path d="M22 42V26h20v16M26 30v8M32 30v8M38 30v8" class="hl-ico-line"/></svg>
+              <h3>Warm</h3>
+              <p>The heat passes to the water in your heating circuit and hot-water tank. Most existing radiators work as they are.</p>
+            </li>
+          </ol>
+        </section>
+
+        <section class="hl-section hl-savings" id="savings" data-host-section="Savings" aria-labelledby="savings-title">
+          <div>
+            <p class="hl-eyebrow">Savings</p>
+            <h2 id="savings-title">What would Hollin Air save you?</h2>
+            <p class="hl-intro">An estimate from typical Nordic homes. Your survey gives you a fixed number.</p>
+          </div>
+          <form class="hl-calc" id="calc" aria-label="Savings calculator">
+            <fieldset>
+              <legend>You heat with</legend>
+              <div class="hl-seg" role="radiogroup">
+                <label><input type="radio" name="fuel" value="oil" checked><span>Oil</span></label>
+                <label><input type="radio" name="fuel" value="electric"><span>Direct electric</span></label>
+                <label><input type="radio" name="fuel" value="gas"><span>Gas</span></label>
+                <label><input type="radio" name="fuel" value="district"><span>District heat</span></label>
+              </div>
+            </fieldset>
+            <label class="hl-range">
+              <span>Yearly heating bill <output id="calc-bill-out">€2,600</output></span>
+              <input type="range" id="calc-bill" min="800" max="6000" step="100" value="2600">
+            </label>
+            <label class="hl-range">
+              <span>Home size <output id="calc-size-out">150 m²</output></span>
+              <input type="range" id="calc-size" min="60" max="280" step="10" value="150">
+            </label>
+            <div class="hl-result" aria-live="polite">
+              <div><span>You'd save about</span><strong id="calc-save">€1,600</strong><span>a year</span></div>
+              <div><span>Pays for itself in</span><strong id="calc-payback">5.3</strong><span>years</span></div>
+              <div><span>Suggested model</span><strong id="calc-model">Air 9</strong><span id="calc-model-note">to 200 m²</span></div>
+            </div>
+          </form>
+        </section>
+
+        <section class="hl-section" id="models" data-host-section="Models" aria-labelledby="models-title">
+          <p class="hl-eyebrow">Models</p>
+          <h2 id="models-title">Three sizes, one quiet machine</h2>
+          <div class="hl-models">
+            <article class="hl-model">
+              <h3>Air 6</h3>
+              <p class="hl-model-for">Homes up to 120 m²</p>
+              <p class="hl-price">€6,900 <span>installed</span></p>
+              <dl>
+                <div><dt>Heat output</dt><dd>6 kW</dd></div>
+                <div><dt>Efficiency (SCOP)</dt><dd>5.1</dd></div>
+                <div><dt>Sound at 3 m</dt><dd>35 dB(A)</dd></div>
+              </dl>
+            </article>
+            <article class="hl-model hl-model-pick">
+              <p class="hl-tag">Most homes</p>
+              <h3>Air 9</h3>
+              <p class="hl-model-for">Homes up to 200 m²</p>
+              <p class="hl-price">€8,400 <span>installed</span></p>
+              <dl>
+                <div><dt>Heat output</dt><dd>9 kW</dd></div>
+                <div><dt>Efficiency (SCOP)</dt><dd>4.9</dd></div>
+                <div><dt>Sound at 3 m</dt><dd>37 dB(A)</dd></div>
+              </dl>
+            </article>
+            <article class="hl-model">
+              <h3>Air 12</h3>
+              <p class="hl-model-for">Homes up to 280 m²</p>
+              <p class="hl-price">€9,900 <span>installed</span></p>
+              <dl>
+                <div><dt>Heat output</dt><dd>12 kW</dd></div>
+                <div><dt>Efficiency (SCOP)</dt><dd>4.7</dd></div>
+                <div><dt>Sound at 3 m</dt><dd>39 dB(A)</dd></div>
+              </dl>
+            </article>
+          </div>
+          <p class="hl-small">All models: water up to 65 °C, works to −25 °C, R290 refrigerant, app control, 7-year warranty. Prices include a standard installation.</p>
+        </section>
+
+        <section class="hl-section hl-quiet" id="quiet" data-host-section="Quiet" aria-labelledby="quiet-title">
+          <div>
+            <p class="hl-eyebrow">Quiet</p>
+            <h2 id="quiet-title">You'll check it's on</h2>
+            <p class="hl-intro">A large, slow fan and a compressor on rubber mounts. At three metres, Hollin Air 6 is quieter than a library reading room, and it turns itself down further at night.</p>
+          </div>
+          <ul class="hl-noise" aria-label="Sound levels compared">
+            <li style="--db: 30"><span>Whisper</span><b>30 dB</b></li>
+            <li class="hl-noise-us" style="--db: 35"><span>Hollin Air 6, at 3 m</span><b>35 dB</b></li>
+            <li style="--db: 40"><span>Library</span><b>40 dB</b></li>
+            <li style="--db: 50"><span>Typical older heat pump</span><b>50 dB</b></li>
+            <li style="--db: 60"><span>Conversation</span><b>60 dB</b></li>
+          </ul>
+        </section>
+
+        <section class="hl-section" id="install" data-host-section="Installation" aria-labelledby="install-title">
+          <p class="hl-eyebrow">Installation</p>
+          <h2 id="install-title">From first call to warm floors in about two weeks</h2>
+          <ol class="hl-timeline">
+            <li><b>Day 1</b><h3>Video survey</h3><p>Thirty minutes on a video call. Show us your boiler room, your radiators and where the outdoor unit could stand.</p></li>
+            <li><b>Within 48 h</b><h3>Fixed quote</h3><p>A fixed price, the right size and the paperwork for any energy grant you qualify for.</p></li>
+            <li><b>Two days</b><h3>Installation</h3><p>Our certified installers fit the outdoor unit and the indoor module, connect your heating, and take the old system away.</p></li>
+            <li><b>Ever after</b><h3>App and warranty</h3><p>Check-ups happen remotely through the app. Seven years of warranty on parts and labour.</p></li>
+          </ol>
+        </section>
+
+        <section class="hl-section" id="faq" data-host-section="FAQ" aria-labelledby="faq-title">
+          <p class="hl-eyebrow">FAQ</p>
+          <h2 id="faq-title">Questions people ask first</h2>
+          <div class="hl-faq">
+            <details><summary>Does it really work in deep frost?</summary><p>Yes. Hollin Air gives full heat down to −25 °C and keeps running below that, with a small built-in electric backup for the coldest nights.</p></details>
+            <details><summary>Do I need new radiators?</summary><p>Usually not. Water up to 65 °C suits most existing radiators. The survey checks yours.</p></details>
+            <details><summary>What maintenance does it need?</summary><p>No yearly service. The app runs a remote check-up once a year, and you keep the outdoor unit clear of snow and leaves.</p></details>
+            <details><summary>Are there grants?</summary><p>Many countries support switching from oil or gas. Your quote lists what applies to you, and we prepare the paperwork.</p></details>
+          </div>
+        </section>
+      </main>
+
+      <footer class="hl-footer">
+        <p><strong>hollin</strong> · A made-up company for a Stand Chat example. Hollin Air isn't a real product.</p>
+      </footer>
+  </div>
+
+  <!-- Ada, standing on the page. host.js places her and runs the conversation; stage.js renders her. -->
+  <div class="ada" id="host">
+    <div class="ada-figure" aria-hidden="true">
+      <img class="ada-poster" src="assets/ada-standing.webp" alt="" width="480" height="792">
+    </div>
+    <button class="ada-hit" type="button" aria-label="Talk to Ada, Hollin's AI host"></button>
+    <div class="ada-bubble" aria-hidden="true">
+      <p class="ada-bubble-who">Ada</p>
+      <p class="ada-bubble-text"></p>
+    </div>
+    <section class="ada-panel" aria-label="Talk to Ada">
+      <p class="ada-you" aria-hidden="true"></p>
+      <header class="ada-panel-head">
+        <p class="ada-title"><span class="ada-dot" aria-hidden="true"></span><b>Ada</b> <span>AI host at Hollin</span></p>
+        <button class="ada-icon ada-log-toggle" type="button" aria-pressed="false" aria-label="Show the conversation" title="Conversation" hidden></button>
+        <button class="ada-icon ada-voice" type="button" aria-pressed="false"></button>
+        <button class="ada-icon ada-close" type="button" aria-label="Close" title="Close"></button>
+      </header>
+      <ol class="ada-log" aria-label="Conversation with Ada"></ol>
+      <div class="ada-choices" aria-label="Things to ask"></div>
+      <form class="ada-form" autocomplete="off">
+        <label class="sr-only" for="ada-input">Ask Ada about Hollin Air</label>
+        <textarea id="ada-input" rows="1" placeholder="Or say something…" enterkeyhint="send"></textarea>
+        <button class="ada-send" type="submit" aria-label="Send"></button>
+      </form>
+      <p class="ada-fine"><span class="ada-who">Answers by an AI Stand-in</span><a class="ada-powered" href="https://stand.chat/" target="_blank" rel="noopener">Powered by Stand</a></p>
+    </section>
+    <button class="ada-pill" type="button"><span class="ada-dot" aria-hidden="true"></span>Talk to Ada</button>
+    <div class="ada-live sr-only" aria-live="polite"></div>
+  </div>
+
+  <section id="how-it-works" class="sx-explainer">
+    <div class="sx-wrap">
+      <p class="sx-eyebrow">How it works</p>
+      <h2>A lifelike host for a product page</h2>
+      <p class="sx-lead">Ada is a real-time 3D person standing on the page, not a video in a box. She walks in when you arrive, listens while you type, thinks while the answer is written, then says it in a speech bubble: her lips follow the words, her hands land on the stressed ones, and when the answer points somewhere on the page she walks over and shows it. Your side of the conversation is a set of dialogue choices, as in an adventure game, plus room for your own words. Behind it all is Stand Chat, so an AI Stand-in answers, a person on the team can take over, and the history stays in Stand.</p>
+
+      <h3>Try it</h3>
+      <ol class="sx-steps">
+        <li>Reload and watch her walk in from the right, turn to you and wave. Leave her alone and she breathes, shifts her weight, glances at the page and your pointer, and now and then takes a few steps.</li>
+        <li>Click her, or <strong>Talk to Ada</strong>, and pick a line: <em>Give me the quick tour</em>. Or type your own. She turns to you and leans in while you type, and looks away to think while the answer is written.</li>
+        <li>Her answer appears in her speech bubble, a sentence at a time, in step with her mouth. When she mentions a part of the page, it scrolls into view and she walks over and presents it.</li>
+        <li>Turn on her voice with the speaker button. Everything also works muted. The list button shows the whole conversation.</li>
+        <li>Scroll down to this section and she steps off the page; scroll back up and she returns. On a phone she waits in the corner and stands on the dialogue bar while you talk.</li>
+      </ol>
+
+      <div class="sx-note">This page uses <code>siteId: 'demo'</code>, Stand Chat's shared demo site, which works on any domain. Its demo Stand-in follows the page's private context. Hollin is made up, and Ada says so if you ask.</div>
+
+      <h3>The pieces</h3>
+      <ul>
+        <li><strong>The character</strong> is Ada, an Epic MetaHuman exported by the open <a href="https://github.com/creategamecharacters/metahuman-to-glb">metahuman-to-glb</a> pipeline with all 51 ARKit face shapes. Her license is in <code>assets/LICENSES.md</code>.</li>
+        <li><strong>The <a href="https://bitmagic.ai/gdk/">Bitmagic GDK</a></strong> prepared and dresses her. Its MetaHuman tools merged her five skeleton copies into one and gave the clothes the skin's weights, and its runtime gives her skin subsurface light, hair and brows from their card atlases, wet eyes and corrective joints. The GDK installs from npm; <code>bitmagic tools</code>, which holds all of this, works without a Bitmagic Pro subscription.</li>
+        <li><strong><code>performer.js</code></strong> is her acting: walking, posture, breath, weight shifts, arm and leg IK, gaze, blinks, expressions and gestures, all procedural.</li>
+        <li><strong><code>speech.js</code></strong> turns a reply into a timeline of words, mouth shapes and stressed words, and plays the optional voice.</li>
+        <li><strong><code>stage.js</code></strong> renders her with three.js (WebGPU, falling back to WebGL 2) on a transparent canvas just her size.</li>
+        <li><strong><code>host.js</code></strong> places her on the page, keeps the bubble on her head, and runs the dialogue on Stand's <a href="https://stand.chat/guide/custom-chat-ui">Visitor API</a>, through <code>stand-client.js</code>.</li>
+      </ul>
+
+      <h3>1. Bring a MetaHuman to the web with the GDK</h3>
+      <p>The GDK ships its MetaHuman toolkit with the CLI. <code>tools/prepare-ada.sh</code> runs it on the upstream export, then finishes the file for a browser.</p>
+      <pre class="sx-code" data-file="tools/prepare-ada.sh, simplified"><code class="language-sh">npm install -g @bitmagic/cli
+GDK=$(bitmagic tools path metahuman)/tools/metahuman
+
+node $GDK/strip-draco.mjs ada.glb 1.glb             # GDK
+node tools/adapt-ada.mjs 1.glb 2.glb                # 5.6 export → the GDK's naming
+node $GDK/merge-skeletons.mjs 2.glb 3.glb           # GDK: five skeletons → one
+node $GDK/reorder-body-first.mjs 3.glb 4.glb        # GDK
+node $GDK/smooth-outfit-weights.mjs 4.glb 5.glb 12 0.6 Shirt
+node $GDK/transfer-skin-weights.mjs 5.glb 6.glb     # GDK: no skin through the shirt
+node tools/finish-ada.mjs 6.glb assets/ada.glb textures/   # bake, WebP, meshopt: 7.6 MB</code></pre>
+      <p>In the page, the GDK's <code>MetaHumanActor</code> adopts the loaded model and upgrades its materials. <code>tools/build-gdk.mjs</code> compiles the three toolkit modules it needs into <code>vendor/bitmagic-metahuman.js</code>, with Bitmagic's license notice.</p>
+      <pre class="sx-code" data-file="stage.js, simplified"><code class="language-js">import { MetaHumanActor, VISEMES } from './vendor/bitmagic-metahuman.js';
+
+const model = (await loader.loadAsync('assets/ada.glb')).scene;
+const actor = new MetaHumanActor({ scene, loader }, {
+  materials: { hairAtlasUrl: 'assets/hair.webp', browAtlasUrl: 'assets/brows.webp', lashCoverageUrl: 'assets/lashes.webp' },
+  life: { blink: false, saccades: false, lookAtCamera: false }, // performer.js directs these
+});
+actor.adopt(model, model); // skin, hair cards, eyes, corrective joints
+const performer = new Performer({ model, actor, visemes: VISEMES });</code></pre>
+
+      <h3>2. Let the conversation drive the body</h3>
+      <p>Each state of the chat is a way of being. Typing in the box makes her lean in and nod now and then. While Stand reports an answer being written, she looks away to think and glances back. When the reply lands, she breathes in and speaks.</p>
+      <pre class="sx-code" data-file="host.js, simplified"><code class="language-js">client.subscribe((state) => {
+  if (state.typing) performer.setMode('thinking');      // standin.status / typing events
+  for (const m of newReplies(state.messages)) speak(m);  // a confirmed Stand-in message
+});
+input.addEventListener('input', () => performer.setMode('listening'));
+
+function speak(message) {
+  const timeline = buildTimeline(withoutMarkup(message.body), { refs });
+  performer.say(timeline, clock);   // lips, beats, nods, glances, gestures
+  bubble.follow(timeline, clock);   // the same clock lights up each word
+}</code></pre>
+
+      <h3>3. Turn words into a performance</h3>
+      <p>A reply becomes a timeline: each word gets a time and a string of mouth shapes, the stressed words get beats, nods and a lift of the brows, and the sentence ends get a nod or, for questions, a tilt. The mouth shapes are the GDK's viseme table on her ARKit blendshapes, blended into the next shape just before it starts, as real mouths do.</p>
+      <pre class="sx-code" data-file="speech.js and performer.js, simplified"><code class="language-js">buildTimeline('The Air 9 suits most homes…')
+// → words: [{ text: 'Air', start: 0.31, end: 0.52, shapes: ['C', 'E'], stressed: true }, …]
+
+planGestures(timeline)
+// → [{ t: 0.12, type: 'look', where: 'away' }, { t: 0.13, type: 'gesture', name: 'beat' },
+//    { t: 1.8, type: 'gesture', name: 'present' }, { t: 2.9, type: 'nod', size: 2 }, …]</code></pre>
+
+      <h3>4. Walk over and point</h3>
+      <p>The private context lists the page's sections and shows one in use, so the Stand-in writes references like <code>[[Savings]]</code>. The bubble turns them into links, and as Ada reaches the word, the page scrolls to the section, she walks over beside the dialogue panel, turns to the content and presents it with an open hand.</p>
+      <p>She lives on a transparent canvas just her size. Her feet stay at the canvas's origin while the floor moves under her, and the page moves the canvas by exactly as much, so her planted feet never slide across the page.</p>
+      <pre class="sx-code" data-file="host.js, simplified"><code class="language-js">performer.walkTo(spotInMetres, -0.45);   // walk there, then turn toward the page
+stage.onFrame = () => {
+  figure.style.transform = `translate3d(${performer.x * pxPerMetre - width / 2}px, ${top}px, 0)`;
+  placeBubble(stage.landmarks().crown);  // the tail stays on her head
+};</code></pre>
+
+      <h3>5. What makes her feel alive</h3>
+      <ul>
+        <li><strong>Nothing is ever still.</strong> She breathes about thirteen times a minute, faster when talking, and takes a breath before each sentence. Her weight moves from one hip to the other every few seconds.</li>
+        <li><strong>Eyes lead.</strong> Her eyes jump to a new target first and her head follows a beat later on a spring. Micro-saccades keep the eyes busy while she holds your gaze, and a blink often covers a big glance.</li>
+        <li><strong>Hands and feet by IK.</strong> Gestures are hand positions and palm turns, not joint angles. Two-bone IK finds the elbows and knees, and forearm and upper-arm twist is shared out to the twist bones, so wrists don't wring.</li>
+        <li><strong>A walk is a pendulum.</strong> Each foot is planted until the step that lifts it; the hips ride as high as the planted legs allow, so they rise over the standing foot and dip when both are down, and sway toward it. Heels lift before the toes leave, the toes flex, the shoulders counter-rotate and the arms swing against the legs. She turns with small steps, and only gestures once both feet are down.</li>
+        <li><strong>Talkers look away.</strong> People glance away as they plan a sentence and come back to you at the end of it. So does Ada.</li>
+        <li><strong>The face does more than the mouth.</strong> Brows lift on emphasis, a smile softens while the mouth works, and listening, thinking and concern each have their own expression.</li>
+      </ul>
+
+      <h3>Good to know</h3>
+      <ul>
+        <li><strong>Say who's answering.</strong> Ada is a character, not the responder. The panel says <em>Answers by an AI Stand-in</em>, and if a person from the team takes over, their messages appear under their name and Ada doesn't voice them.</li>
+        <li><strong>Out of the way.</strong> Clicks pass through to the page everywhere except Ada herself, her bubble and the panel. She stands in the margin and only walks over content while she's showing it.</li>
+        <li><strong>Size.</strong> Ada is 7.6 MB, plus 1.7 MB of hair and lash atlases, and loads after the page. Phones and Data Saver load her only when you talk to her. Until then you see a picture.</li>
+        <li><strong>Graceful everywhere.</strong> Without WebGPU she renders with WebGL 2. Without either, the picture stays and the chat still works. With <em>reduce motion</em> on, she doesn't walk or gesture with her arms, and the page doesn't scroll by itself.</li>
+        <li><strong>Licenses.</strong> The example's own code is public domain. Ada is Epic's MetaHuman, under Epic's terms. The compiled GDK modules are Bitmagic's, under the PolyForm Shield license with a permission for interactive works. Both notices sit next to the files.</li>
+      </ul>
+
+      <details class="made">
+        <summary>How this was made</summary>
+        <div class="made-body">
+          <p><strong>Claude Opus 5.5, in Claude Code</strong>, built this in one long session from the prompts below. It installed the Bitmagic GDK, ran the GDK's MetaHuman preparation on the upstream export, wrote the animation system and the page, held real conversations with Stand's demo site in headless Chrome, and judged Ada's motion, eyes and mouth from rendered filmstrips.</p>
+          <p>A character on your site doesn't have to be a cartoon. With AI writing the front end, a lifelike host can stand beside your product, and Stand's Visitor API keeps the conversation, the AI Stand-in and your team behind her.</p>
+
+          <p class="made-label">The prompt, lightly edited</p>
+          <blockquote class="made-prompt">Use the Bitmagic GDK to create an example of how to bring a lifelike character onto your (non-game) website, as a "host" that explains your product, using Stand Chat.</blockquote>
+
+          <p class="made-label">The follow-ups</p>
+          <blockquote class="made-prompt">Another agent was able to use a Bitmagic standard character without a Pro account, but the outcome is still super crude. Create your version that would be much more natural.</blockquote>
+          <blockquote class="made-prompt">I wonder if the host standing on the page would be more natural. Now she's contained in a small box, where there might not even be a need for a 3D model. A natural "sales rep" would maybe walk around a bit, and could be smaller. Chat in a speech bubble could be more natural too, a bit like how adventure games work.</blockquote>
+
+          <p class="made-label">If you try this yourself</p>
+          <ul>
+            <li>Point the agent at the <a href="https://stand.chat/guide/custom-chat-ui">custom chat UI guide</a> and the GDK's MetaHuman tools (<code>bitmagic tools path metahuman</code>).</li>
+            <li>Ask for motion built from posture, breath, gaze and IK, not joint angles on sine waves.</li>
+            <li>Make the agent look at its own work: filmstrips of the character speaking catch what code review can't.</li>
+          </ul>
+        </div>
+      </details>
+
+      <h3>Copy this example</h3>
+      <pre class="sx-code"><code class="language-sh">npx degit standchat/examples/lifelike-host my-host</code></pre>
+      <p>Set <code>SITE_ID</code> in <code>host.js</code> to your Site ID, rewrite <code>privateContext()</code> with your product's facts and sections, and mark your sections with <code>data-host-section</code>. Keep <code>assets/LICENSES.md</code> and <code>vendor/BITMAGIC-LICENSE.md</code> with the files they cover.</p>
+
+      <ul class="sx-links">
+        <li><a href="https://stand.chat/guide/custom-chat-ui">Custom chat UI guide ↗</a></li>
+        <li><a href="https://bitmagic.ai/gdk/">Bitmagic GDK ↗</a></li>
+        <li><a href="https://github.com/creategamecharacters/metahuman-to-glb">MetaHuman to GLB ↗</a></li>
+        <li><a href="https://github.com/standchat/examples/tree/main/lifelike-host/">Source on GitHub ↗</a></li>
+      </ul>
+    </div>
+  </section>
+</body>
+</html>

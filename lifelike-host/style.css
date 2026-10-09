@@ -1,0 +1,378 @@
+/* Hollin, a made-up heat pump company, and Ada, its host. */
+
+:root {
+  --paper: #f6f3ee;
+  --paper-2: #efeae2;
+  --card: #fffdfa;
+  --ink: #1c2422;
+  --ink-2: #4f5b57;
+  --muted: #7b8580;
+  --line: #e1dbd1;
+  --pine: #2f5d50;
+  --pine-ink: #ffffff;
+  --copper: #b8693a;
+  --sky: #dfe7ea;
+  --focus: #2f7d6a;
+  --bar: var(--sx-bar-height, 0px);
+  --stage-top: #f1ece4;
+  --stage-bottom: #e2d9cc;
+  --radius: 18px;
+  --shadow: 0 1px 2px rgb(28 36 34 / 0.06), 0 8px 28px rgb(28 36 34 / 0.08);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #151918; --paper-2: #1b201f; --card: #1f2524; --ink: #ece8e1; --ink-2: #b9c0bc; --muted: #8b948f;
+    --line: #2d3432; --pine: #7cc2ad; --pine-ink: #10201b; --copper: #e09a6b; --sky: #1f2a2c; --focus: #8fd4bf;
+    --stage-top: #24292a; --stage-bottom: #1a1e1f;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 28px rgb(0 0 0 / 0.35);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #151918; --paper-2: #1b201f; --card: #1f2524; --ink: #ece8e1; --ink-2: #b9c0bc; --muted: #8b948f;
+  --line: #2d3432; --pine: #7cc2ad; --pine-ink: #10201b; --copper: #e09a6b; --sky: #1f2a2c; --focus: #8fd4bf;
+  --stage-top: #24292a; --stage-bottom: #1a1e1f;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 28px rgb(0 0 0 / 0.35);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: calc(var(--bar) + 24px); }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 17px/1.55 "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 6px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---- Layout ---- */
+
+.hl-site { min-width: 0; padding: 0 clamp(20px, 4vw, 56px); }
+.hl-site > * { max-width: 1060px; margin-left: auto; margin-right: auto; }
+
+/* ---- Site ---- */
+
+.hl-nav { display: flex; align-items: center; gap: 28px; padding: 22px 0; }
+.hl-logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font: 600 22px/1 "Instrument Sans", sans-serif; letter-spacing: -0.02em; }
+.hl-logo svg { width: 30px; height: 30px; }
+.hl-logo-disc { fill: var(--pine); }
+.hl-logo-wave { fill: none; stroke: var(--pine-ink); stroke-width: 2.2; stroke-linecap: round; }
+.hl-links { display: flex; gap: 22px; margin-left: auto; font-size: 15px; }
+.hl-links a { text-decoration: none; color: var(--ink-2); }
+.hl-links a:hover { color: var(--ink); }
+
+.hl-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; padding: 0 20px; border-radius: 999px; border: 1px solid transparent;
+  font: 600 15px/1 "Instrument Sans", sans-serif; text-decoration: none; cursor: pointer;
+  transition: background-color .15s, border-color .15s, color .15s, transform .15s;
+}
+.hl-btn:active { transform: translateY(1px); }
+.hl-btn-primary { background: var(--pine); color: var(--pine-ink); }
+.hl-btn-primary:hover { background: color-mix(in srgb, var(--pine) 88%, black); }
+.hl-btn-ghost { border-color: var(--line); color: var(--ink); background: transparent; }
+.hl-btn-ghost:hover { border-color: var(--ink-2); }
+.hl-btn-quiet { border-color: var(--line); background: var(--card); color: var(--ink); min-height: 40px; }
+
+.hl-eyebrow { margin: 0 0 12px; color: var(--pine); font-weight: 600; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; }
+h1, h2 { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; letter-spacing: -0.01em; margin: 0; }
+h1 { font-size: clamp(48px, 6.4vw, 88px); line-height: .98; }
+h1 em, h2 em { font-style: italic; color: var(--pine); }
+h2 { font-size: clamp(34px, 3.8vw, 52px); line-height: 1.05; max-width: 18ch; }
+h3 { margin: 0 0 6px; font-size: 18px; letter-spacing: -0.01em; }
+
+.hl-hero { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: clamp(28px, 4vw, 56px); align-items: center; padding: clamp(24px, 4vw, 56px) 0 clamp(56px, 7vw, 96px); }
+.hl-lede { margin: 22px 0 28px; max-width: 34em; color: var(--ink-2); font-size: 19px; }
+.hl-ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+.hl-facts { display: flex; flex-wrap: wrap; gap: 28px; margin: 36px 0 0; padding: 22px 0 0; list-style: none; border-top: 1px solid var(--line); }
+.hl-facts strong { display: block; font: 400 30px/1 "Instrument Serif", serif; }
+.hl-facts span { color: var(--muted); font-size: 14px; }
+.hl-hero-art { margin: 0; }
+.hl-hero-art svg { display: block; width: 100%; height: auto; border-radius: 28px; box-shadow: var(--shadow); }
+.hl-hero-art figcaption { margin-top: 12px; color: var(--muted); font-size: 13px; }
+@media (prefers-reduced-motion: no-preference) {
+  .hl-fan-blades { transform-origin: 166px 285px; animation: hl-spin 9s linear infinite; }
+  .hl-warmth path { animation: hl-rise 3.2s ease-in-out infinite; }
+  .hl-warmth path:nth-child(2) { animation-delay: .5s; }
+  .hl-warmth path:nth-child(3) { animation-delay: 1s; }
+}
+@keyframes hl-spin { to { transform: rotate(360deg); } }
+@keyframes hl-rise { 0%, 100% { transform: translateY(0); opacity: .2; } 50% { transform: translateY(-8px); opacity: .8; } }
+
+.hl-section { padding: clamp(56px, 7vw, 96px) 0; border-top: 1px solid var(--line); position: relative; }
+.hl-intro { margin: 18px 0 0; max-width: 40em; color: var(--ink-2); font-size: 18px; }
+.hl-small { margin: 22px 0 0; color: var(--muted); font-size: 14px; }
+
+/* When Ada points at a section, it glows for a moment. */
+[data-host-section] { scroll-margin-top: 24px; }
+[data-host-section]::after {
+  content: attr(data-host-label);
+  position: absolute; inset: 14px -18px; border-radius: 26px; pointer-events: none;
+  border: 2px solid transparent; opacity: 0;
+  display: flex; justify-content: flex-end; align-items: flex-start; padding: 10px 16px;
+  font: 600 12px/1 "Instrument Sans", sans-serif; letter-spacing: .04em; color: var(--pine);
+}
+.hl-hero[data-host-section] { position: relative; }
+[data-host-section].is-shown::after {
+  opacity: 1; border-color: color-mix(in srgb, var(--pine) 55%, transparent);
+  background: color-mix(in srgb, var(--pine) 5%, transparent);
+  transition: opacity .35s, border-color .35s;
+}
+@media (prefers-reduced-motion: no-preference) {
+  [data-host-section].is-shown::after { animation: hl-glow 2.4s ease-out 1; }
+}
+@keyframes hl-glow { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--pine) 30%, transparent); } 100% { box-shadow: 0 0 0 18px transparent; } }
+
+.hl-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin: 40px 0 0; padding: 0; list-style: none; }
+.hl-steps li { padding: 26px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); }
+.hl-steps svg { width: 48px; height: 48px; margin-bottom: 18px; }
+.hl-ico-ring { fill: color-mix(in srgb, var(--pine) 12%, transparent); }
+.hl-ico-line { fill: none; stroke: var(--pine); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+.hl-steps p { margin: 0; color: var(--ink-2); font-size: 16px; }
+
+.hl-savings { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(28px, 4vw, 64px); align-items: start; }
+.hl-calc { padding: 28px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+.hl-calc fieldset { margin: 0 0 22px; padding: 0; border: 0; }
+.hl-calc legend, .hl-range > span { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; font-weight: 600; color: var(--ink-2); width: 100%; }
+.hl-range output { color: var(--ink); }
+.hl-seg { display: flex; flex-wrap: wrap; gap: 8px; }
+.hl-seg label { cursor: pointer; }
+.hl-seg input { position: absolute; opacity: 0; pointer-events: none; }
+.hl-seg span { display: inline-flex; align-items: center; min-height: 38px; padding: 0 14px; border: 1px solid var(--line); border-radius: 999px; font-size: 14px; }
+.hl-seg input:checked + span { background: var(--pine); border-color: var(--pine); color: var(--pine-ink); }
+.hl-seg input:focus-visible + span { outline: 2px solid var(--focus); outline-offset: 2px; }
+.hl-range { display: block; margin-bottom: 20px; }
+.hl-range input { width: 100%; accent-color: var(--pine); }
+.hl-result { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 8px; padding-top: 20px; border-top: 1px solid var(--line); }
+.hl-result div { display: flex; flex-direction: column; gap: 4px; }
+.hl-result span { color: var(--muted); font-size: 13px; }
+.hl-result strong { font: 400 34px/1 "Instrument Serif", serif; color: var(--ink); }
+
+.hl-models { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 40px; }
+.hl-model { position: relative; padding: 26px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); }
+.hl-model-pick { border-color: color-mix(in srgb, var(--pine) 50%, var(--line)); box-shadow: var(--shadow); }
+.hl-tag { position: absolute; top: -12px; left: 22px; margin: 0; padding: 4px 10px; border-radius: 999px; background: var(--pine); color: var(--pine-ink); font-size: 12px; font-weight: 600; }
+.hl-model h3 { font: 400 32px/1 "Instrument Serif", serif; margin: 0 0 6px; }
+.hl-model-for { margin: 0; color: var(--muted); font-size: 15px; }
+.hl-price { margin: 18px 0; font: 600 24px/1 "Instrument Sans", sans-serif; }
+.hl-price span { color: var(--muted); font-size: 14px; font-weight: 400; }
+.hl-model dl { margin: 0; display: grid; gap: 8px; }
+.hl-model dl div { display: flex; justify-content: space-between; padding-top: 8px; border-top: 1px solid var(--line); font-size: 15px; }
+.hl-model dt { color: var(--ink-2); }
+.hl-model dd { margin: 0; font-weight: 600; }
+
+.hl-quiet { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(28px, 4vw, 64px); align-items: center; }
+.hl-noise { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; }
+.hl-noise li { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; font-size: 15px; color: var(--ink-2); }
+.hl-noise li::after { content: ""; grid-column: 1 / -1; height: 10px; border-radius: 99px; width: calc((var(--db) - 20) / 45 * 100%); background: color-mix(in srgb, var(--ink) 18%, transparent); }
+.hl-noise b { color: var(--ink); }
+.hl-noise-us { color: var(--ink) !important; font-weight: 600; }
+.hl-noise-us::after { background: var(--pine) !important; }
+
+.hl-timeline { margin: 40px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; counter-reset: step; }
+.hl-timeline li { padding-top: 18px; border-top: 2px solid var(--pine); }
+.hl-timeline b { display: block; margin-bottom: 10px; color: var(--pine); font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }
+.hl-timeline p { margin: 0; color: var(--ink-2); font-size: 15px; }
+
+.hl-faq { margin-top: 32px; display: grid; gap: 10px; max-width: 760px; }
+.hl-faq details { padding: 0 22px; border: 1px solid var(--line); border-radius: 14px; background: var(--card); }
+.hl-faq summary { cursor: pointer; padding: 18px 0; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+.hl-faq summary::-webkit-details-marker { display: none; }
+.hl-faq summary::after { content: "+"; color: var(--muted); font-weight: 400; font-size: 22px; line-height: 1; }
+.hl-faq details[open] summary::after { content: "–"; }
+.hl-faq details p { margin: 0 0 18px; color: var(--ink-2); }
+
+.hl-footer { padding: 36px 0 48px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+
+/* ---- Ada, standing on the page ---- */
+
+/* The layer lets clicks through to the page everywhere except Ada's own parts. */
+.ada { position: fixed; inset: 0; z-index: 30; pointer-events: none; }
+.ada-figure, .ada-hit, .ada-bubble { position: fixed; left: 0; top: 0; will-change: transform; }
+.ada-figure { pointer-events: none; }
+.ada-figure canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .6s ease; }
+.ada.is-live .ada-figure canvas { opacity: 1; }
+.ada-poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: bottom; transition: opacity .6s ease; }
+.ada.is-live .ada-poster { opacity: 0; }
+.ada.is-loading .ada-poster { animation: ada-breathe 2.4s ease-in-out infinite; }
+@keyframes ada-breathe { 50% { opacity: .82; } }
+
+/* Clicking Ada herself opens the conversation. */
+.ada-hit { pointer-events: auto; padding: 0; border: 0; border-radius: 45% 45% 18% 18%; background: transparent; cursor: pointer; }
+.ada-hit:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* Her speech bubble: above her head, the tail on her, one sentence at a time. */
+.ada-bubble {
+  pointer-events: auto; width: max-content; max-width: min(330px, calc(100vw - 24px)); margin: 0; padding: 10px 16px 12px;
+  border-radius: 18px; background: var(--card); color: var(--ink); box-shadow: 0 2px 4px rgb(28 36 34 / .06), 0 14px 36px rgb(28 36 34 / .16);
+  opacity: 0; visibility: hidden; transition: opacity .22s, visibility 0s .22s;
+}
+.ada-bubble.is-on { opacity: 1; visibility: visible; transition: opacity .22s; }
+.ada-bubble::after {
+  content: ""; position: absolute; left: calc(var(--tail, 50%) - 9px); bottom: -8px; width: 18px; height: 18px;
+  background: inherit; border-radius: 3px; transform: rotate(45deg); box-shadow: 6px 6px 10px rgb(28 36 34 / .08);
+}
+.ada-bubble-who { margin: 0 0 2px; color: var(--pine); font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.ada-bubble-text { position: relative; z-index: 1; margin: 0; font-size: 16.5px; line-height: 1.45; }
+.ada-bubble .w { opacity: .3; transition: opacity .16s; }
+.ada-bubble .w.is-said { opacity: 1; }
+.ada-bubble a { color: var(--pine); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1.5px; }
+.ada-note { color: var(--ink-2); }
+.ada-dots { display: inline-flex; gap: 5px; padding: 6px 0 2px; }
+.ada-dots i { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); }
+@media (prefers-reduced-motion: no-preference) {
+  .ada-dots i { animation: ada-dot 1.2s ease-in-out infinite; }
+  .ada-dots i:nth-child(2) { animation-delay: .15s; }
+  .ada-dots i:nth-child(3) { animation-delay: .3s; }
+}
+@keyframes ada-dot { 0%, 60%, 100% { transform: translateY(0); opacity: .45; } 30% { transform: translateY(-4px); opacity: 1; } }
+
+/* Before you talk to her: a small invitation at her feet. */
+.ada-pill {
+  position: fixed; right: calc(var(--ada-home) + var(--ada-ppm) * 0.3); bottom: 16px; pointer-events: auto;
+  display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 16px; border: 1px solid var(--line); border-radius: 999px;
+  background: var(--card); color: var(--ink); font: 600 14px/1 "Instrument Sans", sans-serif; cursor: pointer;
+  box-shadow: 0 6px 20px rgb(28 36 34 / .12); transition: opacity .2s, transform .2s;
+}
+.ada-pill:hover { border-color: var(--pine); }
+.ada-dot { width: 8px; height: 8px; border-radius: 50%; background: #9aa39f; flex: none; }
+.ada[data-phase="available"] .ada-dot, .ada[data-phase="active"] .ada-dot { background: #3ea777; box-shadow: 0 0 0 3px rgb(62 167 119 / .18); }
+.ada[data-phase="unavailable"] .ada-dot { background: #c9a14a; }
+
+/* The dialogue panel: your choices and your own words, beside where she stands. */
+.ada-panel {
+  position: fixed; right: calc(var(--ada-home) + var(--ada-ppm) * 0.3); bottom: 14px; width: min(340px, calc(100vw - 32px));
+  display: flex; flex-direction: column; gap: 8px; padding: 10px 12px 12px; pointer-events: auto;
+  border: 1px solid var(--line); border-radius: 18px; background: var(--card); box-shadow: 0 2px 4px rgb(28 36 34 / .05), 0 18px 48px rgb(28 36 34 / .16);
+  transition: opacity .22s, transform .22s, visibility 0s;
+}
+.ada:not(.is-engaged) .ada-panel { opacity: 0; transform: translateY(10px); visibility: hidden; transition: opacity .22s, transform .22s, visibility 0s .22s; }
+.ada.is-engaged .ada-pill { opacity: 0; transform: scale(.9); pointer-events: none; }
+.ada.is-away .ada-pill, .ada.is-away .ada-panel, .ada.is-away .ada-bubble, .ada.is-away .ada-hit { opacity: 0 !important; visibility: hidden !important; }
+
+.ada-panel-head { display: flex; align-items: center; gap: 4px; }
+.ada-title { display: flex; align-items: center; gap: 7px; margin: 0 auto 0 4px; font-size: 13.5px; }
+.ada-title span:last-child { color: var(--muted); }
+.ada-icon { width: 32px; height: 32px; display: grid; place-items: center; border: 0; border-radius: 50%; background: transparent; color: var(--ink-2); cursor: pointer; }
+.ada-icon:hover { background: var(--paper-2); color: var(--ink); }
+.ada-icon[aria-pressed="true"] { background: var(--pine); color: var(--pine-ink); }
+.ada-icon svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+.ada-log { display: none; max-height: min(36vh, 320px); margin: 0; padding: 4px 4px 2px; list-style: none; overflow-y: auto; flex-direction: column; gap: 8px; border-top: 1px solid var(--line); scrollbar-width: thin; }
+.ada-panel.show-log .ada-log { display: flex; }
+.ada-msg { margin: 0; font-size: 14px; line-height: 1.45; overflow-wrap: anywhere; }
+.ada-msg b { color: var(--pine); font-weight: 700; }
+.ada-msg-visitor b { color: var(--ink-2); }
+.ada-msg-rep b { color: var(--copper); }
+.ada-msg-note { color: var(--muted); font-size: 12.5px; text-align: center; }
+.ada-msg a { color: inherit; font-weight: 600; }
+.ada-msg.is-pending { opacity: .6; }
+.ada-error { color: #b4512f; }
+.ada-error button { padding: 0; border: 0; background: none; color: inherit; font: inherit; text-decoration: underline; cursor: pointer; }
+
+.ada-choices { display: flex; flex-direction: column; gap: 2px; }
+.ada-choices:empty { display: none; }
+.ada-choice {
+  display: flex; gap: 8px; width: 100%; padding: 8px 10px; border: 0; border-radius: 10px; background: transparent; color: var(--ink);
+  font: 500 14.5px/1.35 "Instrument Sans", sans-serif; text-align: left; cursor: pointer;
+}
+.ada-choice::before { content: "›"; color: var(--pine); font-weight: 700; }
+.ada-choice:hover, .ada-choice:focus-visible { background: color-mix(in srgb, var(--pine) 10%, transparent); color: var(--pine); outline: none; }
+
+.ada-form { display: flex; align-items: flex-end; gap: 8px; padding: 5px 5px 5px 14px; border: 1px solid var(--line); border-radius: 20px; background: var(--paper); }
+.ada-form:focus-within { border-color: var(--pine); box-shadow: 0 0 0 3px color-mix(in srgb, var(--pine) 16%, transparent); }
+.ada-form textarea { flex: 1; min-height: 32px; max-height: 110px; padding: 6px 0; resize: none; border: 0; outline: 0; background: transparent; color: var(--ink); font: 15px/1.4 "Instrument Sans", sans-serif; }
+.ada-send { flex: none; width: 32px; height: 32px; display: grid; place-items: center; border: 0; border-radius: 50%; background: var(--pine); color: var(--pine-ink); cursor: pointer; }
+.ada-send:disabled { opacity: .4; cursor: default; }
+.ada-send svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ada-fine { display: flex; justify-content: space-between; gap: 10px; margin: 0 4px; color: var(--muted); font-size: 11.5px; }
+.ada-fine a { color: inherit; }
+
+/* Your line, for a moment, as if you'd said it in the scene. */
+.ada-you {
+  position: absolute; right: 12px; bottom: calc(100% + 10px); max-width: 100%; margin: 0; padding: 8px 14px;
+  border-radius: 16px 16px 4px 16px; background: var(--pine); color: var(--pine-ink); font-size: 14.5px; line-height: 1.4;
+  opacity: 0; transform: translateY(6px); transition: opacity .2s, transform .2s; pointer-events: none;
+}
+.ada-you.is-on { opacity: 1; transform: none; }
+
+@media (max-width: 1099px) {
+  .hl-hero, .hl-savings, .hl-quiet { grid-template-columns: 1fr; }
+  .hl-timeline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 760px) {
+  .hl-links, .hl-nav-cta { display: none; }
+  .hl-steps, .hl-models { grid-template-columns: 1fr; }
+  .hl-result { grid-template-columns: 1fr 1fr; }
+  .hl-result strong { font-size: 28px; }
+  [data-host-section]::after { inset: 8px -8px; }
+}
+/* On a phone the panel is a bar along the bottom, and she stands on it. */
+@media (max-width: 720px) {
+  .ada-panel { left: 0; right: 0; bottom: 0; width: auto; padding-bottom: max(12px, env(safe-area-inset-bottom)); border-width: 1px 0 0; border-radius: 20px 20px 0 0; }
+  .ada-pill { right: calc(var(--ada-home) + var(--ada-ppm) * 0.32); bottom: max(12px, env(safe-area-inset-bottom)); }
+  .ada-bubble { max-width: min(300px, calc(100vw - 24px)); }
+  .ada-bubble-text { font-size: 15.5px; }
+}
+@media (max-width: 560px) {
+  .hl-timeline { grid-template-columns: 1fr; }
+  .hl-facts { gap: 18px; }
+}
+
+/* The "How this was made" box, as in the other AI-built examples. */
+.sx-explainer details.made {
+  margin: 48px 0 0;
+  border: 1px solid var(--sx-line);
+  border-radius: 12px;
+  background: #fff;
+}
+.sx-explainer details.made > summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  color: var(--sx-muted);
+  font-weight: 700;
+  list-style: none;
+  cursor: pointer;
+}
+.sx-explainer details.made > summary::-webkit-details-marker { display: none; }
+.sx-explainer details.made > summary::before {
+  content: '+';
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--sx-line);
+  border-radius: 6px;
+  font: 400 16px/1 'PT Mono', ui-monospace, monospace;
+}
+.sx-explainer details.made[open] > summary::before { content: '–'; }
+.sx-explainer details.made > summary:hover { color: var(--sx-ink); }
+.sx-explainer details.made > summary:focus-visible { outline: 2px solid var(--sx-accent); outline-offset: 2px; border-radius: 12px; }
+.sx-explainer .made-body { padding: 2px 22px 22px; }
+.sx-explainer .made-label {
+  margin: 26px 0 10px;
+  color: var(--sx-muted);
+  font: 700 12px/1 'PT Sans Caption', 'PT Sans', sans-serif;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.sx-explainer .made-prompt {
+  margin: 0;
+  padding: 16px 18px;
+  border-left: 3px solid #86FFA3;
+  border-radius: 0 8px 8px 0;
+  background: var(--sx-paper);
+  color: var(--sx-text);
+  font: 400 14.5px/1.6 'PT Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.sx-explainer .made-prompt + .made-prompt { margin-top: 10px; }
