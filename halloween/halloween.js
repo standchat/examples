@@ -1,4 +1,4 @@
-/*! Stand Chat Halloween mode · Public domain (Unlicense) · No dependencies */
+/*! Stand Chat Halloween mode · Public domain (Unlicense) */
 (function () {
   'use strict';
   if (window.StandHalloween) return;
@@ -26,6 +26,9 @@
     assetBase: new URL('assets/runtime/', source).href, storageKey: 'stand-halloween:greeted',
   };
   const data = script ? script.dataset : {};
+  // Supplying a Site ID opts into the complete, one-script installation.
+  // Omit it when an existing Stand installation owns SDK loading.
+  const standId = String(data.standId || '').trim();
   const initial = Object.assign({}, window.StandHalloweenConfig || {});
   Object.keys(defaults).forEach(key => { if (data[key] !== undefined) initial[key] = data[key]; });
   let config = Object.assign({}, defaults);
@@ -237,6 +240,30 @@
     }
   }
   function freezeAll() { actors.forEach(freezeActor); }
+  function loadStand() {
+    if (!standId || destroyed || window.StandChat) return;
+    const installed = [...document.querySelectorAll('script[src]')].some(node => {
+      if (node === script) return false;
+      try {
+        const url = new URL(node.src, document.baseURI);
+        return url.pathname.endsWith('/stand.js') && (
+          /(^|\.)stand\.chat$/.test(url.hostname) ||
+          node.hasAttribute('data-stand-id') || node.hasAttribute('data-stand-site-id')
+        );
+      } catch (_) { return false; }
+    });
+    if (installed) return;
+    const sdk = document.createElement('script');
+    sdk.src = 'https://cdn.stand.chat/widget/stand.js';
+    sdk.async = true;
+    sdk.setAttribute('data-stand-id', standId);
+    sdk.addEventListener('error', () => {
+      // Remove only our failed request so an explicit chat retry can load it again.
+      sdk.remove();
+      if (!destroyed) emit('error', { reason: 'sdk-load-failed' });
+    }, { once: true });
+    (document.head || document.documentElement).appendChild(sdk);
+  }
   function checkStand() {
     if (destroyed) return false;
     const stand = window.StandChat;
@@ -278,6 +305,7 @@
   }
   async function openChat(kind = 'ghost') {
     if (destroyed || opening) return false;
+    loadStand();
     currentKind = kinds.includes(kind) ? kind : 'ghost';
     suppressed = true;
     opening = true;
@@ -654,7 +682,7 @@
     changed();
     if (window.StandHalloween === api) delete window.StandHalloween;
   }
-  const api = Object.freeze({ version: '2.0.0', configure, start, pause, stop, summon, parade, openChat, destroy, get state() { return state(); } });
+  const api = Object.freeze({ version: '2.1.0', configure, start, pause, stop, summon, parade, openChat, destroy, get state() { return state(); } });
   config = normalize(initial);
   storageRead();
   window.StandHalloween = api;
@@ -682,6 +710,6 @@
   listen(window, 'resize', () => { geometryCache = null; clearActors(); cancelParade(); lastActivity = Date.now(); nextArrival = Date.now() + 2500; });
   listen(media, 'change', () => { clearActors(); clearEffects(); cancelParade(); changed(); });
   listen(window, 'pagehide', event => { if (!event.persisted) destroy(); });
-  const boot = () => { mount(); editing(); if (config.autoStart) start(); else { checkStand(); changed(); } };
+  const boot = () => { loadStand(); mount(); editing(); if (config.autoStart) start(); else { checkStand(); changed(); } };
   if (document.readyState === 'loading') listen(document, 'DOMContentLoaded', boot, { once: true }); else boot();
 }());
