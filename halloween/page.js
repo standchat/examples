@@ -55,7 +55,7 @@
   }
 
   // Pin the public release so copied installations work independently of this preview.
-  const installationSource = 'https://cdn.jsdelivr.net/gh/standchat/examples@5e17ca71d6b84b7713e722abb3c86af8725c5fdc/halloween/halloween.js';
+  const installationSource = 'https://cdn.jsdelivr.net/gh/standchat/examples@c0472d6173d90c487822ccb263659ffc94a70780/halloween/halloween.js';
   function renderSnippet(settings) {
     const attributes = [
       ['src', installationSource], ['data-stand-id', 'demo'], ['data-rating', settings.rating],

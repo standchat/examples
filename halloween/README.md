@@ -10,7 +10,7 @@ Copy this before `</body>`. It loads Halloween mode, its assets, and Stand Chat 
 
 ```html
 <script defer
-  src="https://cdn.jsdelivr.net/gh/standchat/examples@5e17ca71d6b84b7713e722abb3c86af8725c5fdc/halloween/halloween.js"
+  src="https://cdn.jsdelivr.net/gh/standchat/examples@c0472d6173d90c487822ccb263659ffc94a70780/halloween/halloween.js"
   data-stand-id="demo"
   data-rating="pg"
   data-season="always">
@@ -19,7 +19,7 @@ Copy this before `</body>`. It loads Halloween mode, its assets, and Stand Chat 
 
 **Connect your own chat:** in [Stand → Sites → your site → Installation snippet](https://app.stand.chat/sites), copy the `data-stand-id` value and replace `demo` above.
 
-The code works immediately with Stand's demo assistant. Your own site ID connects your responders and site settings; use it on the website registered in Stand. If Stand is already installed, Halloween mode keeps that installation. There is no download or separate Stand script to add.
+The code works immediately with Stand's demo assistant. Your own site ID connects your responders and site settings; use it on the website registered in Stand. If Stand is already installed, Halloween mode keeps that installation. There is no download or separate Stand script to add. While Halloween is active, characters replace the initial chat launcher; opening a conversation restores Stand’s normal conversation controls. A page loaded outside the season keeps the normal launcher.
 
 The copied code includes your workshop settings and starts immediately by default. Choose a season in the workshop to limit visits to an annual date range. The underlying runtime defaults to October 1 through November 1 when `data-season` is omitted.
 

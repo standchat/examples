@@ -19,6 +19,9 @@ copy the data-stand-id value and replace demo above. Open Sites at:
 https://app.stand.chat/sites
 
 It works immediately with demo chat. An existing Stand installation is reused.
+While Halloween is active, its characters replace the initial chat launcher.
+Opening a conversation restores normal conversation controls. Outside the
+season, a newly loaded page keeps the normal launcher.
 The script loads Stand automatically when data-stand-id is present and no Stand
 installation exists; assets load from assets/runtime/{rating}/ beside the script.
 Keep all fifteen WebP files in place. No build step or package install is needed.
