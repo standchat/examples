@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Halloween mode for Stand Chat</title>
+  <meta name="description" content="Free for your website: Halloween characters that put visitors in a good mood, and every one of them opens a chat. Five looks from G to NC-17, two lines of code.">
+  <meta name="author" content="Stand Chat">
+  <link rel="author" href="https://stand.chat/">
+  <meta name="keywords" content="halloween, seasonal, drop-in script, StandChat API, openChat, cut-out animation, generated sprites">
+  <meta property="og:title" content="Stand Chat Halloween mode">
+  <meta property="og:description" content="Free for your website: Halloween characters that put visitors in a good mood, and every one of them opens a chat. Five looks from G to NC-17, two lines of code.">
+  <meta property="og:image" content="https://examples.stand.chat/halloween-mode/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#140e26">
+
+  <!-- Site chrome: the top bar, "How it works" styles and the site's analytics. The demo works without them. -->
+  <link rel="stylesheet" href="/_shared/example.css">
+  <script type="module" src="/_shared/example.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Fraunces:ital,opsz,wght@0,9..144,600..900;1,9..144,500..800&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Stand Chat's shared demo site: answers on any domain. Your site uses the snippet from Sites in Stand. -->
+  <script defer src="https://cdn.stand.chat/widget/stand.js" data-stand-id="demo"></script>
+  <!--
+    Halloween mode. On your site this is just <script defer src="halloween.js"></script>.
+    This page runs all year (data-season="always") and starts from its own switch
+    (data-autostart="false"), so it can stage the first parade around its moon.
+  -->
+  <script defer src="halloween.js" data-season="always" data-autostart="false" data-rating="pg-13"></script>
+  <!-- This page's switch, rating slider, cast and configurator. Not needed on your site. -->
+  <script defer src="demo.js"></script>
+</head>
+<body>
+  <sx-example-bar></sx-example-bar>
+
+  <div class="hw-page" data-rating="pg-13">
+    <header class="hero">
+      <div class="sky" aria-hidden="true">
+        <div class="tint" data-for="g"></div>
+        <div class="tint" data-for="pg"></div>
+        <div class="tint" data-for="r"></div>
+        <div class="tint" data-for="nc-17"></div>
+        <div class="stars"></div>
+        <div class="moon"><i></i><i></i><i></i></div>
+        <svg class="hills" viewBox="0 0 1440 220" preserveAspectRatio="none">
+          <path d="M0,120 C180,70 330,64 520,104 C690,140 820,150 1000,112 C1170,76 1310,78 1440,104 L1440,220 L0,220 Z"/>
+          <path d="M0,170 C210,130 400,136 600,160 C820,186 990,174 1180,148 C1300,132 1380,136 1440,146 L1440,220 L0,220 Z"/>
+        </svg>
+      </div>
+
+      <div class="hero-in">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="mark" data-art="pumpkin" aria-hidden="true"></span><span><b>Stand Chat</b> · Free for your website</span></p>
+          <h1>Halloween <em>mode</em></h1>
+          <p class="tagline" data-tagline>Your website is going as a ghost this year.</p>
+          <p class="lead">Add it to your own website for free: paste two lines and it’s on. The characters put visitors in a good mood, and every one of them opens a chat, so you can help people and hear what they came&nbsp;for.</p>
+
+          <div class="rating" data-rating-box data-halloween="web-right">
+            <div class="rating-top">
+              <span class="rating-badge" data-rating-label>PG-13</span>
+              <p><b data-rating-title>Parents strongly cautioned</b><span data-rating-blurb>Rated PG-13 for glowing eyes, things in the dark and a ghost you can see through.</span></p>
+            </div>
+            <input type="range" min="0" max="4" step="1" value="2" aria-label="Rating, from G to NC-17" aria-valuetext="PG-13" data-rating-slider>
+            <div class="rating-ticks" aria-hidden="true">
+              <button type="button" tabindex="-1" data-rate="0">G</button>
+              <button type="button" tabindex="-1" data-rate="1">PG</button>
+              <button type="button" tabindex="-1" data-rate="2">PG-13</button>
+              <button type="button" tabindex="-1" data-rate="3">R</button>
+              <button type="button" tabindex="-1" data-rate="4">NC-17</button>
+            </div>
+          </div>
+
+          <div class="actions">
+            <div class="install">
+              <code title="Both lines, ready to paste into any page"><span class="line"><span class="t">&lt;script</span> <span class="a">src</span>=<span class="s">"…/stand.js"</span> <span class="a">data-stand-id</span>=<span class="s">"demo"</span><span class="t">&gt;&lt;/script&gt;</span></span><span class="line"><span class="t">&lt;script</span> <span class="a">src</span>=<span class="s">"…/halloween.js"</span><span class="t">&gt;&lt;/script&gt;</span></span></code>
+              <button type="button" class="copy" data-copy-install aria-label="Copy a working demo: Stand Chat with Halloween mode">Copy</button>
+            </div>
+            <button class="switch" type="button" role="switch" aria-checked="false" data-switch>
+              <span class="track" aria-hidden="true"><span class="knob"></span></span>
+              <span class="label">Halloween mode <b data-switch-state>Off</b></span>
+            </button>
+            <button class="sound" type="button" aria-pressed="true" aria-label="Sound" data-sound>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.2L12 5.6v12.8l-4.8-3.9H4z" fill="currentColor"/><path class="on" d="M15.5 8.6a4.8 4.8 0 0 1 0 6.8M18 6.2a8.2 8.2 0 0 1 0 11.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path class="off" d="M15.6 9.6l4.8 4.8m0-4.8l-4.8 4.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="cast" id="cast" aria-labelledby="cast-title">
+        <div class="wrap">
+          <p class="kicker">The night shift</p>
+          <h2 id="cast-title">Six regulars, five ratings, one&nbsp;costume</h2>
+          <p class="sub">Each one has its own entrance, exit and opening line, and its look follows the rating. They use your page, too: the cat climbs onto these cards, the pumpkin peeks over them, and cobwebs grow in their corners.</p>
+
+          <ul class="cards">
+            <li class="card" data-halloween="perch web">
+              <div class="card-stage"><span class="art" data-cast-art="ghost"></span></div>
+              <div class="card-body">
+                <p class="role">The host</p>
+                <h3 data-cast-name="ghost">The ghost</h3>
+                <p>Comes out when nobody has moved for a while, says hi, and goes home when you’re busy. Gentle ratings float out of the chat button; scarier ones rise from behind your page, or are just there.</p>
+                <blockquote data-cast-line="ghost"></blockquote>
+                <button type="button" class="summon" data-summon="ghost">Summon</button>
+              </div>
+            </li>
+            <li class="card" data-halloween="perch web">
+              <div class="card-stage"><span class="art" data-cast-art="bats"></span></div>
+              <div class="card-body">
+                <p class="role">Night shift</p>
+                <h3 data-cast-name="bats">The bats</h3>
+                <p>Swoop across in ones, twos and threes, or as a swarm in NC-17. Now and then one stops to hang upside down from the top of the window or under a header.</p>
+                <blockquote data-cast-line="bats"></blockquote>
+                <button type="button" class="summon" data-summon="bats">Summon</button>
+              </div>
+            </li>
+            <li class="card" data-halloween="perch web">
+              <div class="card-stage"><span class="art" data-cast-art="spider"></span></div>
+              <div class="card-body">
+                <p class="role">Hangs around</p>
+                <h3 data-cast-name="spider">The spider</h3>
+                <p>Drops in on a thread from the top of the window, or from under a heading or a card, dangles a while, and climbs back up. Scroll, and it bounces.</p>
+                <blockquote data-cast-line="spider"></blockquote>
+                <button type="button" class="summon" data-summon="spider">Summon</button>
+              </div>
+            </li>
+            <li class="card" data-halloween="perch web">
+              <div class="card-stage"><span class="art" data-cast-art="pumpkin"></span></div>
+              <div class="card-body">
+                <p class="role">Head of lighting</p>
+                <h3 data-cast-name="pumpkin">Jack</h3>
+                <p>Rises from the bottom of the window, or peeks up from behind a card or an image, and flickers like a real candle. Brighter when you come close.</p>
+                <blockquote data-cast-line="pumpkin"></blockquote>
+                <button type="button" class="summon" data-summon="pumpkin">Summon</button>
+              </div>
+            </li>
+            <li class="card" data-halloween="perch web">
+              <div class="card-stage"><span class="art" data-cast-art="cat"></span></div>
+              <div class="card-body">
+                <p class="role">Very curious</p>
+                <h3 data-cast-name="cat">Midnight</h3>
+                <p>Makes itself at home: walks in, leaps from card to card, sits a while and watches your pointer. Rest the pointer on a card and it comes over.</p>
+                <blockquote data-cast-line="cat"></blockquote>
+                <button type="button" class="summon" data-summon="cat">Summon</button>
+              </div>
+            </li>
+            <li class="card" data-halloween="perch web">
+              <div class="card-stage"><span class="art" data-cast-art="broom"></span></div>
+              <div class="card-body">
+                <p class="role">Rare guest</p>
+                <h3 data-cast-name="broom">The witch</h3>
+                <p>Crosses the top of the window now and then. A broom on its own in G, the witch herself in PG and PG-13, a raven in R and a murder of crows in NC-17.</p>
+                <blockquote data-cast-line="broom"></blockquote>
+                <button type="button" class="summon" data-summon="broom">Summon</button>
+              </div>
+            </li>
+          </ul>
+
+          <p class="costume"><span class="art" data-cast-art="costume" aria-hidden="true"></span><span><strong>Plus a costume for your chat button.</strong> Stand’s launcher wears a witch’s hat for the season (horns in NC-17), and takes it off when the chat opens.</span></p>
+        </div>
+      </section>
+
+      <section class="studio" id="make-it-yours" aria-labelledby="studio-title">
+        <div class="wrap">
+          <p class="kicker">Make it yours</p>
+          <h2 id="studio-title">Dress it up, then copy your snippet</h2>
+          <p class="sub">Whatever you change here happens on this page right away. The snippet only lists what differs from the defaults.</p>
+
+          <div class="studio-grid">
+            <form class="knobs" data-knobs data-halloween="perch">
+              <div class="field">
+                <label for="studio-rating">Rating <output data-studio-rating>PG-13 · Parents strongly cautioned</output></label>
+                <input id="studio-rating" class="rating-range" type="range" min="0" max="4" step="1" value="2" aria-valuetext="PG-13" data-rating-slider>
+                <div class="studio-ticks" aria-hidden="true"><span>G</span><span>PG</span><span>PG-13</span><span>R</span><span>NC-17</span></div>
+              </div>
+
+              <fieldset class="field">
+                <legend>Who’s coming</legend>
+                <div class="chips" data-cast-chips></div>
+              </fieldset>
+
+              <div class="field-row">
+                <fieldset class="field">
+                  <legend>How haunted</legend>
+                  <div class="segmented">
+                    <label><input type="radio" name="haunt" value="calm"><span>Calm</span></label>
+                    <label><input type="radio" name="haunt" value="lively" checked><span>Lively</span></label>
+                    <label><input type="radio" name="haunt" value="haunted"><span>Haunted</span></label>
+                  </div>
+                  <p class="note" data-haunt-note>Someone drops by every 16 to 30 seconds, two at most.</p>
+                </fieldset>
+                <fieldset class="field">
+                  <legend>Using your page</legend>
+                  <div class="segmented">
+                    <label><input type="radio" name="perch" value="auto" checked><span>Anywhere</span></label>
+                    <label><input type="radio" name="perch" value="marked"><span>Marked</span></label>
+                    <label><input type="radio" name="perch" value="off"><span>Edges only</span></label>
+                  </div>
+                  <p class="note" data-perch-note>Cards, images, buttons and headings are fair game.</p>
+                </fieldset>
+              </div>
+
+              <div class="field-row">
+                <div class="field grow">
+                  <label for="idle">The ghost comes out after <output for="idle" data-idle-out>8 seconds</output></label>
+                  <input id="idle" name="idle" type="range" min="3" max="60" step="1" value="8">
+                </div>
+                <div class="field grow">
+                  <label for="webs">Cobwebs on screen: <output for="webs" data-webs-out>2</output></label>
+                  <input id="webs" name="webs" type="range" min="0" max="4" step="1" value="2">
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="greeting">The ghost’s greeting</label>
+                <input id="greeting" name="greeting" type="text" maxlength="160" autocomplete="off" spellcheck="true">
+              </div>
+
+              <div class="field-row">
+                <fieldset class="field">
+                  <legend>Size</legend>
+                  <div class="segmented">
+                    <label><input type="radio" name="size" value="0.8"><span>S</span></label>
+                    <label><input type="radio" name="size" value="1" checked><span>M</span></label>
+                    <label><input type="radio" name="size" value="1.25"><span>L</span></label>
+                  </div>
+                </fieldset>
+                <fieldset class="field">
+                  <legend>Chat button</legend>
+                  <div class="segmented">
+                    <label><input type="radio" name="costume" value="on" checked><span>In costume</span></label>
+                    <label><input type="radio" name="costume" value="none"><span>As it is</span></label>
+                  </div>
+                </fieldset>
+              </div>
+
+              <div class="field">
+                <label for="season">Season <span class="aside">(this page runs all year)</span></label>
+                <select id="season" name="season">
+                  <option value="10-01/11-01" selected>October 1 to November 1, every year</option>
+                  <option value="10-24/11-01">Halloween week, every year</option>
+                  <option value="10-31/10-31">Just Halloween, every year</option>
+                  <option value="always">Always on (for testing)</option>
+                </select>
+              </div>
+
+              <label class="check"><input type="checkbox" name="sound" checked><span>Sound effects, after the visitor’s first click</span></label>
+            </form>
+
+            <div class="output">
+              <div class="output-head">
+                <span>Your snippet</span>
+                <button type="button" class="copy" data-copy-snippet>Copy</button>
+              </div>
+              <pre><code data-snippet></code></pre>
+              <ol class="output-steps">
+                <li>Paste the snippet right after Stand’s. It turns itself on in October.</li>
+                <li>That’s it. To serve it yourself instead, put <a href="halloween.js" download>halloween.js</a> on your site with <a href="halloween/pg.webp" download data-image-link>pg.webp</a> in a folder named <code>halloween</code> next to it, and change <code>src</code>.</li>
+              </ol>
+            </div>
+          </div>
+
+          <p class="signoff">Happy chat-or-treating!</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <section id="how-it-works" class="sx-explainer">
+    <div class="sx-wrap">
+      <p class="sx-eyebrow">How it works</p>
+      <h2>A costume for the chat you already have</h2>
+      <p class="sx-lead">Halloween mode doesn’t replace Stand’s widget. It draws a few characters on a layer above your page, lets them sit on and hang from what’s already there, and when one is clicked, it opens Stand’s own chat with that character’s greeting, through Stand’s public JavaScript API.</p>
+
+      <h3>1. Paste it into any page</h3>
+      <p>Nothing to install. These two lines work on any page, even a local HTML file: Stand Chat with its shared <code>demo</code> site, which answers anywhere, and Halloween mode straight from this site, characters included.</p>
+      <pre class="sx-code" data-file="index.html"><code class="language-html">&lt;script defer src="https://cdn.stand.chat/widget/stand.js" data-stand-id="demo"&gt;&lt;/script&gt;
+&lt;script defer src="https://examples.stand.chat/halloween-mode/halloween.js" data-rating="pg"&gt;&lt;/script&gt;</code></pre>
+      <p>It runs from October 1 to November 1 every year and stays in its box the rest of the time. Add <code>?halloween=on</code> to the page’s address to see it any day, <code>?halloween=r</code> to try another rating, or <code>?halloween=off</code> to see the page without it.</p>
+
+      <h3>2. Answer with your own Stand</h3>
+      <p>Swap <code>demo</code> for your Site ID from <strong>Sites</strong> in Stand. Now your own Stand-ins and team answer, and every chat starts with the character’s line and a private note about how the visitor got there.</p>
+      <pre class="sx-code" data-file="index.html"><code class="language-html">&lt;script defer src="https://cdn.stand.chat/widget/stand.js" data-stand-id="YOUR-SITE-ID"&gt;&lt;/script&gt;</code></pre>
+
+      <h3>3. Pick a rating</h3>
+      <p>Change <code>data-rating</code> and the whole cast changes with it: same choreography, five temperaments. The rating sets the art, the lines, the speech bubbles, what bursts out on a click, and the tone the private prompt asks of whoever answers.</p>
+      <div class="hw-table">
+        <table>
+          <thead><tr><th scope="col">Rating</th><th scope="col">The look</th><th scope="col">Good for</th></tr></thead>
+          <tbody>
+            <tr><td><code>g</code></td><td>Plush felt toys with button eyes and stitched smiles, and puns. Candy bursts out.</td><td>Schools, kids’ brands, anyone gentle.</td></tr>
+            <tr><td><code>pg</code></td><td>Stop-motion puppets: a bedsheet ghost, a gap-toothed jack-o’-lantern, a cackling witch on a broom. The default.</td><td>Most shops and businesses.</td></tr>
+            <tr><td><code>pg-13</code></td><td>Film props in the dark: a gauze apparition, a real bat, a long-legged spider, mist when the ghost is out. Embers.</td><td>Brands that like a little atmosphere.</td></tr>
+            <tr><td><code>r</code></td><td>Horror-film creatures: a skeletal wraith, a vampire bat, a tarantula, a rotting pumpkin, a raven. Moths.</td><td>Games, entertainment, bold brands.</td></tr>
+            <tr><td><code>nc-17</code></td><td>The haunted house: a screaming reaper that jumps around, a swarm of demon bats, a black widow, a pumpkin with too many teeth, film grain.</td><td>Horror fans. Not your kindergarten.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Let them use your page</h3>
+      <p>Characters look at what’s on screen: cards, images and buttons with a visible edge, headings, and bars. The cat walks along top edges and leaps between them, the pumpkin and the ghost peek over them, spiders and bats hang from bottom edges, and cobwebs grow in corners. Everything follows the page as it scrolls, and nothing settles on links, buttons or fields you might click. Mark elements to steer them:</p>
+      <pre class="sx-code" data-file="index.html"><code class="language-html">&lt;div class="product-card" data-halloween="perch web"&gt;…&lt;/div&gt;  &lt;!-- sit on it, web its corner --&gt;
+&lt;h2 data-halloween="hang"&gt;Opening hours&lt;/h2&gt;              &lt;!-- spiders and bats hang here --&gt;
+&lt;img src="hero.jpg" alt="" data-halloween="peek"&gt;           &lt;!-- the ghost and pumpkin peek over --&gt;
+&lt;form data-halloween="none"&gt;…&lt;/form&gt;                     &lt;!-- keep everything off --&gt;</code></pre>
+      <p>With <code>data-perch="marked"</code>, only marked elements are used. With <code>data-perch="off"</code>, everyone stays on the window’s edges.</p>
+
+      <h3>Choose who comes, and how often</h3>
+      <p>Options are <code>data-*</code> attributes on the same tag. Leave one out to keep its default.</p>
+      <pre class="sx-code" data-file="index.html" data-wrap><code class="language-html">&lt;script defer src="https://examples.stand.chat/halloween-mode/halloween.js"
+  data-rating="pg"
+  data-cast="ghost bats pumpkin cat"
+  data-haunt="calm"
+  data-ghost-greeting="Boo! Looking for our opening hours? I can help."&gt;&lt;/script&gt;</code></pre>
+      <div class="hw-table">
+        <table>
+          <thead><tr><th scope="col">Attribute</th><th scope="col">Default</th><th scope="col">What it does</th></tr></thead>
+          <tbody>
+            <tr><td><code>data-rating</code></td><td><code>pg</code></td><td><code>g</code>, <code>pg</code>, <code>pg-13</code>, <code>r</code> or <code>nc-17</code>.</td></tr>
+            <tr><td><code>data-cast</code></td><td><code>ghost bats spider pumpkin cat broom</code></td><td>Who visits. The ghost is the one who comes out when nobody’s moving.</td></tr>
+            <tr><td><code>data-haunt</code></td><td><code>lively</code></td><td>How often the others drop by: <code>calm</code> (about once a minute, one at a time), <code>lively</code> (every 16 to 30 seconds) or <code>haunted</code> (every 6 to 12).</td></tr>
+            <tr><td><code>data-perch</code></td><td><code>auto</code></td><td>Using your page: <code>auto</code>, <code>marked</code> (only <code>data-halloween</code> elements) or <code>off</code>.</td></tr>
+            <tr><td><code>data-webs</code></td><td><code>2</code></td><td>Cobwebs on screen at once, in the corners of cards and images. <code>0</code> for none.</td></tr>
+            <tr><td><code>data-idle</code></td><td><code>8</code></td><td>Seconds without scrolling, typing or moving before the ghost comes out.</td></tr>
+            <tr><td><code>data-season</code></td><td><code>10-01/11-01</code></td><td>Month and day, from and until, every year. Exact dates work too, like <code>2026-10-09/2026-11-02</code>, and so does <code>always</code>.</td></tr>
+            <tr><td><code>data-ghost-greeting</code></td><td>The rating’s lines</td><td>What the ghost says. Every character has one: <code>data-bats-greeting</code>, <code>data-spider-greeting</code>, <code>data-pumpkin-greeting</code>, <code>data-cat-greeting</code>, <code>data-broom-greeting</code>.</td></tr>
+            <tr><td><code>data-costume</code></td><td><code>on</code></td><td>Stand’s chat button dresses up for the rating, or <code>none</code>.</td></tr>
+            <tr><td><code>data-size</code></td><td><code>1</code></td><td>Scale for every character, from <code>0.5</code> to <code>2</code>. Phones get 78% of it.</td></tr>
+            <tr><td><code>data-sound</code></td><td><code>true</code></td><td>Small synthesized sounds, darker as the rating goes up. They start after the visitor’s first click or tap, as browsers require. <code>false</code> keeps it quiet.</td></tr>
+            <tr><td><code>data-context</code></td><td>None</td><td>Facts for whoever answers, added to each character’s private prompt.</td></tr>
+            <tr><td><code>data-prompt</code></td><td>Built in</td><td>The whole private prompt. <code>{who}</code> becomes the character and <code>{tone}</code> the rating’s tone. An empty value sends none.</td></tr>
+            <tr><td><code>data-assets</code></td><td>Next to the script</td><td>The URL of the <code>halloween</code> folder, if the images live somewhere else.</td></tr>
+            <tr><td><code>data-autostart</code></td><td><code>true</code></td><td><code>false</code> waits for <code>StandHalloween.start()</code>.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Drive it from JavaScript</h3>
+      <p>Set <code>window.StandHalloweenConfig</code> before the script for what doesn’t fit in an attribute, like several lines per character or labels in your language. <code>window.StandHalloween</code> takes it from there.</p>
+      <pre class="sx-code" data-file="index.html"><code class="language-js">window.StandHalloweenConfig = {
+  rating: 'pg',
+  greetings: {
+    ghost: ['Boo! Looking for our opening hours?', 'Still here? Ask me anything.'],
+    pumpkin: 'Lit to see you! The pumpkin spice menu is back.',
+  },
+  context: 'Kaisla is a public lakeside sauna, open 7–22 every day.',
+  labels: { ask: 'Kysy meiltä', hint: 'Avaa chat', dismiss: 'Ei nyt' },
+};
+
+StandHalloween.configure({ rating: 'r' }); // Everyone goes home; the R cast arrives.
+StandHalloween.summon('cat');              // Someone drops by now.
+StandHalloween.stop();                     // Everyone goes home.
+
+document.addEventListener('stand-halloween-open', (event) =&gt; {
+  analytics.track('Halloween chat', { creature: event.detail.creature, rating: event.detail.rating });
+});</code></pre>
+      <p><code>StandHalloween.art('pumpkin', 'r')</code> returns any character in any rating as an element that fits itself into the box you put it in, for your 404 page or a banner.</p>
+
+      <h3>How a character opens the chat</h3>
+      <p>Halloween mode never talks to Stand’s servers itself. It waits until Stand has someone who can answer, and every click goes through <code>StandChat.openChat</code>. The character’s line becomes the greeting of a new conversation, a private prompt tells whoever answers how the visitor got there and which tone to strike, and <code>analyticsId</code> shows you in Stand which character brought the chat in.</p>
+      <pre class="sx-code" data-file="halloween.js"><code class="language-js">StandChat.whenAvailable(() =&gt; start()); // Only once someone can answer.
+
+// What a click on the R-rated tarantula sends:
+StandChat.openChat('Eight eyes, all on you. What do you need?', {
+  prompt: 'Halloween mode is on for this website… The visitor opened this chat by '
+    + 'clicking a hairy tarantula… Open your first reply with one deadpan, creepy '
+    + 'line in its spirit… Creepy fun only: no gore, no threats. Then help…',
+  analyticsId: 'halloween-spider',
+});</code></pre>
+      <p>When a conversation is already open, <code>openChat</code> just brings it back, so a second character never interrupts. While the chat is open, the characters step back, and they return a little after it closes.</p>
+
+      <h3>Host it yourself</h3>
+      <p>The copy on this site changes when this example does. To keep yours exactly as it is, download <a href="halloween.js" download><code>halloween.js</code></a> and the image for your rating into a folder named <code>halloween</code> next to it: <a href="halloween/g.webp" download>g</a>, <a href="halloween/pg.webp" download>pg</a>, <a href="halloween/pg-13.webp" download>pg-13</a>, <a href="halloween/r.webp" download>r</a> or <a href="halloween/nc-17.webp" download>nc-17</a>, 150 to 210 KB each. Only the rating on show is ever downloaded. If the images live somewhere else, <code>data-assets</code> points the script at them.</p>
+      <pre class="sx-code" data-file="index.html"><code class="language-html">&lt;script defer src="/halloween.js" data-rating="pg"&gt;&lt;/script&gt;
+&lt;!-- …with /halloween/pg.webp next to it --&gt;</code></pre>
+
+      <h3>Things to try on this page</h3>
+      <ul>
+        <li>Keep still for a few seconds. The ghost comes out: from the chat button in G and PG, from behind something on the page in PG-13 and R, and out of nowhere in NC-17.</li>
+        <li>Click a character or the ghost’s bubble. The demo Stand-in answers in the character’s tone, then helps.</li>
+        <li>Scroll down to the cast. The cat leaps from card to card, the pumpkin peeks over them, and cobwebs grow in their corners. Rest your pointer on a card and the cat comes over.</li>
+        <li>Type <kbd>b</kbd> <kbd>o</kbd> <kbd>o</kbd> anywhere on the page.</li>
+      </ul>
+
+      <h3>Good to know</h3>
+      <ul>
+        <li><strong>Polite by default.</strong> One or two visitors at a time. They don’t settle on links, buttons or fields, and nobody new arrives while someone types in a form or chats. While the ghost talks, Stand’s own greeting bubble steps aside, so there’s one greeting at a time.</li>
+        <li><strong>The ghost knows when to go.</strong> It waits a moment when the visitor comes back, then goes home. The × or <kbd>Esc</kbd> sends it home for half an hour and calms everyone else down.</li>
+        <li><strong>Reduced motion is respected.</strong> With <code>prefers-reduced-motion</code>, nobody flies, walks or jumps. A few characters just appear and sit still, and there’s no mist or grain.</li>
+        <li><strong>It stays out of your styles.</strong> Everything lives in a shadow root just under Stand’s widget. The layer lets clicks through everywhere except on the characters, and the speech bubbles borrow your page’s font, except where a rating has its own.</li>
+        <li><strong>One script, one image.</strong> The script is about 40 KB gzipped, and your rating’s image 150 to 210 KB, downloaded once and cached. No cookies. The animation loop runs only while someone moves, and sleeps in background tabs.</li>
+        <li><strong>The costume is best-effort.</strong> It looks for Stand’s chat button, and isn’t worn when the button is hidden. <code>data-costume="none"</code> skips it.</li>
+        <li><strong>The characters are extra doors.</strong> They’re hidden from screen readers and skipped by the keyboard, so Stand’s own button stays the accessible way into the chat.</li>
+      </ul>
+
+      <h3>Change anything</h3>
+      <p>Halloween mode is public domain, art included: copy it, change it, ship it, no credit needed. Each rating is one image plus a table in the script of where its parts are, so you can swap in your own characters too. The quickest way to make it yours is to copy the folder and tell an AI coding agent what you want. For example:</p>
+      <blockquote class="hw-prompt">In halloween.js, give the cat a favorite spot. On pages with an element marked data-halloween="cat-bed", it heads there first, hopping from card to card, curls up, and stays until the visitor scrolls past. Clicked there, it opens the chat with “You found my bed. What can I find for you?”</blockquote>
+      <pre class="sx-code"><code class="language-sh">npx degit standchat/examples/halloween-mode my-halloween</code></pre>
+
+      <details class="made" id="how-this-was-made">
+        <summary>How this was made</summary>
+        <div class="made-body">
+          <p><strong>Claude Opus 5.5, with max effort, in Claude Code</strong>, built this in one session from the prompt below and a run of follow-ups. Before writing any code, it read the coverage of Rivian’s 2026 Halloween update to find the voice: playful, warm and never actually scary, with named characters and a pun when one fits. It read stand.js to learn how to dress the chat button and notice when the chat opens, and checked the motion with filmstrips from headless Chrome.</p>
+          <p>Its first cast was drawn in SVG, and SVG couldn’t do horror. So the image model in Codex CLI drew ten characters for each rating, and then redrew each one as a sheet of puppet parts: a body, wings, legs, a tail, a lantern. Claude matched every part back onto the whole character in headless Chrome, packed each rating into one image, and kept the animation code it had written for the SVG cast.</p>
+          <p>The cat became the star. It has a skeleton of its own (a pelvis and a chest, a head, legs in three pieces and a tail in five), posed every frame with inverse kinematics so its paws stay planted while it walks, crouches, wiggles, leaps from card to card and lands. Bats beat jointed wings that fold at the wrist. Ravens and crows flap in three drawn poses, because a wing beating toward you can’t be faked by turning a flat picture.</p>
+          <p>A seasonal layer like this doesn’t need a custom chat UI. Stand’s widget stays as it is, and <code>openChat</code> carries a greeting and a private prompt for each character.</p>
+
+          <p class="made-label">The prompt, lightly edited</p>
+          <blockquote class="made-prompt">Create a new example: Halloween mode.
+
+In this mode, Halloween-themed items animate onto and off the page. Interacting with them opens a chat.
+
+If there is no interaction, a friendly ghost wanders on the page as a greeting for the chat.
+
+Be creative.
+
+Make this easy to plug into any page that uses Stand Chat by including just one JS file and its assets, and make it configurable. Include instructions on how to use it on the example’s page.
+
+This was inspired by Rivian’s Halloween mode. When pondering the tone of voice, check Rivian’s 2026 Halloween mode update.
+
+One-shot this to very high quality: something people might be inspired to include on their own pages.
+
+The og image should demonstrate what it is, and also be enough of an advertisement for “Stand Chat Halloween mode”.</blockquote>
+
+          <p class="made-label">The follow-ups</p>
+          <blockquote class="made-prompt">The basic idea is good. Visually this seems pre-school themed, which might be a bad fit for some websites. Could we provide five versions named after the movie rating system, and a slider on the page for switching between them?
+
+Can the decorations recognize page elements and interact with them, or be placed using them?
+
+The G to NC-17 progression isn’t working well. Compare it with what Codex generated.
+
+The functionality is good, but the graphics go from bad (G) to horrific in the wrong way (NC-17). Generated SVG doesn’t cut it for horror. You can use an image generation model with Codex CLI. My intuition: generate the characters with it, slice them into parts, and animate them as you do now, but with pixmaps.
+
+The cat animation needs more work. Maybe cats need more joints. Put effort into it: the cat could be the heart of the whole experience, not just walking but jumping to page elements in a cat-like manner.
+
+The crow animation isn’t convincing either: the wings need more joints. Fix the bats too.
+
+Make the onboarding simpler: a first step you can paste into any page without installing anything, with the demo site ID and the script served from this site. End with a reminder that it’s free to modify, and an example AI prompt.</blockquote>
+          <p class="made-note">A few smaller notes followed, on the hero’s copy, a working snippet in its box, sound on by default, and a rating slider in the snippet builder.</p>
+
+          <p class="made-label">If you try this yourself</p>
+          <ul>
+            <li>Point the agent at a voice you like, here Rivian’s Halloween update, and let it research before it writes a line of copy.</li>
+            <li>When your idea decorates the page rather than replacing the chat, ask for a drop-in script on Stand’s <a href="https://stand.chat/features/javascript-api">JavaScript API</a>. For a chat that looks completely different, start from the <a href="https://stand.chat/guide/custom-chat-ui">custom chat UI guide</a>.</li>
+            <li>Start on the <code>demo</code> Site ID, so the agent can open real chats while it builds, and ask it to test the replies. Here, the private prompt went through three rewrites before the Stand-in opened with “I’m just here for the boos, not the business hours.”</li>
+            <li>Ask it to check its own work in a browser. Filmstrips caught a pumpkin and a cat fighting over the same corner, and a dimming effect that looked like dirt on light pages.</li>
+            <li>For animated characters, let an image model draw and the agent rig. Ask for each character whole, in a pose that’s easy to cut (wings spread, legs apart, the lantern hanging free), then for the same character as a sheet of puppet parts.</li>
+          </ul>
+        </div>
+      </details>
+
+      <ul class="sx-links">
+        <li><a href="https://stand.chat/features/javascript-api">JavaScript API ↗</a></li>
+        <li><a href="https://stand.chat/features/private-page-context">Private page context ↗</a></li>
+        <li><a href="https://github.com/standchat/examples/tree/main/halloween-mode/">Source on GitHub ↗</a></li>
+      </ul>
+    </div>
+  </section>
+</body>
+</html>
