@@ -1,0 +1,144 @@
+STAND CHAT HALLOWEEN MODE
+
+The example page's Copy installation code button is the simplest installation:
+paste that code before </body>. No download or separate Stand snippet is needed.
+
+If you downloaded this package to host the files yourself:
+1. Upload this folder, keeping halloween.js beside assets/.
+2. Paste the following before </body>, adjusting src to your uploaded file:
+
+   <script defer
+     src="/halloween/halloween.js"
+     data-stand-id="demo"
+     data-rating="pg"
+     data-season="always">
+   </script>
+
+Connect your own chat: in Stand > Sites > your site > Installation snippet,
+copy the data-stand-id value and replace demo above. Open Sites at:
+https://app.stand.chat/sites
+
+It works immediately with demo chat. An existing Stand installation is reused.
+While Halloween is active, its characters replace the initial chat launcher.
+Opening a conversation restores normal conversation controls. Outside the
+season, a newly loaded page keeps the normal launcher.
+The script loads Stand automatically when data-stand-id is present and no Stand
+installation exists; assets load from assets/runtime/{rating}/ beside the script.
+Keep all twenty-five WebP files in place. No build step or package install is needed.
+
+This snippet starts immediately. To schedule it, use data-season="10-01/11-01"
+or another inclusive annual MM-DD/MM-DD range in each visitor's local time.
+The runtime defaults to October 1 through November 1 if data-season is omitted.
+
+FIVE STYLES
+
+  g      Little boos: reassuring soft plush and felt
+  pg     A little mischief: handmade stop-motion characters
+  pg-13  After dark: eerie gauze and realistic creature textures
+  r      Gothic hours: skeletal horror-film practical effects
+  nc-17  Full haunt: monstrous theatrical haunted-house creatures
+
+These are movie-inspired visual intensity labels, not official age ratings.
+All styles are gore-free. No licensed movie characters are included.
+
+CONFIGURATION
+
+Use the example's live configurator to create a snippet, or add attributes:
+
+  data-stand-id="demo"            Auto-load Stand; replace demo with your site ID
+  data-cast="ghost,pumpkin,bat,spider,hand"  Select the visiting characters
+  data-activity="calm"             calm, lively (default), or haunted
+  data-placement="auto"            auto (default), marked, or edges
+  data-size="1"                    Character scale, 0.75 to 1.35
+  data-season="10-01/11-01"         Inclusive annual range, or always
+  data-greeting="Your own welcome" Override invitation and chat greeting
+  data-chat-greeting="Hello!"       Separate chat greeting if desired
+  data-idle-delay="15000"           Quiet time before ghost, milliseconds
+  data-auto-start="false"           Start it yourself through the API
+  data-idle-once="false"            Permit repeated idle invitations
+  data-asset-base="./assets/runtime/" Relative to the script's URL
+
+Leave greeting unset or empty to use the chosen character's own line.
+The default idle delay is 12000 milliseconds; the default cast includes all
+five characters. Removing the ghost also disables its automatic invitation.
+
+For JavaScript configuration, define window.StandHalloweenConfig before the
+script loads. Use camelCase keys such as idleDelay and assetBase. Attributes
+on the script override those settings. preview is for demos only; leave it
+false in a production installation so the seasonal schedule is respected.
+
+PLACEMENT
+
+The mode can find suitable page features automatically. You can also mark them:
+
+  <h2 data-halloween="hang">The October edit</h2>
+  <article data-halloween="perch peek">...</article>
+  <div data-halloween="ground">A floor for a reaching hand</div>
+  <form data-halloween="none">...</form>
+
+Use data-placement="marked" to consider only marked features before falling
+back to an edge. Use data-placement="edges" to keep visitors at viewport edges.
+The none marker excludes an element and its descendants. Visitors avoid page
+controls. perch and peek use an element's top edge; hang uses its lower edge.
+ground marks a top edge where a hand can emerge.
+
+JAVASCRIPT API
+
+After the script loads:
+
+  StandHalloween.configure({ rating: 'pg-13', activity: 'calm' });
+  StandHalloween.summon('ghost'); // Invite one character; static if paused
+  StandHalloween.summon('pumpkin', { anchor: document.querySelector('.preview') });
+  StandHalloween.parade();        // Resume and briefly invite the selected cast
+  StandHalloween.pause();         // Freeze visitors and stop arrivals
+  StandHalloween.stop();          // Remove visitors and stop arrivals
+  StandHalloween.start();         // Resume
+  StandHalloween.state;           // Read state, including seasonActive
+  StandHalloween.destroy();       // Remove everything for SPA cleanup
+
+An optional anchor element places a manual invitation near that element. Add
+data-halloween-preview to the element to use it as a dedicated preview stage.
+The character and greeting appear together once the image has loaded. A new
+manual invitation replaces the previous manual preview. summon returns a Promise
+that resolves true after the entrance, or false if the visit cannot appear.
+
+Summon preserves a paused state; start resumes that visitor's motion. Parade
+resumes the mode. Both respect the seasonal schedule. Destroy the instance
+when unmounting an SPA page, then load the script again to initialize it.
+Duplicate script loads are otherwise harmless.
+
+VISITOR EXPERIENCE
+
+Bats fly in flocks, pumpkins rest on surfaces, ghosts drift, spiders descend
+on silk, and skeletal hands rise from the bottom edge. A flock counts as one
+encounter.
+
+The mode never opens chat automatically. Tapping a character opens your existing
+Stand Chat with its greeting. Stand must be available; otherwise a retry notice
+appears. The mode pauses after a successful chat handoff.
+
+Hover and keyboard focus freeze a character. Escape dismisses visitors. The
+floating control pauses and resumes the mode. Text-field focus hides and pauses
+visitors; hidden tabs pause work. Reduced-motion users see static visitors.
+One optional sessionStorage flag limits automatic idle invitations.
+
+The runtime adds no separate tracking, cookies, audio, flashing, or jump scares.
+The normal Stand chat handoff identifies the selected rating and character
+through an activation ID. The mode uses Shadow DOM and an injected stylesheet. Sites with strict Content Security
+Policies need to permit the script, image assets, and runtime stylesheet.
+
+ASSETS AND LICENSE
+
+All twenty-five characters were made with the image-generation model. This package
+uses transparent 384-pixel WebP files. Full-size artwork and prompts are in the
+source repository; they are not needed for installation.
+
+This package and original artwork are public domain under the included
+Unlicense. Stand Chat's name and branding are not covered. A configured Stand
+Chat site is required; this package does not change your Stand Chat plan.
+
+Demo, configurator, and full instructions (after deployment):
+https://examples.stand.chat/halloween/
+
+Independent seasonal experiment inspired by Rivian's 2026 Halloween update.
+No affiliation with Rivian and no licensed movie characters.

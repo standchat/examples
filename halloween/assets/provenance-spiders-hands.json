@@ -1,0 +1,258 @@
+{
+  "generatedOn": "2026-10-09",
+  "tool": "Built-in image_gen.imagegen",
+  "transparency": true,
+  "notes": "Ten separately generated original sprites. Every output was visually reviewed. PNG originals are retained intact. Delivery variants only resize and encode; no procedural edits to character artwork.",
+  "assets": [
+    {
+      "rating": "g",
+      "kind": "spider",
+      "prompt": "Use case: stylized-concept. Asset type: one premium Halloween website character sprite, isolated with genuine transparent background. Square canvas, entire silhouette within image with a small clear transparent margin on all sides. A single original character, no text, no logo, no watermark, no background scenery, no platform, no cast shadow outside the character. Rich tactile material detail, beautifully lit studio creature photography, clear silhouette readable at 100 pixels. A very friendly preschool Halloween spider made entirely of soft lavender felt and plush wool. Round body, tiny warm brown button eyes, tiny stitched smile. Eight short softly curved plush legs spread clearly around its body. Threequarter overhead/front view, body upright and face looking toward viewer. Sweet handmade toy, tactile seams, absolutely no sharp points, no fangs, no threat. No silk thread.",
+      "generationFile": "exec-87cc3066-75c4-4248-931a-e941dbb8418f.png",
+      "original": "g/spider.png",
+      "fullsize": "g/spider.webp",
+      "runtime": "runtime/g/spider.webp",
+      "sourceDimensions": [
+        1254,
+        1254
+      ],
+      "runtimeBytes": 27202,
+      "runtimeAlphaBounds": {
+        "left": 14,
+        "top": 46,
+        "right": 372,
+        "bottom": 326
+      },
+      "hasAlpha": true,
+      "alphaRange": [
+        0,
+        255
+      ]
+    },
+    {
+      "rating": "g",
+      "kind": "hand",
+      "prompt": "Use case: stylized-concept. Asset type: one premium Halloween website character sprite, isolated with genuine transparent background. Square canvas, entire silhouette within image with a small clear transparent margin on all sides. A single original character, no text, no logo, no watermark, no background scenery, no platform, no cast shadow outside the character. Rich tactile material detail, beautifully lit studio creature photography, clear silhouette readable at 100 pixels. A friendly soft plush skeleton hand puppet, standing upright with five rounded fingers open in a welcoming wave. Warm ivory stuffed felt bones carefully stitched over a muted lavender mitten and short cuff. Straight little forearm extends down toward bottom of composition. Palm toward camera. Preschool craft toy, tactile wool fibres and seams, soft round proportions, absolutely no real bone, no claws, no sharp edges, no gore. Full hand and short wrist visible. No body or second hand.",
+      "generationFile": "exec-5de15742-2b0c-40d3-a475-26d9fb145ba8.png",
+      "original": "g/hand.png",
+      "fullsize": "g/hand.webp",
+      "runtime": "runtime/g/hand.webp",
+      "sourceDimensions": [
+        1254,
+        1254
+      ],
+      "runtimeBytes": 28240,
+      "runtimeAlphaBounds": {
+        "left": 59,
+        "top": 10,
+        "right": 331,
+        "bottom": 373
+      },
+      "hasAlpha": true,
+      "alphaRange": [
+        0,
+        255
+      ]
+    },
+    {
+      "rating": "pg",
+      "kind": "spider",
+      "prompt": "Use case: stylized-concept. Asset type: one premium Halloween website character sprite, isolated with genuine transparent background. Square canvas, entire silhouette within image with a small clear transparent margin on all sides. A single original character, no text, no logo, no watermark, no background scenery, no platform, no cast shadow outside the character. Rich tactile material detail, beautifully lit studio creature photography, clear silhouette readable at 100 pixels. A mischievous handmade stop-motion Halloween spider miniature, warm aubergine fuzzy velvet body with eight slender gently bent wire-and-felt legs spread around it, glossy little amber eyes with playful expression. Physical miniature with tactile fibres, tiny hand-sewn details, subtle purple rim light, sweet Halloween mischief rather than menace. Threequarter overhead/front view, face toward viewer, entire legs visible. No silk thread.",
+      "generationFile": "exec-a6923de3-0e0d-414f-9a41-becc945bb1dd.png",
+      "original": "pg/spider.png",
+      "fullsize": "pg/spider.webp",
+      "runtime": "runtime/pg/spider.webp",
+      "sourceDimensions": [
+        1254,
+        1254
+      ],
+      "runtimeBytes": 43814,
+      "runtimeAlphaBounds": {
+        "left": 15,
+        "top": 35,
+        "right": 372,
+        "bottom": 358
+      },
+      "hasAlpha": true,
+      "alphaRange": [
+        0,
+        255
+      ]
+    },
+    {
+      "rating": "pg",
+      "kind": "hand",
+      "prompt": "Use case: stylized-concept. Asset type: one premium Halloween website character sprite, isolated with genuine transparent background. Square canvas, entire silhouette within image with a small clear transparent margin on all sides. A single original character, no text, no logo, no watermark, no background scenery, no platform, no cast shadow outside the character. Rich tactile material detail, beautifully lit studio creature photography, clear silhouette readable at 100 pixels. A single playful handmade stop-motion skeleton hand miniature reaching vertically upward from a short forearm, five fingers splayed in a crooked friendly wave. Warm ivory painted wooden bone segments, visible carved imperfections and tiny joint details, theatrical miniature craft texture, softly rounded fingertips, palm facing viewer. Slight purple rim light. Complete hand and short forearm isolated, wrist extends to bottom, no sleeve, no other body part, no ground, no flesh, no gore.",
+      "generationFile": "exec-738c4642-d0d7-46b8-8c66-4703a4c97d4d.png",
+      "original": "pg/hand.png",
+      "fullsize": "pg/hand.webp",
+      "runtime": "runtime/pg/hand.webp",
+      "sourceDimensions": [
+        1254,
+        1254
+      ],
+      "runtimeBytes": 30962,
+      "runtimeAlphaBounds": {
+        "left": 47,
+        "top": 6,
+        "right": 337,
+        "bottom": 379
+      },
+      "hasAlpha": true,
+      "alphaRange": [
+        0,
+        255
+      ]
+    },
+    {
+      "rating": "pg-13",
+      "kind": "spider",
+      "prompt": "Use case: stylized-concept. Asset type: one premium Halloween website character sprite, isolated with genuine transparent background. Square canvas, entire silhouette within image with a small clear transparent margin on all sides. A single original character, no text, no logo, no watermark, no background scenery, no platform, no cast shadow outside the character. Rich tactile material detail, beautifully lit studio creature photography, clear silhouette readable at 100 pixels. An eerie realistic Halloween tarantula prop, deep charcoal furry body with mossy brown highlights and faint cool teal rim light. Eight long articulated hairy legs fanned out into a strong hanging silhouette, small clustered glossy black eyes, natural subtle fangs. Front/overhead threequarter view, face toward viewer and body upright. Elaborate practical-effects prop photographed with tactile realism; uncanny and atmospheric but no gore, no dripping venom. Entire legs and body visible. No silk thread.",
+      "generationFile": "exec-905d6f44-b163-4871-bc74-b82e5c31ae48.png",
+      "original": "pg-13/spider.png",
+      "fullsize": "pg-13/spider.webp",
+      "runtime": "runtime/pg-13/spider.webp",
+      "sourceDimensions": [
+        1254,
+        1254
+      ],
+      "runtimeBytes": 52296,
+      "runtimeAlphaBounds": {
+        "left": 7,
+        "top": 10,
+        "right": 380,
+        "bottom": 376
+      },
+      "hasAlpha": true,
+      "alphaRange": [
+        0,
+        255
+      ]
+    },
+    {
+      "rating": "pg-13",
+      "kind": "hand",
+      "prompt": "Use case: stylized-concept. Asset type: one premium Halloween website character sprite, isolated with genuine transparent background. Square canvas, entire silhouette within image with a small clear transparent margin on all sides. A single original character, no text, no logo, no watermark, no background scenery, no platform, no cast shadow outside the character. Rich tactile material detail, beautifully lit studio creature photography, clear silhouette readable at 100 pixels. A single eerie antique skeletal hand reaching upward, five clearly separated bone fingers with a gentle clawing curl, palm turned threequarter toward viewer. A weathered warm ivory bone forearm extends downward, fine cracked bone texture, subtle mossy grey patina and cool teal rim light. Photoreal film practical-effects prop, atmospheric supernatural realism, not an illustration. All fingertips and the complete short forearm visible, no second hand, no flesh, no blood, no ground or dirt base, no sleeve.",
+      "generationFile": "exec-1a40ff4f-a663-4af3-a24d-655c3503ea44.png",
+      "original": "pg-13/hand.png",
+      "fullsize": "pg-13/hand.webp",
+      "runtime": "runtime/pg-13/hand.webp",
+      "sourceDimensions": [
+        1254,
+        1254
+      ],
+      "runtimeBytes": 25570,
+      "runtimeAlphaBounds": {
+        "left": 93,
+        "top": 4,
+        "right": 293,
+        "bottom": 379
+      },
+      "hasAlpha": true,
+      "alphaRange": [
+        0,
+        255
+      ]
+    },
+    {
+      "rating": "r",
+      "kind": "spider",
+      "prompt": "Use case: stylized-concept. Asset type: one premium Halloween website character sprite, isolated with genuine transparent background. Square canvas, entire silhouette within image with a small clear transparent margin on all sides. A single original character, no text, no logo, no watermark, no background scenery, no platform, no cast shadow outside the character. Rich tactile material detail, beautifully lit studio creature photography, clear silhouette readable at 100 pixels. A menacing horror-film tarantula creature practical-effects prop. Large dark mottled brown and charcoal hairy abdomen, eight long muscular segmented legs sharply articulated and spread into a legible suspended pose, tiny ruby-black reflective eye cluster, two visible ivory-tipped natural fangs. Threequarter overhead/front view looking toward viewer. Distressed tactile chitin and wiry hairs, bone-pale highlights, warm ember rim light. Original realistic animatronic creature, not a cartoon. Whole silhouette visible with margin. No web, no silk thread, no gore, no blood.",
+      "generationFile": "exec-8ae5428a-5e20-4233-bdda-72df8af73d30.png",
+      "original": "r/spider.png",
+      "fullsize": "r/spider.webp",
+      "runtime": "runtime/r/spider.webp",
+      "sourceDimensions": [
+        1254,
+        1254
+      ],
+      "runtimeBytes": 62430,
+      "runtimeAlphaBounds": {
+        "left": 13,
+        "top": 18,
+        "right": 373,
+        "bottom": 373
+      },
+      "hasAlpha": true,
+      "alphaRange": [
+        0,
+        255
+      ]
+    },
+    {
+      "rating": "r",
+      "kind": "hand",
+      "prompt": "Use case: stylized-concept. Asset type: one premium Halloween website character sprite, isolated with genuine transparent background. Square canvas, entire silhouette within image with a small clear transparent margin on all sides. A single original character, no text, no logo, no watermark, no background scenery, no platform, no cast shadow outside the character. Rich tactile material detail, beautifully lit studio creature photography, clear silhouette readable at 100 pixels. A single horror-film skeletal hand clawing upward, five long anatomically articulated bony fingers dramatically curled, weathered ochre ivory bones with deep dark fissures, old burial patina, a few dry fibres along the wrist. Short forearm extends vertically downward, palm threequarter toward viewer, fingers separated and readable. Photoreal practical-effects haunted-house prop, hard dramatic side light and faint ember rim light, frightening and tactile. Entire five fingertips and forearm inside frame. No flesh, no blood, no gore, no ground, no base, no other body.",
+      "generationFile": "exec-6ec1b565-2f22-49bc-a74f-0e606e31735f.png",
+      "original": "r/hand.png",
+      "fullsize": "r/hand.webp",
+      "runtime": "runtime/r/hand.webp",
+      "sourceDimensions": [
+        1254,
+        1254
+      ],
+      "runtimeBytes": 29692,
+      "runtimeAlphaBounds": {
+        "left": 105,
+        "top": 9,
+        "right": 314,
+        "bottom": 376
+      },
+      "hasAlpha": true,
+      "alphaRange": [
+        0,
+        255
+      ]
+    },
+    {
+      "rating": "nc-17",
+      "kind": "spider",
+      "prompt": "Use case: stylized-concept. Asset type: one premium Halloween website character sprite, isolated with genuine transparent background. Square canvas, entire silhouette within image with a small clear transparent margin on all sides. A single original character, no text, no logo, no watermark, no background scenery, no platform, no cast shadow outside the character. Rich tactile material detail, beautifully lit studio creature photography, clear silhouette readable at 100 pixels. A monstrous theatrical haunted-house spider creature practical-effects animatronic. Massive ash-black bristled body, eight extraordinarily long angular gnarled legs spread wide, ridged charcoal chitin with aged bone coloured joint plates, a small cluster of ember-red eyes and hooked dry dark fangs. Front/overhead threequarter suspended pose, face toward viewer, sharply readable silhouette. Maximum horror prop intensity, elaborate sculptural anatomy, subtle warm orange rim light, visceral tangible craftsmanship. Full body and all legs inside canvas. Original design, no web, no silk thread, no blood, no gore, no victim.",
+      "generationFile": "exec-88933e52-58e8-41d9-8bdb-03467d8989c4.png",
+      "original": "nc-17/spider.png",
+      "fullsize": "nc-17/spider.webp",
+      "runtime": "runtime/nc-17/spider.webp",
+      "sourceDimensions": [
+        1254,
+        1254
+      ],
+      "runtimeBytes": 47346,
+      "runtimeAlphaBounds": {
+        "left": 12,
+        "top": 23,
+        "right": 377,
+        "bottom": 359
+      },
+      "hasAlpha": true,
+      "alphaRange": [
+        0,
+        255
+      ]
+    },
+    {
+      "rating": "nc-17",
+      "kind": "hand",
+      "prompt": "Use case: stylized-concept. Asset type: one premium Halloween website character sprite, isolated with genuine transparent background. Square canvas, entire silhouette within image with a small clear transparent margin on all sides. A single original character, no text, no logo, no watermark, no background scenery, no platform, no cast shadow outside the character. Rich tactile material detail, beautifully lit studio creature photography, clear silhouette readable at 100 pixels. A single monstrous reaper's skeletal hand breaking upward in a reaching pose, five very long gnarled bone fingers with hooked darkened bony tips, ash-black cracks through ancient distressed ivory bones, ragged charcoal shroud scraps wrapped loosely around a short forearm. Dramatic open claw silhouette, palm threequarter toward viewer, all fingers clearly separated and complete. Premium theatrical haunted-house practical-effects prop, haunting realistic texture, subtle ember-orange rim light. Forearm points straight down to bottom of frame, complete isolated silhouette with clear margin, no ground, no base, no other body parts, no flesh, no blood, no gore.",
+      "generationFile": "exec-94b29ca5-abe9-4862-b979-40381ac6341d.png",
+      "original": "nc-17/hand.png",
+      "fullsize": "nc-17/hand.webp",
+      "runtime": "runtime/nc-17/hand.webp",
+      "sourceDimensions": [
+        1254,
+        1254
+      ],
+      "runtimeBytes": 35578,
+      "runtimeAlphaBounds": {
+        "left": 81,
+        "top": 3,
+        "right": 334,
+        "bottom": 380
+      },
+      "hasAlpha": true,
+      "alphaRange": [
+        0,
+        255
+      ]
+    }
+  ]
+}

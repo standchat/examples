@@ -1,0 +1,61 @@
+{
+  "created": "2026-10-09",
+  "assets": [
+    {
+      "rating": "g",
+      "kind": "ghost",
+      "prompt": "Use case: stylized-concept. Asset type: one transparent PNG sprite for a preschool-friendly website Halloween mode. Generate ONE original friendly floating ghost, full body. A beautifully tactile small ivory plush-felt ghost, rounded marshmallow silhouette, softly wavy hem, two small waving mitten-like arms, gentle warm brown button eyes, a subtle welcoming stitched smile, faint peach cheeks. Exceptional handmade toy product photography / high-end stop-motion puppet realism: tiny felt fibres, stuffed volume, rounded sculptural folds. Completely reassuring and innocent, charming without cheap clip art. Front three-quarter view, full isolated character centered filling 82 percent of a square, generous clear margin on every side. Soft studio light from upper left, warm restrained cream palette. Truly transparent alpha background; NO floor, backdrop, drop shadow, glow aura, text, frame, logo, watermark, other objects, crop, flat vector rendering, thick cartoon outline, fangs, threatening face, skull or human anatomy.",
+      "source": "exec-da863b4a-888f-44e2-8d40-b4a07f59a32f.png",
+      "path": "halloween/assets/g/ghost.png",
+      "tool": "builtin image_gen",
+      "transparent_background": true
+    },
+    {
+      "rating": "g",
+      "kind": "pumpkin",
+      "prompt": "Use case: stylized-concept. Asset type: one transparent PNG sprite for a preschool-friendly website Halloween mode. Generate ONE original gentle Halloween pumpkin character, full object. A rounded squishy apricot-orange plush/felt pumpkin with deep softly stuffed ribbing, tiny curled sage-green felt stem, gentle curved embroidered warm brown eyes and an absolutely friendly curved embroidered closed smile. No carved hole or teeth. Exceptional handmade toy product photography / high-end stop-motion puppet realism: fine felt fibres and visible subtle seam details, stuffed soft volume. Completely reassuring and innocent, sweet but sophisticated craft. Front three-quarter view, full isolated object centered filling 82 percent of a square with clear margins. Soft studio light from upper left. Truly transparent alpha background; NO floor, backdrop, drop shadow, glow aura, text, logo, watermark, other objects, crop, flat vector drawing, thick cartoon outlines, scary expression, sharp edges or carved teeth.",
+      "source": "exec-a9d7acf8-75f1-4d2d-ac2c-6fba18951038.png",
+      "path": "halloween/assets/g/pumpkin.png",
+      "tool": "builtin image_gen",
+      "transparent_background": true
+    },
+    {
+      "rating": "g",
+      "kind": "bat",
+      "prompt": "Use case: stylized-concept. Asset type: one transparent PNG sprite for a preschool-friendly website Halloween mode. Generate ONE original little plush bat in flight, full body and both wings. A fuzzy lavender felt bat, rounded cuddly stuffed body, small warm brown bead eyes, a gentle stitched closed smile, soft velvety spread scalloped wings with puffy rounded tips, small softly rounded ears. No fangs, no claws. Exceptional handmade toy product photography / high-end stop-motion puppet realism: fine wool felt fibres, gently raised wing seams, realistic stuffed volume. Completely reassuring and friendly. Frontal view with wings spread, full isolated character centered filling 85 percent of square width, no part cropped and clear margin all sides. Soft studio light from upper left, lavender and dusty violet palette. Truly transparent alpha background; NO floor, backdrop, drop shadow, glow aura, text, frame, logo, watermark, accessories, extra objects, vector illustration or thick cartoon outline.",
+      "source": "exec-ef6c03ff-b447-46ce-9916-a62fd959ee91.png",
+      "path": "halloween/assets/g/bat.png",
+      "tool": "builtin image_gen",
+      "transparent_background": true
+    },
+    {
+      "rating": "pg",
+      "kind": "ghost",
+      "prompt": "Use case: stylized-concept. Asset type: single isolated transparent PNG sprite for a PG family-adventure Halloween website theme. Generate ONE original ghost practical stop-motion puppet. A floating loosely draped ivory muslin sheet with visible fine linen weave, slender tapering silhouette, long loose wavy trailing fabric folds, two asymmetrical dark oval eye cutouts, a tiny mischievous curved mouth. One side of the sheet gestures lightly upward as if inviting conversation. This is a tangible handmade miniature theatrical prop with cinematic studio photography, softly aged seams and convincing cloth volume; NOT a plush baby toy, no cheeks, no button eyes. Friendly with a little mysterious mischief, more grown-up than preschool. Full character frontal three-quarter view centered occupying 83 percent of square height, clear margin on every side, nothing cropped. Soft warm key from upper-left with very slight cool violet rim. Truly transparent alpha background. No floor, shadow below, backdrop, environment, floating aura, props, extra characters, text, border, logo, watermark, flat illustration, vector or thick outlines, frightening teeth or gore.",
+      "source": "exec-eabe02d2-7073-4009-86da-2f41fffa2a7b.png",
+      "path": "halloween/assets/pg/ghost.png",
+      "tool": "builtin image_gen",
+      "transparent_background": true
+    },
+    {
+      "rating": "pg",
+      "kind": "pumpkin",
+      "prompt": "Use case: stylized-concept. Asset type: single isolated transparent PNG sprite for a PG family-adventure Halloween website theme. Generate ONE original carved jack-o-lantern as a practical stop-motion miniature prop. A real tactile richly orange pumpkin with asymmetrical ribbing, gently mottled peel and fine rough cut edges, corky crooked green-brown stem. Two crooked triangular carved eyes, one playfully raised, and a wide wonky carved smile with two chunky blunt teeth. Warm amber lantern light from inside cutouts. Charming mischievous family-adventure personality with subtle mystery, NOT a preschool plush toy, not vicious. High-end cinematic product photography, tangible hand-crafted pumpkin miniature. Full object centered filling 83 percent of square with clear margins, slight three-quarter view. Soft warm key light from upper left with slight cool violet rim, internal warm glow stays within object. Truly transparent alpha background; no floor, cast shadow, background, halo, props, text, logo, watermark, extra objects, cropping, flat illustration, vector shapes, thick outlines, blood, sharp needle teeth or gore.",
+      "source": "exec-1b9ea339-0b46-4ef3-9a05-0b4ae3735fb3.png",
+      "path": "halloween/assets/pg/pumpkin.png",
+      "tool": "builtin image_gen",
+      "transparent_background": true
+    },
+    {
+      "rating": "pg",
+      "kind": "bat",
+      "prompt": "Use case: stylized-concept. Asset type: single isolated transparent PNG sprite for a PG family-adventure Halloween website theme. Generate ONE original bat as a handmade stop-motion practical puppet flying with wings spread. Slender small purple-black velvety bat body, long pointed expressive ears, small amber glass eyes, two tiny ivory fangs in an otherwise amused mischievous smile. Elegant realistic scalloped wings made from softly worn plum leather stretched over slender articulated wing bones, convincing tactile fine fur and wing material. Family Halloween adventure charm, confidently a little spooky, NOT baby proportions or plush toy, no cartoon big eyes. High-end cinematic miniature product photography. Frontal three-quarter view wings fully extended, entire subject centered filling 85 percent square width, clear margin on every side, no clipping. Soft warm key light from upper-left with subtle cool violet rim. Truly transparent alpha background; no floor, cast shadow, backdrop, glow aura, environment, props, text, logos, watermark, extra objects, flat vector illustration, thick outlines, blood or gore.",
+      "source": "exec-70c2ee2a-a10e-418f-a497-3fb26906048f.png",
+      "path": "halloween/assets/pg/bat.png",
+      "tool": "builtin image_gen",
+      "transparent_background": true,
+      "firstGenerationSource": "exec-0d25a90e-4ccf-4dd1-834a-c2b2a419ddec.png",
+      "editPrompt": "Edit this original PG Halloween bat sprite, preserving its exact design, realistic purple-black velvet fur and plum leather wings, amber eyes, tiny fangs, stop-motion puppet look and warm upper-left lighting. Correct framing only: zoom out enough that BOTH entire wing tips are fully visible, centered, with at least 12 percent completely empty transparent margin along LEFT and RIGHT edges and 10 percent margin top/bottom. The bat should occupy only 75 percent of square width. Do not crop any tip or claw. Preserve truly transparent alpha background, no background color or shadow or other objects. Do not otherwise alter the bat."
+    }
+  ]
+}
