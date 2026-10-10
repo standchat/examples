@@ -666,7 +666,7 @@
 .ambience > div { opacity: 0; transition: opacity 1.8s ease; }
 .vignette { background: radial-gradient(130% 100% at 50% 42%, rgba(10, 14, 8, 0) 52%, rgba(10, 14, 8, .4) 100%); }
 .stage[data-rating="nc-17"] .vignette { background: radial-gradient(130% 100% at 50% 42%, rgba(30, 0, 4, 0) 48%, rgba(30, 0, 4, .5) 100%); }
-.ambience > .mist { top: auto; height: 36vh; background:
+.ambience > .mist { top: auto; left: -6%; right: -6%; height: 36vh; background:
   radial-gradient(48% 70% at 18% 100%, rgba(232, 228, 246, .34), transparent 72%),
   radial-gradient(42% 60% at 52% 100%, rgba(232, 228, 246, .26), transparent 72%),
   radial-gradient(46% 70% at 86% 100%, rgba(232, 228, 246, .32), transparent 72%); animation: hw-mist 16s ease-in-out infinite alternate; }
@@ -687,9 +687,11 @@
 .part { position: absolute; display: block; }
 .actor.web { margin: 0 !important; transform-origin: 0 0; }
 .actor.web > .rig { filter: drop-shadow(0 0 1px rgba(0, 0, 0, .45)); }
-.cat > .rig-catSit { opacity: 0; transition: opacity .18s; }
-.cat.sitting > .rig-cat { opacity: 0; transition: opacity .18s; }
-.cat.sitting > .rig-catSit { opacity: 1; }
+/* Sitting is a drawing of its own: a cut to it (a fade would show two cats), and a little plop. */
+.cat > .rig-catSit { opacity: 0; transform-origin: 50% 100%; }
+.cat.sitting > .rig-cat { opacity: 0; }
+.cat.sitting > .rig-catSit { opacity: 1; animation: hw-plop .2s cubic-bezier(.3, 1.5, .6, 1); }
+@keyframes hw-plop { from { transform: scale(1.06, .9); } }
 .bat > .rig-batHang, .bat.hanging > .rig-bat { display: none; }
 .bat.hanging > .rig-batHang { display: block; }
 .silk { position: absolute; left: calc(50% - 1px); width: 2px; height: 0; pointer-events: none; background: linear-gradient(90deg, rgba(255, 255, 255, .8) 50%, rgba(70, 54, 104, .55) 50%); }
@@ -2002,7 +2004,7 @@
     step(dt) {
       const B = this.body;
       const st = this.st;
-      const g = this.ground();
+      let g = this.ground();
       if (!g && this.phase !== 'leap') return false;
       if (this.surface.perch && this.lost(this.surface.perch.r) && !this.leaving && this.phase !== 'leap') this.leave(true);
       let pose = null;
@@ -2083,6 +2085,7 @@
             this.surface = j.to.surface;
             this.at = j.to.surface.floor ? j.to.x : j.to.at;
             this.perch = this.surface.perch ?? null;
+            g = b; // Placed on the new surface from this frame on, not the one it left.
             this.trips++;
             sound.play('boing');
             this.go('land');
