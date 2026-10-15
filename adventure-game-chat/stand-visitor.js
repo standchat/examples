@@ -54,13 +54,14 @@ export class StandVisitor {
   #uncertain = false;
   #typingSent = 0;
   #turn = { id: '', seq: -1 };
-  #activationId = null;
+  #activation = null;
+  #invitationOpen = false;
   #typingTimer;
   #resent = ''; // The clientMessageId already sent again on its own, or refused with 409
   #key;
 
-  constructor({ siteId, page = () => location.href, prompt = '', greeting = '', storage = safeStorage(), apiBase = API, wsBase = WS }) {
-    Object.assign(this, { siteId, page, prompt, greeting, storage, apiBase, wsBase });
+  constructor({ siteId, page = () => location.href, prompt = '', greeting = '', analyticsId = 'adventure-game-chat', storage = safeStorage(), apiBase = API, wsBase = WS }) {
+    Object.assign(this, { siteId, page, prompt, greeting, analyticsId, storage, apiBase, wsBase });
     this.#key = `stand-visitor:v1:${apiBase}:${siteId}`;
   }
 
@@ -133,9 +134,11 @@ export class StandVisitor {
           notice: text(offer.sensitiveNoticeText),
           poweredByUrl: text(offer.poweredByUrl),
         });
+        this.#completeActivation(available ? offer : {});
       }
     } catch (error) {
       if (read.signal.aborted) return;
+      this.#completeActivation();
       this.#fail(error, 'Could not reach the chat. Check your connection and try again.');
       if (this.#session) this.#reconnectLater();
       else if (this.#state.phase !== 'ended') this.#update({ phase: 'unavailable' });
@@ -149,6 +152,7 @@ export class StandVisitor {
     // One message at a time: an unconfirmed one goes first, as itself.
     const waiting = this.#state.pending;
     if (waiting?.clientMessageId && waiting.body !== body) return false;
+    if (!this.#session) this.activate('submit', true);
     this.#update({ busy: true, error: null });
     let recover = false;
     try {
@@ -169,7 +173,7 @@ export class StandVisitor {
             ...(this.greeting ? { openingMessage: this.greeting } : {}),
             ...(this.prompt ? { prompt: this.prompt.slice(0, 2000) } : {}),
             showId: offer.showId,
-            ...(this.#activationId ? { activationId: this.#activationId, activationSource: 'unknown' } : {}),
+            ...(this.#activation ? { activationId: this.#activation.id, activationSource: 'custom_ui', activationAnalyticsId: this.#activation.analyticsId } : {}),
             visitorLanguage: navigator.language,
             visitorLanguages: navigator.languages,
             visitorTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -179,7 +183,6 @@ export class StandVisitor {
         if (!text(data.sessionId) || !text(data.visitorToken)) throw new Error('Incomplete session');
         this.#session = { sessionId: data.sessionId, visitorToken: data.visitorToken };
         this.#uncertain = false;
-        this.#activationId = null; // Used once, for this conversation.
         this.#update({ pending: null });
         this.#apply(data);
         if (this.#session) this.#connect();
@@ -217,6 +220,7 @@ export class StandVisitor {
 
   // Ends the conversation for good. Closing the UI does not call this.
   end = async () => {
+    this.closeInvitation();
     if (!this.#session || this.#state.busy) return;
     this.#update({ busy: true, error: null });
     try {
@@ -233,6 +237,8 @@ export class StandVisitor {
   // text that didn't get through comes back as a draft to review and resend.
   newChat = async () => {
     if (this.#state.busy || this.#session) return;
+    this.closeInvitation();
+    this.#activation = null;
     this.#uncertain = false;
     this.#retries = 0;
     this.#update({ ...INITIAL_STATE, draft: this.#state.pending?.body || this.#state.draft });
@@ -270,21 +276,52 @@ export class StandVisitor {
 
   // Optional telemetry, fire and forget: the visitor opened the chat. Stand
   // ties this activation to the conversation it starts.
-  activate(interaction) {
-    if (this.#session || this.#state.phase !== 'available') return;
-    const offer = this.#offer;
-    this.#activationId = crypto.randomUUID();
-    this.#beacon('/v1/events/activate', {
-      siteId: this.siteId,
-      activationId: this.#activationId,
-      showId: offer.showId ?? null,
-      page: this.page(),
-      ...(text(offer.standinProfileId) ? { standinProfileId: offer.standinProfileId } : { repId: offer.repId ?? null }),
-      responderType: offer.responderType ?? null,
-      sourceType: 'unknown',
-      interaction,
-      initialMessagePresent: false,
-    });
+  activate(interaction = 'click', initialMessagePresent = false) {
+    if (this.#session || this.#uncertain || this.#state.busy || this.#state.phase === 'ended') return;
+    if (this.#invitationOpen && this.#activation) return;
+    this.#invitationOpen = true;
+    this.#activation = {
+      id: crypto.randomUUID(), page: this.page(), analyticsId: this.analyticsId ?? null,
+      interaction, initialMessagePresent, payload: null,
+    };
+    if (this.#state.phase === 'available') this.#completeActivation(this.#offer);
+    else if (this.#state.phase === 'unavailable') this.#completeActivation();
+  }
+
+  closeInvitation() {
+    this.#completeActivation();
+    this.#invitationOpen = false;
+  }
+
+  #completeActivation(offer = {}) {
+    const activation = this.#activation;
+    if (!activation || activation.payload) return;
+    // Capture once: a late discovery, navigation, or reopen cannot alter a retry.
+    activation.payload = {
+      siteId: this.siteId, activationId: activation.id, page: activation.page,
+      showId: text(offer.showId) || null, repId: text(offer.repId) || null,
+      standinProfileId: text(offer.standinProfileId) || null,
+      responderType: text(offer.responderType) || null,
+      sourceType: 'custom_ui', analyticsId: activation.analyticsId,
+      interaction: activation.interaction, initialMessagePresent: activation.initialMessagePresent,
+    };
+    const body = JSON.stringify(activation.payload);
+    const send = async () => {
+      for (let attempt = 0; attempt < 2; attempt++) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 5000);
+        try {
+          const response = await fetch(this.apiBase + '/v1/events/activate', {
+            method: 'POST', credentials: 'omit', keepalive: true,
+            headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+            body, signal: controller.signal,
+          });
+          if (response.ok || (response.status >= 400 && response.status < 500 && response.status !== 429)) return;
+        } catch { /* Best effort; retry the same event after a lost response. */ }
+        finally { clearTimeout(timer); }
+      }
+    };
+    void send(); // Statistics never hold up opening, sending, or closing.
   }
 
   // Optional telemetry: the visitor clicked "Powered by Stand".
@@ -295,6 +332,7 @@ export class StandVisitor {
   }
 
   destroy() {
+    this.closeInvitation();
     this.#disconnect();
     this.#read?.abort();
     this.#listeners.clear();
@@ -398,6 +436,7 @@ export class StandVisitor {
   }
 
   #finish(error = null) {
+    this.closeInvitation();
     this.#disconnect();
     this.#read?.abort();
     this.#session = null;

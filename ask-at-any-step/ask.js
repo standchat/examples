@@ -443,6 +443,7 @@ export class Advisor {
   open() {
     const dialog = this.#dialog;
     if (dialog.open) return;
+    this.#client.activate({ analyticsId: 'ask-at-any-step', interaction: 'click' });
     this.#opener = document.activeElement;
     if (matchMedia(WIDE).matches) {
       dialog.show();
@@ -468,6 +469,7 @@ export class Advisor {
 
   #opener = null;
   #afterClose() {
+    this.#client.closeInvitation();
     for (const button of document.querySelectorAll('[data-advisor-open]')) button.setAttribute('aria-expanded', 'false');
     const opener = this.#opener;
     this.#opener = null;
@@ -567,7 +569,7 @@ export class Advisor {
   }
 
   async #newChat() {
-    await this.#client.newChat();
+    await this.#client.newChat({ analyticsId: 'ask-at-any-step', interaction: 'click' });
     this.#slots.get(this.#wizard.step)?.input.focus();
   }
 

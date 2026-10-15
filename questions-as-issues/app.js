@@ -86,6 +86,7 @@ const command = new CommandMenu();
 const shortcuts = new Shortcuts();
 const confirmDialog = new Confirm();
 const composer = new Composer({
+  close: () => client.closeInvitation(),
   submit: (fields) => fileIssue(fields),
   change: (fields) => {
     store.draft = fields.title.trim() || fields.description.trim() || fields.priority !== 'none' || fields.labels.length ? fields : null;
@@ -243,6 +244,7 @@ function adoptClientDraft() {
 // Filing issues and comments ---------------------------------------------------------
 
 function openComposer(fields = {}) {
+  client.activate({ analyticsId: 'questions-as-issues', interaction: 'click' });
   Menu.current?.close({ restore: false });
   const draft = store.draft;
   const hasDraft = Boolean(draft?.title?.trim() || draft?.description?.trim());
@@ -270,10 +272,10 @@ async function fileIssue(fields) {
   if (store.view !== 'mine') store.view = 'issues';
   store.label = null;
   save();
+  const sent = client.send(body, context);
   composer.close({ restore: false });
   page.settle();
   page.revealApp();
-  const sent = client.send(body, context);
   afterRender(() => tracker.focusIssue());
   if (await sent) return;
   // Nothing was filed: put the words back where they came from.
@@ -288,7 +290,7 @@ async function fileIssue(fields) {
 
 async function startNewConversation() {
   archiveLive();
-  await client.newChat();
+  await client.newChat({ analyticsId: 'questions-as-issues', interaction: 'click' });
   adoptClientDraft();
   if (store.draft && !composer.isOpen) openComposer();
 }

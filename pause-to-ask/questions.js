@@ -64,7 +64,8 @@ export function mountQuestions({ player, root, client }) {
 
   // The composer --------------------------------------------------------------
 
-  function openComposer(time = player.time) {
+  function openComposer(time = player.time, { activate = true } = {}) {
+    if (activate) client.activate({ analyticsId: 'pause-to-ask', interaction: 'click' });
     if (composer.hidden) lastFocus = document.activeElement;
     composerAt = Math.floor(time);
     const draft = parseQuestion(state.draft);
@@ -80,7 +81,8 @@ export function mountQuestions({ player, root, client }) {
     });
   }
 
-  function closeComposer({ restoreFocus = true } = {}) {
+  function closeComposer({ restoreFocus = true, preserveInvitation = false } = {}) {
+    if (!preserveInvitation) client.closeInvitation();
     if (composer.hidden) return;
     composer.hidden = true;
     composerAt = null;
@@ -134,7 +136,7 @@ export function mountQuestions({ player, root, client }) {
     input.value = '';
     client.setDraft('');
     open = String(time);
-    closeComposer();
+    closeComposer({ preserveInvitation: true });
     player.markTouched();
     const sent = client.send(body, first ? { prompt: buildPrompt(time), analyticsId: 'pause-to-ask' } : {});
     revealThread(String(time));
@@ -283,7 +285,7 @@ export function mountQuestions({ player, root, client }) {
     else if (action === 'end') client.end();
     else if (action === 'new') {
       open = null;
-      client.newChat().then(() => {
+      client.newChat({ analyticsId: 'pause-to-ask', interaction: 'click' }).then(() => {
         const draft = parseQuestion(client.getSnapshot().draft);
         if (draft) {
           player.pause({ user: true });
@@ -735,7 +737,7 @@ export function mountQuestions({ player, root, client }) {
       const draft = parseQuestion(next.draft);
       if (draft) {
         input.value = draft.text;
-        openComposer(draft.time);
+        openComposer(draft.time, { activate: false });
       }
     }
     render();
@@ -748,7 +750,7 @@ export function mountQuestions({ player, root, client }) {
   if (draft && saved.touched) {
     input.value = draft.text;
     player.seek(draft.time);
-    openComposer(draft.time);
+    openComposer(draft.time, { activate: false });
   }
 
   return { client, openComposer };

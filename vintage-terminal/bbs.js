@@ -555,6 +555,7 @@ export class Bbs {
     this.#intro = false;
     this.#dial();
     void this.#client.newChat();
+    this.#client.activate('keyboard');
   }
 
   #command(line) {

@@ -154,6 +154,7 @@ export class CowChat {
   show() {
     if (this.#shown) return;
     this.#shown = true;
+    this.#client.activate('click');
     this.#root.classList.add('pc-chat--shown');
     // Touch devices get the dialog, so the keyboard does not cover the cow straight away.
     const touch = window.matchMedia?.('(pointer: coarse)').matches;
@@ -162,6 +163,7 @@ export class CowChat {
   }
 
   hide() {
+    this.#client.closeInvitation();
     this.#shown = false;
     this.#root.classList.remove('pc-chat--shown');
   }
@@ -268,6 +270,7 @@ export class CowChat {
     newChat.addEventListener('click', () => {
       this.#keepAtBottom = true;
       void this.#client.newChat();
+      this.#client.activate('click');
     });
     ended.append(endedText, newChat);
 

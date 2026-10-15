@@ -7,7 +7,8 @@
   "scripts": {
     "build": "node build.mjs",
     "start": "node build.mjs && npx --yes serve@14 --no-clipboard --listen 3000",
-    "og": "node og.mjs"
+    "og": "node og.mjs",
+    "test": "node --test */*.test.mjs"
   },
   "engines": {
     "node": ">=18"

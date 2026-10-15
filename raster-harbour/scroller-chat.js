@@ -362,6 +362,7 @@ function burst(impact) {
 function closeChat() {
   if (!open) return;
   open = false;
+  client.closeInvitation();
   dive = null;
   openFrom = openT;
   openStart = now();
@@ -489,6 +490,7 @@ function skipWriting() {
 function newChat() {
   transcript.reset();
   void client.newChat();
+  client.activate('click');
   screen.toEnd();
 }
 

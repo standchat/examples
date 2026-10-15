@@ -589,17 +589,17 @@ inp.addEventListener('keydown',e=>{
 });
 retryEl.addEventListener('click',()=>{
   const state=client.getSnapshot();
-  if(['uncertain','ended'].includes(state.phase))void client.newChat();
+  if(['uncertain','ended'].includes(state.phase))void client.newChat({ analyticsId: 'glitch-mascot', interaction: 'click' });
   else if(state.error==='end')void client.end();
   else if(state.pending)void client.send();
   else void client.retry();
 });
 followupEl.addEventListener('submit',e=>{e.preventDefault();void client.submitEmail(document.getElementById('chat-email').value);});
 endEl.addEventListener('click',()=>void client.end());
-newEl.addEventListener('click',()=>void client.newChat());
+newEl.addEventListener('click',()=>void client.newChat({ analyticsId: 'glitch-mascot', interaction: 'click' }));
 brandEl.addEventListener('click',()=>client.trackAttributionClick());
 document.getElementById('bye').onclick=()=>{say(["fine."]);setTimeout(leave,700);};
-cv.addEventListener('click',()=>{if(bubble.classList.contains('show')){hideBubble();}else{fitBubble();showBubble();inp.focus();}});
+cv.addEventListener('click',()=>{if(bubble.classList.contains('show')){client.closeInvitation();hideBubble();}else{client.activate({analyticsId:'glitch-mascot',interaction:'click'});fitBubble();showBubble();inp.focus();}});
 
 /* ---------- "virus" effects ---------- */
 const GLY='▓▒░█▚▞/\\|#01';

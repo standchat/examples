@@ -57,11 +57,11 @@ export class Strip {
       action('End conversation', () => void client.end());
     } else if (s.phase === 'ended') {
       parts.push(s.error === 'gone' ? 'This conversation is no longer available.' : 'Conversation ended.');
-      action('Start a new conversation', () => void client.newChat(), true);
+      action('Start a new conversation', () => void client.newChat({ analyticsId: 'ask-any-line', interaction: 'click' }), true);
     } else if (s.phase === 'uncertain') {
       dot = 'warn';
       parts.push('Your first question may have started a conversation, but it wasn\'t confirmed.');
-      action('Start a new conversation', () => void client.newChat(), true);
+      action('Start a new conversation', () => void client.newChat({ analyticsId: 'ask-any-line', interaction: 'click' }), true);
     }
     const powered = poweredBy(s.poweredByUrl, () => client.trackAttributionClick());
     if (powered) actions.push(powered);
