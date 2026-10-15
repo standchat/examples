@@ -44,6 +44,14 @@ Then replace its Stand `<script>` tag with the installation snippet from **Sites
 - Social images (`og.png`) are committed. The build only checks that they are 1200×630; it never regenerates them. To recapture with Chrome, run `npm run og` for all of them or `npm run og -- <folder>` for one (`og.mjs`).
 - Vercel runs `node build.mjs` and serves the repository as it is (`vercel.json`).
 
+## Custom chat accounting
+
+Raw Visitor API clients send `POST /v1/events/activate` when the visitor opens a custom chat invitation. An inline composer can instead activate on its first submitted message. Discovery, page mount, restoring a conversation, and later messages are not activations. Carry the latest activation ID into `POST /v1/sessions`; telemetry remains best effort and never blocks chat.
+
+The standalone clients expose `activate()` and `closeInvitation()` for actual open/close boundaries, with a first-submit fallback for inline reuse. Keep these UI hooks when copying an example. The character clients retry failed delivery once with the same ID; the inline client family uses its existing best-effort beacon. Copied integrations need the updated client and UI hooks; updating this repository cannot change copies already installed elsewhere. See the [custom UI guide](https://stand.chat/guide/custom-chat-ui) for the complete contract.
+
+Run `npm test` for client accounting and example-model regression checks, and `npm run build` to validate the catalog.
+
 ## License
 
 Public domain under the [Unlicense](LICENSE). Copy anything.

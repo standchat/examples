@@ -53,6 +53,7 @@ export class StandVisitorClient {
   #listeners = new Set();
   #session = null; // { sessionId, visitorToken, visitorId }
   #offer = {}; // the last discovery response: who would answer a new conversation
+  #invitation = null; // Explicit opens wait for discovery; never restored on mount.
   #mounts = 0;
   #epoch = 0; // bumps on unmount, so late responses for an old mount are ignored
   #socket = null;
@@ -106,6 +107,7 @@ export class StandVisitorClient {
       document.removeEventListener('visibilitychange', this.#wake);
       this.#disconnect();
       this.#read?.abort();
+      this.closeInvitation();
       // A start or send in flight still finishes: its response must be saved.
     };
   }
@@ -154,9 +156,11 @@ export class StandVisitorClient {
           notice: text(offer.sensitiveNoticeText),
           poweredByUrl: text(offer.poweredByUrl),
         });
+        this.#flushActivation(!available);
       }
     } catch (error) {
       if (stale()) return;
+      this.#flushActivation(true);
       if (this.#session) {
         this.#fail(error, 'connect');
         if (this.#session) this.#scheduleReconnect();
@@ -185,6 +189,7 @@ export class StandVisitorClient {
     const retrying = Boolean(this.#state.pending && !this.#state.pending.creating);
     const body = retrying ? this.#state.pending.body : String(message).trim();
     if (!body || !['available', 'active'].includes(this.#state.phase)) return false;
+    if (!this.#session) this.activate({ ...context, interaction: 'send', initialMessagePresent: true });
     this.#visitorTyped(false);
     this.#update({ busy: true, error: '', ...(context.owner ? { owner: context.owner } : {}) });
     let recover = false;
@@ -194,8 +199,7 @@ export class StandVisitorClient {
         // the next one must ask the visitor instead of starting a second chat.
         this.#uncertain = true;
         this.#update({ pending: { body, clientMessageId: '', creating: true } });
-        const activationId = uuid();
-        this.#activate(activationId, context);
+        const activationId = this.#invitation.id;
         const identity = context.identity ?? {};
         const data = await this.#request('/v1/sessions', {
           anonymous: true,
@@ -215,8 +219,8 @@ export class StandVisitorClient {
               ? { visitorExternalId: String(identity.externalId), ...(identity.name ? { visitorIdentityName: String(identity.name) } : {}) }
               : {}),
             activationId,
-            activationSource: 'unknown',
-            ...(context.analyticsId ? { activationAnalyticsId: context.analyticsId } : {}),
+            activationSource: 'custom_ui',
+            ...(this.#invitation.context.analyticsId ? { activationAnalyticsId: this.#invitation.context.analyticsId } : {}),
             visitorLanguage: navigator.language,
             visitorLanguages: navigator.languages,
             ...(document.documentElement.lang ? { pageLanguage: document.documentElement.lang } : {}),
@@ -278,15 +282,18 @@ export class StandVisitorClient {
   }
 
   /** After an ended or uncertain start: look again, and give unsent text back as a draft. */
-  async newChat() {
+  async newChat(invitationContext = null) {
     if (this.#state.busy || this.#session) return;
     this.#uncertain = false;
     this.#retries = 0;
     this.#lookups = 0;
+    this.closeInvitation();
     // Never replays anything into the new conversation: the visitor reviews and sends.
     const { pending, draft, owner } = this.#state;
     const unsent = pending?.body && pending.body !== draft ? [pending.body, draft].filter(Boolean).join('\n\n') : draft || pending?.body || '';
     this.#update({ ...INITIAL_STATE, draft: unsent, owner });
+    // Only an explicit UI action opts in; programmatic resets stay quiet.
+    if (invitationContext) this.activate(invitationContext);
     await this.retry();
   }
 
@@ -711,21 +718,43 @@ export class StandVisitorClient {
     t.timer = setTimeout(() => send(false), 4000);
   }
 
-  #activate(activationId, context) {
-    const responder = text(this.#offer.standinProfileId)
-      ? { standinProfileId: this.#offer.standinProfileId }
-      : { repId: this.#offer.repId };
+  /** Record an explicit invitation open, without creating a chat session. */
+  activate(context = {}) {
+    if (this.#session || this.#uncertain || this.#state.phase === 'ended') return;
+    if (!this.#invitation) this.#invitation = { id: uuid(), context: { ...context }, page: this.page(), sent: false };
+    this.#flushActivation(this.#state.phase === 'unavailable');
+  }
+
+  /** Closing an unsent invitation lets a later open have its own activation. */
+  closeInvitation() {
+    if (!this.#session && !this.#state.busy && !this.#uncertain) {
+      this.#flushActivation(true);
+      this.#invitation = null;
+    }
+  }
+
+  #flushActivation(force = false) {
+    const invitation = this.#invitation;
+    if (!invitation || invitation.sent || this.#session || (!force && this.#state.phase !== 'available')) return;
+    invitation.sent = true;
+    this.#activate(invitation.id, invitation.context, this.#state.phase === 'available' ? this.#offer : {}, invitation.page);
+  }
+
+  #activate(activationId, context, offer, page) {
+    const responder = text(offer.standinProfileId)
+      ? { standinProfileId: offer.standinProfileId }
+      : { repId: offer.repId ?? null };
     beacon(`${this.api}/v1/events/activate`, {
       siteId: this.site,
       activationId,
-      showId: this.#offer.showId ?? null,
-      page: this.page(),
+      showId: offer.showId ?? null,
+      page,
       ...responder,
-      responderType: this.#offer.responderType ?? null,
-      sourceType: 'unknown',
+      responderType: offer.responderType ?? null,
+      sourceType: 'custom_ui',
       analyticsId: context.analyticsId || null,
-      interaction: 'send',
-      initialMessagePresent: true,
+      interaction: context.interaction || 'click',
+      initialMessagePresent: Boolean(context.initialMessagePresent),
     });
   }
 }
@@ -810,7 +839,9 @@ function beacon(url, data) {
   } catch {
     // Fall through to fetch.
   }
-  fetch(url, { method: 'POST', body, keepalive: true, credentials: 'omit', headers: { 'Content-Type': 'text/plain;charset=UTF-8' } }).catch(() => {});
+  try {
+    fetch(url, { method: 'POST', body, keepalive: true, credentials: 'omit', headers: { 'Content-Type': 'text/plain;charset=UTF-8' } }).catch(() => {});
+  } catch { /* Telemetry must never interrupt a conversation. */ }
 }
 
 function uuid() {

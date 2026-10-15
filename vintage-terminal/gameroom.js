@@ -134,10 +134,6 @@ class GameTerminal {
     if (active === this) {
       if (input.value !== state.draft) input.value = state.draft;
       syncControls();
-      if (state.phase === 'available' && !this.activated) {
-        this.activated = true;
-        this.client.activate('click');
-      }
     }
     wake();
   }
@@ -201,6 +197,7 @@ function openTerminal(terminal) {
   }
   for (const other of terminals) if (other !== terminal) other.suspend();
   terminal.resume();
+  terminal.client.activate('click');
   terminal.client.showGreeting(terminal.game.greeting);
   terminal.screen.scrollToEnd();
   terminal.dirty = true;
@@ -409,10 +406,11 @@ controls.addEventListener('click', async event => {
     terminal.seen.clear();
     terminal.lastSeq = 0;
     terminal.preview = null;
-    terminal.activated = false;
     transcript.replaceChildren();
     terminal.print(terminal.game.greeting, BRIGHT, Infinity);
-    await terminal.client.newChat();
+    const discovery = terminal.client.newChat();
+    terminal.client.activate('click');
+    await discovery;
   }
   if (active === terminal && action !== 'close') input.focus({ preventScroll: true });
 });

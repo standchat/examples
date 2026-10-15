@@ -463,12 +463,6 @@ export class PinkCow extends EventTarget {
       storage: o.storage ?? undefined,
     });
     this.#client = client;
-    // The visitor opened this chat UI: report it once Stand knows who answers.
-    const unsubscribe = client.subscribe((state) => {
-      if (state.phase !== 'available') return;
-      unsubscribe();
-      client.activate('click');
-    });
     const chat = new CowChat({
       client,
       copy: { title: o.title, subtitle: o.subtitle, greeting: o.greeting, suggestions: o.suggestions, placeholder: o.placeholder, links: o.links },

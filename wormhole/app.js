@@ -40,7 +40,7 @@ const rendered = new Map();
 const seen = new Set();
 let restoring = true, introTimer, introStageTimer, outgoing = '', generation = 0;
 let flightQueue = Promise.resolve();
-let bridgeReady = false, activated = false, paused = reduced.matches;
+let bridgeReady = false, paused = reduced.matches;
 
 function setMotion(value) {
   paused = value; scene.paused = value; flights.paused = value;
@@ -171,7 +171,6 @@ async function send() {
   const state=client.state;
   if(state.busy || !['available','active'].includes(state.phase))return;
   const body=state.pending?.body || state.draft.trim(); if(!body)return;
-  if(!activated){client.activate('keyboard');activated=true;}
   outgoing=body;
   sound.ping(false);
   const outbound=flights.fly(body);
@@ -183,7 +182,7 @@ async function send() {
 $('#compose').addEventListener('submit',e=>{e.preventDefault();void send();});
 input.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();void send();}});
 $('#retry').addEventListener('click',()=>{
-  if(['ended','uncertain'].includes(client.state.phase)) { generation++;flights.finish();flightQueue=Promise.resolve();seen.clear();activated=false;void client.newChat(); }
+  if(['ended','uncertain'].includes(client.state.phase)) { generation++;flights.finish();flightQueue=Promise.resolve();seen.clear();void client.newChat();client.activate('click'); }
   else if(client.state.pending)void send(); else void client.retry();
 });
 $('#end').addEventListener('click',()=>client.end());

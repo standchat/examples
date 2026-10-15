@@ -65,7 +65,8 @@ export class StandClient {
   #read = null;
   #retries = 0;
   #uncertain = false;
-  #activationId = null;
+  #activation = null;
+  #invitationOpen = false;
   #greetingShown = '';
   #typingSentAt = 0;
   #typingIdle;
@@ -157,6 +158,7 @@ export class StandClient {
     if (!this.#state.busy && this.#state.phase !== 'ended') void this.retry();
     return () => {
       if (epoch !== this.#epoch) return;
+      this.closeInvitation();
       this.#mounted = false;
       ++this.#epoch;
       this.#disconnect();
@@ -252,6 +254,7 @@ export class StandClient {
   }
 
   #finish(error = null) {
+    this.closeInvitation();
     this.#disconnect();
     this.#read?.abort();
     this.#session = null;
@@ -304,9 +307,11 @@ export class StandClient {
           poweredByUrl: text(offer.poweredByUrl),
           greeting: available ? this.config.greeting || text(offer.greeting) : '',
         });
+        this.#completeActivation(available ? offer : {});
       }
     } catch (error) {
       if (stale()) return;
+      this.#completeActivation();
       this.#fail(error, 'Could not connect. Your draft is saved.');
       if (this.#session) this.#scheduleReconnect();
       else if (this.#state.phase !== 'ended') this.#update({ phase: 'unavailable' });
@@ -442,6 +447,7 @@ export class StandClient {
     if (this.#state.busy) return;
     const body = this.#state.pending?.body || this.#state.draft.trim();
     if (!body || !['available', 'active'].includes(this.#state.phase)) return;
+    if (!this.#session) this.activate('submit', true);
     this.#sendTyping(false);
     this.#update({ busy: true, error: null });
     let recover = false;
@@ -461,7 +467,7 @@ export class StandClient {
           ...(greeting && greeting === text(offer.greeting) && offer.greetingVariantId ? { greetingVariantId: offer.greetingVariantId } : {}),
           ...(this.config.prompt ? { prompt: this.config.prompt.slice(0, 2000) } : {}),
           showId: offer.showId,
-          ...(this.#activationId ? { activationId: this.#activationId, activationSource: 'unknown', activationAnalyticsId: this.config.analyticsId } : {}),
+          ...(this.#activation ? { activationId: this.#activation.id, activationSource: 'custom_ui', activationAnalyticsId: this.#activation.analyticsId } : {}),
           visitorLanguage: navigator.language,
           visitorLanguages: navigator.languages,
           pageLanguage: document.documentElement.lang,
@@ -503,6 +509,7 @@ export class StandClient {
 
   // Ends the conversation for everyone. Only on an explicit visitor action.
   end = async () => {
+    this.closeInvitation();
     if (!this.#session || this.#state.busy) return;
     this.#update({ busy: true, error: null });
     try {
@@ -519,6 +526,8 @@ export class StandClient {
   // to the draft for review; it is never replayed into another conversation.
   newChat = async () => {
     if (this.#state.busy || this.#session) return;
+    this.closeInvitation();
+    this.#activation = null;
     this.#uncertain = false;
     this.#retries = 0;
     const pendingBody = this.#state.pending?.body;
@@ -559,22 +568,52 @@ export class StandClient {
   }
 
   // The visitor opened the chat UI. Correlates this activation with the chat it may start.
-  activate(interaction) {
-    if (this.#session || this.#state.phase !== 'available') return;
-    const offer = this.#offer;
-    this.#activationId = crypto.randomUUID();
-    this.#beacon('/v1/events/activate', {
-      siteId: this.config.siteId,
-      activationId: this.#activationId,
-      showId: offer.showId ?? null,
-      page: this.config.page(),
-      ...(text(offer.standinProfileId) ? { standinProfileId: offer.standinProfileId } : { repId: offer.repId ?? null }),
-      responderType: offer.responderType ?? null,
-      sourceType: 'unknown',
-      analyticsId: this.config.analyticsId ?? null,
-      interaction,
-      initialMessagePresent: false,
-    });
+  activate(interaction = 'click', initialMessagePresent = false) {
+    if (this.#session || this.#uncertain || this.#state.busy || this.#state.phase === 'ended') return;
+    if (this.#invitationOpen && this.#activation) return;
+    this.#invitationOpen = true;
+    this.#activation = {
+      id: crypto.randomUUID(), page: this.config.page(), analyticsId: this.config.analyticsId ?? null,
+      interaction, initialMessagePresent, payload: null,
+    };
+    if (this.#state.phase === 'available') this.#completeActivation(this.#offer);
+    else if (this.#state.phase === 'unavailable') this.#completeActivation();
+  }
+
+  closeInvitation() {
+    this.#completeActivation();
+    this.#invitationOpen = false;
+  }
+
+  #completeActivation(offer = {}) {
+    const activation = this.#activation;
+    if (!activation || activation.payload) return;
+    // Capture once: a late discovery, navigation, or reopen cannot alter a retry.
+    activation.payload = {
+      siteId: this.config.siteId, activationId: activation.id, page: activation.page,
+      showId: text(offer.showId) || null, repId: text(offer.repId) || null,
+      standinProfileId: text(offer.standinProfileId) || null,
+      responderType: text(offer.responderType) || null,
+      sourceType: 'custom_ui', analyticsId: activation.analyticsId,
+      interaction: activation.interaction, initialMessagePresent: activation.initialMessagePresent,
+    };
+    const body = JSON.stringify(activation.payload);
+    const send = async () => {
+      for (let attempt = 0; attempt < 2; attempt++) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 5000);
+        try {
+          const response = await fetch(this.#api + '/v1/events/activate', {
+            method: 'POST', credentials: 'omit', keepalive: true,
+            headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+            body, signal: controller.signal,
+          });
+          if (response.ok || (response.status >= 400 && response.status < 500 && response.status !== 429)) return;
+        } catch { /* Best effort; retry the same event after a lost response. */ }
+        finally { clearTimeout(timer); }
+      }
+    };
+    void send(); // Statistics never hold up opening, sending, or closing.
   }
 
   // The visitor clicked the "Powered by Stand" attribution.

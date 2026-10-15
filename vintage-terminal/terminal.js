@@ -289,6 +289,7 @@ function openTerminal(interaction) {
 function closeTerminal() {
   if (!open) return;
   open = false;
+  client.closeInvitation();
   zoomTo(0);
   launcher.setAttribute('aria-expanded', 'false');
   backdrop.classList.remove('is-visible');

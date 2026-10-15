@@ -46,6 +46,7 @@ export class StandChatClient {
   #state = INITIAL_STATE;
   #session = null; // { sessionId, visitorToken }
   #offer = {};
+  #activation = null;
   #listeners = new Set();
   #mounted = false;
   #initialized = false;
@@ -64,6 +65,7 @@ export class StandChatClient {
    * @param {string} [config.apiBase]   https://api.stand.chat
    * @param {string} [config.wsBase]    wss://api.stand.chat
    * @param {() => string} [config.page]  The current page URL.
+   * @param {string} [config.analyticsId] A stable label for this custom chat surface.
    * @param {Storage} [config.storage]  Where to keep the conversation across reloads.
    * @param {() => object} [config.context]  Extra fields for session creation: prompt, openingMessage…
    */
@@ -136,6 +138,7 @@ export class StandChatClient {
     if (!this.#state.busy && this.#state.phase !== 'ended') this.retry();
     return () => {
       if (epoch !== this.#epoch) return;
+      this.closeInvitation();
       this.#mounted = false;
       ++this.#epoch;
       this.#disconnect();
@@ -145,6 +148,59 @@ export class StandChatClient {
 
   get hasSession() {
     return Boolean(this.#session);
+  }
+
+  // Call on a real invitation open; mount and restored conversations are not activations.
+  activate(interaction = 'click', initialMessagePresent = false) {
+    if (this.#session || this.#uncertain || this.#state.phase === 'ended' || this.#activation) return;
+    this.#activation = {
+      activationId: crypto.randomUUID(),
+      page: this.config.page(),
+      interaction,
+      initialMessagePresent,
+    };
+    this.#flushActivation();
+  }
+
+  closeInvitation() {
+    this.#flushActivation(true);
+    this.#activation = null;
+  }
+
+  #flushActivation(siteOnly = false) {
+    const activation = this.#activation;
+    if (!activation || activation.sent || (!siteOnly && this.#state.phase === 'loading')) return;
+    activation.sent = true;
+    const offer = siteOnly ? {} : this.#offer;
+    // Freeze the payload: a retry must carry the same ID and attribution.
+    const body = JSON.stringify({
+      siteId: this.config.siteId,
+      activationId: activation.activationId,
+      page: activation.page,
+      interaction: activation.interaction,
+      initialMessagePresent: activation.initialMessagePresent,
+      sourceType: 'custom_ui',
+      analyticsId: this.config.analyticsId ?? null,
+      showId: offer.showId ?? null,
+      ...(text(offer.standinProfileId) ? { standinProfileId: offer.standinProfileId } : { repId: offer.repId ?? null }),
+      responderType: offer.responderType ?? null,
+    });
+    const send = async () => {
+      for (let attempt = 0; attempt < 2; attempt++) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 5000);
+        try {
+          const response = await fetch(this.api + '/v1/events/activate', {
+            method: 'POST', credentials: 'omit', keepalive: true,
+            headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+            body, signal: controller.signal,
+          });
+          if (response.ok || (response.status >= 400 && response.status < 500 && response.status !== 429)) return;
+        } catch { /* Best effort; a lost response can safely retry the same ID. */ }
+        finally { clearTimeout(timer); }
+      }
+    };
+    void send(); // Opening and sending never wait for statistics.
   }
 
   setDraft(draft) {
@@ -279,12 +335,16 @@ export class StandChatClient {
           notice: text(offer.sensitiveNoticeText),
           poweredByUrl: text(offer.poweredByUrl),
         });
+        this.#flushActivation();
       }
     } catch (error) {
       if (!this.#mounted || epoch !== this.#epoch || read.signal.aborted) return;
       this.#handleFailure(error, 'Could not connect. Your message is saved; try again.');
       if (this.#session) this.#scheduleReconnect();
-      else if (this.#state.phase !== 'ended') this.#update({ phase: 'unavailable' });
+      else if (this.#state.phase !== 'ended') {
+        this.#update({ phase: 'unavailable' });
+        this.#flushActivation(true);
+      }
     }
   };
 
@@ -409,6 +469,7 @@ export class StandChatClient {
     let recover = false;
     try {
       if (!this.#session) {
+        this.activate('submit', true); // Inline callers and a restored invitation activate on first submit.
         this.#uncertain = true;
         this.#update({ draft: body, pending: { body, clientMessageId: 'initial' } }); // Remember an ambiguous start before sending.
         const data = await this.#request('/v1/sessions', {
@@ -423,6 +484,9 @@ export class StandChatClient {
           pageLanguage: document.documentElement.lang,
           visitorTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
           ...(this.config.context?.() ?? {}),
+          activationId: this.#activation?.activationId,
+          activationSource: 'custom_ui',
+          activationAnalyticsId: this.config.analyticsId,
         });
         if (!text(data.sessionId) || !text(data.visitorToken)) throw new Error('Incomplete session credentials');
         this.#session = { sessionId: data.sessionId, visitorToken: data.visitorToken };
@@ -477,6 +541,8 @@ export class StandChatClient {
 
   newChat = async () => {
     if (this.#state.busy || this.#session) return;
+    this.closeInvitation();
+    this.#offer = {};
     this.#uncertain = false;
     this.#retries = 0;
     // Starting over only prepares an editable draft; nothing is replayed into

@@ -113,6 +113,7 @@ class GillyChat {
     this.voice = new Voice();
     this.client = new StandChatClient({
       siteId: SITE_ID,
+      analyticsId: 'chat-mascot',
       storage: store,
       context: () => ({
         prompt: privateContext(),
@@ -391,6 +392,8 @@ class GillyChat {
 
   setOpen(open, { quiet = false } = {}) {
     if (open === this.open) return;
+    if (open && !quiet) this.client.activate();
+    else if (!open) this.client.closeInvitation();
     this.open = open;
     remember('gilly-open', open ? '1' : '0');
     this.hit.setAttribute('aria-expanded', String(open));
@@ -852,7 +855,9 @@ class GillyChat {
     this.localLines = [];
     this.greeting = '';
     remember('gilly-greeting', '');
-    await this.client.newChat();
+    const ready = this.client.newChat();
+    if (this.open) this.client.activate();
+    await ready;
     if (this.open && this.state.phase === 'available') {
       this.greeting = WELCOME_BACK;
       remember('gilly-greeting', this.greeting);

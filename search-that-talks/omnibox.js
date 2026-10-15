@@ -128,6 +128,7 @@ export function createOmnibox(root, { client, onOpenFlow = () => {} }) {
         client.setDraft('');
       }
     } else if (event.key === 'Backspace' && !input.value && ask && ask.kind !== 'nomatch') {
+      client.closeInvitation();
       ask = null; // Backspace in an empty box removes the "about" token, like a search chip.
       client.setDraft('');
       render();
@@ -160,6 +161,7 @@ export function createOmnibox(root, { client, onOpenFlow = () => {} }) {
   }
 
   function reset() {
+    client.closeInvitation();
     endDemo();
     ask = null;
     category = null;
@@ -238,6 +240,7 @@ export function createOmnibox(root, { client, onOpenFlow = () => {} }) {
   }
 
   function askAbout(target) {
+    client.activate({ analyticsId: 'search-that-talks', interaction: 'click' });
     endDemo();
     appId = null;
     category = null;
@@ -1094,7 +1097,7 @@ export function createOmnibox(root, { client, onOpenFlow = () => {} }) {
     else if ('new' in d) {
       confirmEnd = false;
       earlierOpen = false;
-      client.newChat().then(() => input.focus({ preventScroll: true }));
+      client.newChat({ analyticsId: 'search-that-talks', interaction: 'click' }).then(() => input.focus({ preventScroll: true }));
     } else if ('end' in d) {
       confirmEnd = true;
       render();
@@ -1126,6 +1129,7 @@ export function createOmnibox(root, { client, onOpenFlow = () => {} }) {
 
   token.addEventListener('click', (event) => {
     if (!event.target.closest('.omni-token-x')) return;
+    client.closeInvitation();
     ask = null;
     client.setDraft(input.value.trim() ? input.value : '');
     render();

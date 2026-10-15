@@ -157,7 +157,8 @@ function askLine(file, n) {
 }
 
 /** Opens the question box for a place, or the thread already there. */
-function askAt(anchor, { text } = {}) {
+function askAt(anchor, { text, activate = true } = {}) {
+  if (activate) client.activate({ analyticsId: 'ask-any-line', interaction: 'click' });
   hideHint();
   if (anchor.kind === 'line' && ui.wide && anchor.file !== ui.file) showFile(anchor.file);
   const key = threadKey(anchor);
@@ -190,6 +191,7 @@ function replyAnchor(thread) {
 
 function closeComposer({ keepDraft = false } = {}) {
   if (!ui.compose) return;
+  client.closeInvitation();
   const { anchor, key } = ui.compose;
   if (keepDraft && composer.field.value.trim()) drafts.set(key, composer.field.value);
   else drafts.delete(key);
@@ -225,7 +227,7 @@ function restoreDraft() {
   if (!parsed) return;
   const anchor = parsed.anchor.kind === 'line' ? { ...parsed.anchor, part: prettyPart(parsed.anchor.part) } : parsed.anchor;
   drafts.set(threadKey(anchor), parsed.question);
-  askAt(anchor, { text: parsed.question });
+  askAt(anchor, { text: parsed.question, activate: false });
 }
 
 function resolve(key) {
@@ -648,8 +650,8 @@ function composerNote(c) {
     if (s.error === 'connect') return { text: 'Couldn\'t reach Stand to see who can answer.', warn: true, block: true, action: action('Try again', () => void client.retry()) };
     return { text: 'Nobody from the Tender team can answer right now.', warn: true, block: true, action: action('Check again', () => void client.retry()) };
   }
-  if (s.phase === 'uncertain') return { text: 'Your first question may have started a conversation, but it wasn\'t confirmed. Your text is still here.', warn: true, block: true, action: action('Start a new conversation', () => void client.newChat()) };
-  if (s.phase === 'ended') return { text: 'This conversation has ended.', block: true, action: action('Start a new conversation', () => void client.newChat()) };
+  if (s.phase === 'uncertain') return { text: 'Your first question may have started a conversation, but it wasn\'t confirmed. Your text is still here.', warn: true, block: true, action: action('Start a new conversation', () => void client.newChat({ analyticsId: 'ask-any-line', interaction: 'click' })) };
+  if (s.phase === 'ended') return { text: 'This conversation has ended.', block: true, action: action('Start a new conversation', () => void client.newChat({ analyticsId: 'ask-any-line', interaction: 'click' })) };
   if (s.pending && !s.pending.creating && !s.busy) return { text: 'Your last question wasn\'t delivered yet.', warn: true, block: true, action: action('Retry it', () => void client.send()) };
   // One answer at a time, so each lands in the right thread.
   if (view.awaiting && view.awaiting !== c.key) {

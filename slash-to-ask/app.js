@@ -119,6 +119,7 @@ const outline = createOutline({ root: $('#doc-body'), onGo: (id) => doc.reveal(i
 
 /** A new ask block: after a block, in place of an empty line, or before the invite line. */
 function insertAsk({ after, replace = false, before = false, quote = '' }) {
+  client.activate({ analyticsId: 'slash-to-ask', interaction: 'click' });
   const id = newId('ask');
   asks.set(id, askModel({ heading: doc.headingFor(after, { self: !replace && !before }), quote }));
   const el = createAskElement(id);
@@ -200,7 +201,7 @@ async function startNewConversation() {
     }
   }
   doc.save();
-  await client.newChat();
+  await client.newChat({ analyticsId: 'slash-to-ask', interaction: 'click' });
 }
 
 // ---------- Actions from ask blocks ----------
@@ -215,6 +216,7 @@ const actions = {
     doc.saveSoon();
   },
   cancel(id, empty) {
+    client.closeInvitation();
     const ask = asks.get(id);
     const el = document.getElementById(id);
     if (!ask || !el) return;

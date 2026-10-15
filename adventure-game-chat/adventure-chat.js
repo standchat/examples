@@ -69,7 +69,7 @@ class AdventureChat extends HTMLElement {
         send: (text) => this.client.send(text).then((ok) => { if (!ok && !this.client.state.pending) this.window.prefill(text); }),
         close: () => this.close(),
         end: () => this.client.end(),
-        newChat: () => this.client.newChat(),
+        newChat: () => { const discovery = this.client.newChat(); this.client.activate('click'); return discovery; },
         retry: () => this.client.retry(),
         resend: () => this.client.send(this.client.state.pending?.body ?? ''),
         email: (email) => this.client.submitEmail(email),
@@ -185,6 +185,7 @@ class AdventureChat extends HTMLElement {
 
   async close() {
     if (!this.window.isOpen) return;
+    this.client.closeInvitation();
     this.window.close();
     this.#quiet();
     this.dispatchEvent(new CustomEvent('adventure-chat:close', { bubbles: true }));

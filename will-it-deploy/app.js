@@ -601,6 +601,7 @@ function logAnchor(line) {
 }
 
 function openPanel(subject, { from = null, question = '' } = {}) {
+  client.activate({ analyticsId: 'will-it-deploy', interaction: 'click' });
   if (subject) {
     page.subject = subject;
     page.view = chat.anchorKey(subject);
@@ -625,6 +626,7 @@ function openPanel(subject, { from = null, question = '' } = {}) {
 }
 
 function closePanel({ restoreFocus = true } = {}) {
+  client.closeInvitation();
   page.panelOpen = false;
   save();
   closeMenu();
@@ -1364,7 +1366,7 @@ function wire() {
       page.seen = {};
       page.lastSeen = 0;
       save();
-      return void client.newChat();
+      return void client.newChat({ analyticsId: 'will-it-deploy', interaction: 'click' });
     }
     const link = t.closest('[data-link-card]');
     if (link) client.trackLinkClick(link.dataset.linkCard, link.href);

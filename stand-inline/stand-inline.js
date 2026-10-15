@@ -522,7 +522,7 @@ class StandInline extends HTMLElement {
     if (!s) return;
     if (s.phase === 'ended' || s.phase === 'uncertain') {
       this.#ui.autoExpanded = false;
-      void client.newChat().then(() => {
+      void client.newChat({ analyticsId: this.getAttribute('analytics-id') || '', interaction: 'click' }).then(() => {
         const draft = client.getSnapshot().draft;
         if (draft) this.draft = draft;
         this.#els.input.focus();

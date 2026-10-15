@@ -679,6 +679,7 @@ export class Assistant extends EventTarget {
 
   /** From the playground's buttons: attach the context, then send or let the visitor write. */
   ask({ question = '', context = null, send = false, source = 'playground', placeholder = '' } = {}) {
+    this.client.activate({ analyticsId: 'ask-the-playground', interaction: 'click' });
     if (context) this.attach(context);
     this.open();
     if (send && question) {
@@ -759,7 +760,7 @@ export class Assistant extends EventTarget {
   async #newChat() {
     this.#runs = {};
     store.remove(RUNS);
-    await this.client.newChat();
+    await this.client.newChat({ analyticsId: 'ask-the-playground', interaction: 'click' });
     this.input.focus({ preventScroll: true });
   }
 
@@ -819,6 +820,7 @@ export class Assistant extends EventTarget {
 
   open() {
     if (!this.mq.matches || this.root.classList.contains('is-open')) return;
+    this.client.activate({ analyticsId: 'ask-the-playground', interaction: 'click' });
     this.#returnFocus = document.activeElement;
     this.root.classList.add('is-open');
     this.backdrop.classList.add('is-open');
@@ -837,6 +839,7 @@ export class Assistant extends EventTarget {
   close({ restore = true, force = false } = {}) {
     if (!force && !this.root.classList.contains('is-open')) return;
     const wasOpen = this.root.classList.contains('is-open');
+    if (wasOpen) this.client.closeInvitation();
     this.root.classList.remove('is-open');
     this.backdrop.classList.remove('is-open');
     this.root.removeAttribute('role');

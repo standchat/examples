@@ -946,6 +946,7 @@ class CommentLayer {
   open(label, { toggle = false, reveal = false, focus = true } = {}) {
     if (!label || !this.pins.has(label)) return;
     if (toggle && label === this.openLabel) return this.close();
+    this.client.activate({ analyticsId: 'comment-anywhere', interaction: 'click' });
     this.openLabel = label;
     this.#toggleMenu(false);
     if (reveal) this.#revealPin(label);
@@ -959,6 +960,7 @@ class CommentLayer {
   }
 
   close({ restore = true } = {}) {
+    this.client.closeInvitation();
     const label = this.openLabel;
     if (!label) return;
     this.openLabel = '';
@@ -1048,7 +1050,7 @@ class CommentLayer {
     this.drafts.clear();
     this.openLabel = '';
     this.#save();
-    await this.client.newChat();
+    await this.client.newChat({ analyticsId: 'comment-anywhere', interaction: 'click' });
     const state = this.client.getSnapshot();
     this.#restoreDraft(state, before);
     this.lastDraft = state.draft;

@@ -198,11 +198,13 @@ $("#priority").addEventListener("change", () => {
   attachContext();
 });
 $("#open-discussion").addEventListener("click", () => {
+  chat.client.activate({ analyticsId: 'experiment-verdict', interaction: 'click' });
   discussionOpen = true;
   renderDecision();
   chat.focus();
 });
 $("#own-product").addEventListener("click", () => {
+  chat.client.activate({ analyticsId: 'experiment-verdict', interaction: 'click' });
   own = !own;
   discussionOpen = true;
   renderDecision();
@@ -284,6 +286,7 @@ $("#next-evidence").addEventListener("click", () => {
     opened = Math.max(opened, stage);
     renderEvidence(true);
   } else {
+    chat.client.activate({ analyticsId: 'experiment-verdict', interaction: 'click' });
     discussionOpen = true;
     renderDecision();
     $("#decision-title").scrollIntoView({ block: "center" });

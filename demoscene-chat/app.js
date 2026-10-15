@@ -20,7 +20,6 @@ const rendered = new Map();
 let mounted = false;
 let lastOpener;
 let openTimer;
-let activation = null;
 let formedKey = '';
 let outgoing = '';
 let formFrame;
@@ -55,12 +54,9 @@ function openChat(event) {
   transmission.open();
   clearTimeout(openTimer);
   openTimer = setTimeout(() => dialog.classList.add('ready'), scene.paused ? 0 : 150);
-  activation = event?.detail === 0 ? 'keyboard' : 'click';
+  const activation = event?.detail === 0 ? 'keyboard' : 'click';
   if (!mounted) { mounted = true; client.mount(); }
-  if (client.state.phase === 'available') {
-    client.activate(activation);
-    activation = null;
-  }
+  client.activate(activation);
   if (client.state.greeting) client.showGreeting(client.state.greeting);
   input.focus({ preventScroll: true });
   transcript.scrollTop = transcript.scrollHeight;
@@ -69,6 +65,7 @@ function openChat(event) {
 
 function closeChat() { dialog.close(); }
 dialog.addEventListener('close', () => {
+  client.closeInvitation();
   clearTimeout(openTimer);
   dialog.classList.remove('ready');
   document.body.classList.remove('chat-open');
@@ -168,10 +165,6 @@ function systemText(message) {
 }
 
 client.subscribe(state => {
-  if (dialog.open && activation && state.phase === 'available') {
-    client.activate(activation);
-    activation = null;
-  }
   const nearBottom = transcript.scrollHeight - transcript.scrollTop - transcript.clientHeight < 90;
   const ready = ['available', 'active'].includes(state.phase);
   const hostName = state.host.name || 'Afterlight host';
@@ -269,7 +262,7 @@ input.addEventListener('keydown', event => {
   if (event.key === 'Enter' && !event.shiftKey && !event.isComposing) { event.preventDefault(); void send(); }
 });
 $('#retry').addEventListener('click', () => {
-  if (['ended', 'uncertain'].includes(client.state.phase)) void client.newChat();
+  if (['ended', 'uncertain'].includes(client.state.phase)) { void client.newChat(); client.activate('click'); }
   else if (client.state.pending) void client.send();
   else void client.retry();
 });

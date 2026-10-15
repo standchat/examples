@@ -144,6 +144,7 @@ class Host {
 
     this.client = new StandChatClient({
       siteId: SITE_ID,
+      analyticsId: 'lifelike-host',
       storage: session,
       context: () => ({
         prompt: privateContext(),
@@ -234,6 +235,8 @@ class Host {
   }
 
   setEngaged(engaged, { focus = false, quiet = false } = {}) {
+    if (engaged && !this.engaged && !quiet) this.client.activate();
+    else if (!engaged) this.client.closeInvitation();
     this.engaged = engaged;
     this.root.classList.toggle('is-engaged', engaged);
     this.panel.setAttribute('aria-hidden', String(!engaged));
@@ -469,6 +472,13 @@ class Host {
     if (!s.typing) this.#settle();
   }
 
+  #newChat() {
+    if (this.client.state.busy || this.client.hasSession) return;
+    const ready = this.client.newChat();
+    this.client.activate(); // The visitor opened a fresh invitation, even before discovery finishes.
+    return ready;
+  }
+
   #send(text) {
     const body = text.trim();
     if (!body || this.client.state.busy) return;
@@ -479,7 +489,7 @@ class Host {
         this.waiting = body;
         this.input.value = body;
         this.#autosize();
-        if (phase === 'ended') this.client.newChat();
+        if (phase === 'ended') this.#newChat();
       }
       return;
     }
@@ -738,7 +748,7 @@ class Host {
       const retry = document.createElement('button');
       retry.type = 'button';
       retry.textContent = s.phase === 'ended' ? 'Start a new chat' : 'Try again';
-      retry.addEventListener('click', () => (s.phase === 'ended' ? this.client.newChat() : s.pending ? this.client.send() : this.client.retry()));
+      retry.addEventListener('click', () => (s.phase === 'ended' ? this.#newChat() : s.pending ? this.client.send() : this.client.retry()));
       li.append(retry);
       this.log.append(li);
       this.panel.classList.add('show-log');
@@ -781,7 +791,7 @@ class Host {
       b.addEventListener('click', onClick);
       return b;
     };
-    if (s.phase === 'ended') this.choices.replaceChildren(button('Start a new chat', () => this.client.newChat()));
+    if (s.phase === 'ended') this.choices.replaceChildren(button('Start a new chat', () => this.#newChat()));
     else this.choices.replaceChildren(...list.map((q) => button(q, () => this.#send(q))));
   }
 

@@ -12,6 +12,7 @@ let state = normalize(saved.state || DEFAULTS);
 let selected = null;
 let chat;
 let loadingChat;
+const invitationActions = [];
 let lastTrigger;
 let announceTimer;
 let paused = reducedMotion.matches;
@@ -117,6 +118,17 @@ function showContext() {
   put('context-summary', `${r.profile.name} · ${SCENARIOS[r.state.scenario]} · ${number(r.incoming)} incoming req/s · ${money(r.total)} for one illustrative hour.`);
   put('context-preview', scenarioContext(r, selected.focus));
 }
+function trackInvitation(open) {
+  invitationActions.push(open);
+  flushInvitations();
+}
+function flushInvitations() {
+  if (!chat) return;
+  for (const open of invitationActions.splice(0)) {
+    if (open) chat.client.activate({ analyticsId: 'launch-simulator', interaction: 'click' });
+    else chat.client.closeInvitation();
+  }
+}
 async function ensureChat() {
   if (chat) return chat;
   if (loadingChat) return loadingChat;
@@ -155,6 +167,7 @@ async function ensureChat() {
         if (selected) { selected.attached = false; selected.removed = true; render(); }
       });
       $('chat-mount').append(chat);
+      flushInvitations();
       chat.client.subscribe((s) => {
         offlineText.textContent = s.error === 'connect'
           ? 'We couldn’t reach Stand Chat. Check your connection and try again. Your local scenario is still here.'
@@ -172,6 +185,7 @@ async function ensureChat() {
 }
 async function selectContext(focus, trigger, restore = false) {
   if (chat?.client.getSnapshot().busy) return;
+  if (!restore) trackInvitation(true);
   if (!restore) selected = { state: { ...state }, focus, attached: true };
   lastTrigger = trigger || lastTrigger;
   $('conversation').hidden = false;
@@ -192,6 +206,7 @@ async function selectContext(focus, trigger, restore = false) {
 for (const button of document.querySelectorAll('[data-focus]')) button.addEventListener('click', () => void selectContext(button.dataset.focus, button));
 $('update-context').addEventListener('click', () => void selectContext(selected?.focus || 'Full launch bill'));
 $('close-chat').addEventListener('click', () => {
+  trackInvitation(false);
   $('conversation').hidden = true;
   // Hiding the view keeps the conversation alive; End chat is a separate action.
   (lastTrigger || $('reset')).focus({ preventScroll: true });
